@@ -201,7 +201,7 @@ class Product extends Entity {
     
         //カレンダー
         if($nextsection == 0 || $nextsection == 3) {
-            if( empty($data['ClosingOut_date']) ) {
+            if( $data['ClosingOut_date'] == '' ) {
                 $err_msg['ClosingOut_date'] = MESSAGE_ERROR_REQUIRE;
                 $err_msg['nextsection'] = 2;
             }
@@ -306,6 +306,7 @@ class Product extends Entity {
         $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
         if( !is_null($mt_disp) ) {
             $serch_condition[] = array('name' => 'mt_disp', 'value' => $mt_disp);
+            $serch_condition[] = array('name' => 'date', 'value' => date('Y/m/d H:i'), 'operator' => '<=');
         }
 
         $spiral->setSelectParam($select_columns, $serch_condition);
@@ -368,12 +369,17 @@ class Product extends Entity {
                     if($value != '') {
                         $resultData[$column . '_text'] = Constant::$aryMtDisp[$value];
                     }
+                } elseif( $column == 'ClosingOut_time' ) {
+                    if($value != '') {
+                        $date = DateTime::createFromFormat('H時i分', $value);
+                        $resultData[$column] = $date->format('H:i');
+                    }
                 } elseif( $column == 'date' ) {
                     $resultData[$column] = array(date('Y/m/d'), date('H:i'));
                     if($value != '') {
                         $date = DateTime::createFromFormat('Y年m月d日 H時i分', $value);
-                        $resultData[0] = $date->format('Y/m/d');
-                        $resultData[1] = $date->format('H:i');
+                        $resultData[$column][0] = $date->format('Y/m/d');
+                        $resultData[$column][1] = $date->format('H:i');
                     }
 
                 } else {
@@ -396,6 +402,7 @@ class Product extends Entity {
 
         $serch_condition = array();
         $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
+        $serch_condition[] = array('name' => 'productDate', 'value' => date('Y/m'), 'operator' => '>=');
 
         $spiral->setSelectParam($columns, $serch_condition);
 
@@ -459,11 +466,13 @@ class Product extends Entity {
         $columns[] = 'area';
         $columns[] = 'Category';
         $columns[] = 'registDate';
+        $columns[] = 'mt_disp';
 
         $serch_condition = array();
 
         if( !is_null($mt_disp) ) {
             $serch_condition[] = array('name' => 'mt_disp', 'value' => $mt_disp);
+            $serch_condition[] = array('name' => 'date', 'value' => date('Y/m/d H:i'), 'operator' => '<=');
         }
         if( !is_null($area) ) {
             $serch_condition[] = array('name' => 'area', 'value' => '%' . $area . '%', 'operator' => 'like');

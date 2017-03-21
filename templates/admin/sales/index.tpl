@@ -84,13 +84,13 @@
               <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">合計売上</p>
-                    <p class="title">{$salessum.sales}円</p>
+                    <p class="title">{$salessum.sales|number_format}円</p>
                 </div>
               </div>
               <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">合計件数</p>
-                    <p class="title">{$salessum.amount}</p>
+                    <p class="title">{$salessum.amount|number_format}</p>
                 </div>
               </div>
             </nav>
@@ -128,8 +128,8 @@
               <td class="order-number">{$sales.OrderNumber|string_format:'%06d'}</td>
               <td class="order-product-name">{$sales.title}</td>
               <td class="order-name">{$sales.nameSei} {$sales.nameMei}</td>
-              <td class="order-number">{$sales.volume1 + $sales.volume2 + $sales.volume3 + $sales.volume4 + $sales.volume5}</td>
-              <td class="order-amount">{$sales.plan_Fee1 * $sales.volume1 + $sales.plan_Fee2 * $sales.volume2 + $sales.plan_Fee3 * $sales.volume3 + $sales.plan_Fee4 * $sales.volume4 + $sales.plan_Fee5 * $sales.volume5}</td>
+              <td class="order-number">{($sales.volume1 + $sales.volume2 + $sales.volume3 + $sales.volume4 + $sales.volume5)|number_format}</td>
+              <td class="order-amount">{($sales.plan_Fee1 * $sales.volume1 + $sales.plan_Fee2 * $sales.volume2 + $sales.plan_Fee3 * $sales.volume3 + $sales.plan_Fee4 * $sales.volume4 + $sales.plan_Fee5 * $sales.volume5)|number_format}</td>
               <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$sales.OderID}">詳細</a></td>
             </tr>
             {/foreach}
@@ -137,8 +137,8 @@
           <tfoot>
             <tr>
               <th class="order-date" colspan="4">合計</th>
-              <th class="order-number">15</th>
-              <th class="order-amount">90,000円</th>
+              <th class="order-number">{$salessum.amount|number_format}</th>
+              <th class="order-amount">{$salessum.sales|number_format}円</th>
               <th></th>
             </tr>
           </tfoot>

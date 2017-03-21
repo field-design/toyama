@@ -357,7 +357,7 @@
         google.maps.event.addListener(map, 'click', function() {infowindow.close();});
         {/literal}  
         var point = new google.maps.LatLng({$map[0]}, {$map[1]});
-        var marker = crearMarcador(point, '{$data.locationname|default:""}', '<strong>{$data.locationname|default:""}</strong><br><a href="https://goo.gl/maps/u4gQqYUnnCq" target="_blank">google mapで見る</a>');
+        var marker = crearMarcador(point, '{$data.locationname|default:""}', '<strong>{$data.locationname|default:""}</strong><br><a href="https://maps.google.com/maps?q={$map[0]},{$map[1]}" target="_blank">google mapで見る</a>');
     {/if}    
     }
     {literal}
@@ -396,6 +396,8 @@
         var few = {$smarty.const.FEW_THRESHOLD};
         var plan_type = {$data.plan_type|default:1};
         var now_ym = '{$smarty.now|date_format:'%Y/%m'}';
+        var closingout_date = {$data.ClosingOut_date|default:0};
+        var closingout_time = '{$data.ClosingOut_time|replace:':':''|default:'2400'}';
         {literal}
         function setStockCalendar(ym){
             $.ajax({
@@ -403,7 +405,7 @@
                 url: location.pathname,
                 data: { 'addtype' : 'calendar', 'ym' : ym, 'ProductID' : product_id },
                 success: function(data){
-                    $('#entry .order-table-section').stockcalendar({'start':ym, 'data':data, 'few':few, 'plan_type':plan_type });
+                    $('#entry .order-table-section').stockcalendar({'start':ym, 'data':data, 'few':few, 'plan_type':plan_type, 'closingout_date':closingout_date, 'closingout_time':closingout_time });
                     $('#entry .order-table-section a.button.prev').click(function() {
                         setStockCalendar(data.prevMonth);
                     });

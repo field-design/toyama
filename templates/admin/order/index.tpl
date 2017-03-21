@@ -227,7 +227,7 @@
             <td class="order-number">{$order.OrderNumber|string_format:'%06d'}</td>
             <td class="order-name">{$order.nameSei} {$order.nameMei}</td>
             <td class="order-payment">{$order.Payment}</td>
-            <td class="order-amount">{$order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5}</td>
+            <td class="order-amount">{($order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5)|number_format}</td>
             <td class="order-status">{$order.Correspondence}</td>
             <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$order.OderID}">詳細</a></td>
         </tr>

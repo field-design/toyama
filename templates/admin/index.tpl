@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/meta.tpl'}
 
-<title>title</title>
+<title>ダッシュボード</title>
 <meta name="description" content="">
 
 <!-- icons -->
@@ -109,7 +109,7 @@
               <td class="order-number">{$order.OrderNumber|string_format:'%06d'}</td>
               <td class="order-name">{$order.nameSei} {$order.nameMei}</td>
               <td class="order-payment">{$order.Payment}</td>
-              <td class="order-amount">{$order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5}</td>
+              <td class="order-amount">{($order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5)|number_format}</td>
               <td class="order-status">{$order.Correspondence}</td>
               <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit/?OderID={$order.OderID}">詳細</a></td>
             </tr>
@@ -133,13 +133,13 @@
               <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">合計売上</p>
-                    <p class="title">{$salessum.sales}円</p>
+                    <p class="title">{$salessum.sales|number_format}円</p>
                 </div>
               </div>
               <div class="level-item has-text-centered">
                 <div>
                     <p class="heading">合計件数</p>
-                    <p class="title">{$salessum.amount}</p>
+                    <p class="title">{$salessum.amount|number_format}</p>
                 </div>
               </div>
             </nav>

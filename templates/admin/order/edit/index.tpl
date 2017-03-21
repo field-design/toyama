@@ -195,13 +195,8 @@
               <th class="order-edit">小計</th>
             </tr>
           </thead>
-          <tfoot>
-            <tr>
-              <th class="order-date" colspan="3">合計</th>
-              <th class="order-amount">18,000円</th>
-            </tr>
-        </tfoot>
           <tbody>
+            {assign var="sales" value=0}
             {section name=i start=0 loop=5}
                 {assign var='index' value=$smarty.section.i.index}
                 {assign var='plan_title' value='plan_title'|cat:($index+1)}
@@ -211,13 +206,20 @@
                 {if $data.$plan_title != '' || $data.$plan_Fee != '' || $data.$plan_Kind}
                 <tr>
                 <td class="order-product-name">{$data.$plan_title}({$data.$plan_Kind})</td>
-                <td class="order-amount">{$data.$plan_Fee}円</td>
-                <td class="order-number">{$data.$volume}</td>
-                <td class="order-amount">{$data.$plan_Fee * $data.$volume}円</td>
+                <td class="order-amount">{$data.$plan_Fee|number_format}円</td>
+                <td class="order-number">{$data.$volume|number_format}</td>
+                <td class="order-amount">{($data.$plan_Fee * $data.$volume)|number_format}円</td>
                 </tr>
+                {assign var="sales" value=$sales + $data.$plan_Fee * $data.$volume}
                 {/if}
             {/section}
           </tbody>
+          <tfoot>
+            <tr>
+              <th class="order-date" colspan="3">合計</th>
+              <th class="order-amount">{$sales|number_format}円</th>
+            </tr>
+          </tfoot>
         </table>
     </section>
 

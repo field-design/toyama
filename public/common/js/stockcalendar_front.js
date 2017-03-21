@@ -120,9 +120,13 @@
                         var t_date = new Date(yyyy, (mmmm - 1) + i, day);
                         var now = new Date();
                         var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                        var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
 
                         if( t_date < today ) {
                             //期限切れ
+                            status = 'out';
+                        } else if(day < now.getDate() + settings.closingout_date || (day == now.getDate() + settings.closingout_date && now_time >= settings.closingout_time) ) {
+                            //手じまい日
                             status = 'out';
                         } else if(settings.plan_type == 2) {
                             //リクエストプラン

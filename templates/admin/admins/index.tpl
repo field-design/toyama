@@ -51,7 +51,7 @@
     <div class="breadcrumbs section">
         <div class="notification">
             <ul class="is-clearfix">
-              <li><a href="/"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
+              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
               <li><span>事業者一覧</span></li>
             </ul>
         </div>

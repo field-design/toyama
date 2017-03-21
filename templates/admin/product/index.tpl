@@ -157,10 +157,16 @@
                 </div>
               </div>
               <footer class="card-footer">
-                <a class="card-footer-item">
+                {if $data.mt_disp == 1}
+                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?ProductID={$data.ProductID}" target="_blank">
                     <span class="icon is-small"><i class="fa fa-external-link"></i></span>
                     表示
                 </a>
+                {else}
+                <span class="card-footer-item">
+                    非公開
+                </span>
+                {/if}
                 <a class="card-footer-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/edit?ProductID={$data.ProductID}">
                     <span class="icon is-small"><i class="fa fa-edit"></i></span>
                     編集

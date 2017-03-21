@@ -27,4 +27,5 @@ $product = new Product();
 $data_list = $product->getProductListView(100);
 
 $smarty->assign('data_list', $data_list);
+$smarty->assign('protocol', empty($_SERVER["HTTPS"]) ? "http://" : "https://");
 $smarty->display(ADMIN_DIR . 'product/index.tpl');

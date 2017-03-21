@@ -52,8 +52,8 @@
     <div class="breadcrumbs section">
         <div class="notification">
             <ul class="is-clearfix">
-              <li><a href="/"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><a href="/product"><span>商品管理</span></a></li>
+              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
+              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}product"><span>商品管理</span></a></li>
               <li>
                 {if $edit_type == 'new'}
                 <span>商品追加</span>
@@ -1021,7 +1021,7 @@
         });
         /***************************
         カレンダー設定
-        buttoncalendar.js
+        stockmanager.js
         ****************************/
         var stockmanager = new StockManager();
         stockmanager.setButton('#stock_calendar_picker');

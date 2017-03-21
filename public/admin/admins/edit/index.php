@@ -139,7 +139,10 @@ if( !is_array($data) ) {
     //システム管理者でないとき
     if( !$login->isAuthAdmin() ) {
 
-        if( $data['PersonID'] == '' ) {
+        if(count($data) == 0) {
+            $err_flg = true;
+            $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
+        } elseif( $data['PersonID'] == '' ) {
             //新規登録不可
             $err_flg = true;
             $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
@@ -148,6 +151,11 @@ if( !is_array($data) ) {
             $err_flg = true;
             $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
         }
+    }
+
+    if( !$err_flg && count($data) == 0) {
+        $err_flg = true;
+        $smarty->assign('global_message', MESSAGE_ERROR_DB_NO_DATA);
     }
 
     if ( $err_flg ) {

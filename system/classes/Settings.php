@@ -213,7 +213,7 @@ class Settings extends Entity {
         $selectData = $spiral->getSelectData();
 
         if( count($selectData) == 0 ) {
-            return MESSAGE_ERROR_DB_NO_DATA;
+            return $selectData;
         }
 
         $resultData = array();

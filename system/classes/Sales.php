@@ -78,6 +78,8 @@ class Sales extends Entity {
 
         $serch_condition = array();
         $serch_condition[] = array('name' => 'Correspondence', 'value' => '4');
+        $serch_condition[] = array('name' => 'paymentDate', 'value' => date('Y/m/01'), 'operator' => '>=');
+        $serch_condition[] = array('name' => 'paymentDate', 'value' => date("Y/m/01", strtotime("+1 month")), 'operator' => '<');
 
         $lines_per_page = $num;
 

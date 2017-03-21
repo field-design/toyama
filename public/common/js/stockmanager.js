@@ -26,6 +26,10 @@ function StockManager() {
 			{
 				onSelect: function(dateText, inst){
 					var dt = new Date(dateText);
+					var dt_now = new Date();
+					if(dt.getFullYear() + getLeftZero(dt.getMonth(), 2) < dt_now.getFullYear() + getLeftZero(dt_now.getMonth(), 2)) {
+						return false;
+					}
 					THIS.changeCalendar(dt);
 				}
 			}
@@ -40,6 +44,10 @@ function StockManager() {
 		$('#stock_calendar_prev').click(function(){
 			var dt = new Date(dpInput.val());
 			dt.setMonth(dt.getMonth() - 1);
+			var dt_now = new Date();
+			if(dt.getFullYear() + getLeftZero(dt.getMonth(), 2) < dt_now.getFullYear() + getLeftZero(dt_now.getMonth(), 2)) {
+				return false;
+			}
 			THIS.changeCalendar(dt);
 		});
 
@@ -64,12 +72,14 @@ function StockManager() {
 	/**
 	 * カレンダー変更時処理
 	 */
-	THIS.changeCalendar = function(dt, data={}) {
+	THIS.changeCalendar = function(dt, data) {
 		var dt_y = dt.getFullYear();
 		var dt_m = dt.getMonth() + 1;
 		var dt_d = dt.getDate();
 		var dt_ym = dt_y + '-' + getLeftZero(dt_m, 2);
 		var dt_ymd = dt_y + '/' + getLeftZero(dt_m, 2) + '/' + getLeftZero(dt_d, 2);
+
+		data = data || {};
 
 		// 対象年月文字設定
 		$('#stock_calendar_picker span').html(dt_y + '年' + dt_m + '月');
