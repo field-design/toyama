@@ -1,0 +1,235 @@
+/* =====================
+  common styles
+===================== */
+.breadcrumbs ul li {
+  float: left;
+  margin-right: .5em; }
+  .breadcrumbs ul li:not(:first-child) {
+    position: relative;
+    padding-left: 1em; }
+    .breadcrumbs ul li:not(:first-child):before {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      content: "\f105";
+      font-family: FontAwesome; }
+
+.breadcrumbs .icon {
+  vertical-align: middle; }
+
+.breadcrumbs span {
+  vertical-align: middle; }
+
+/* =====================
+  products styles
+===================== */
+.products .category ul {
+  padding: 0;
+  margin: 0; }
+  .products .category ul li {
+    list-style: none;
+    display: inline-block;
+    position: relative;
+    padding-right: .75em; }
+    .products .category ul li:not(:last-child):after {
+      position: absolute;
+      top: 0;
+      right: 0;
+      content: "/";
+      color: #999; }
+
+.input-table table th,
+.input-table table td {
+  position: relative;
+  text-align: center; }
+  .input-table table th .status,
+  .input-table table td .status {
+    margin-top: 1.5em; }
+    .input-table table th .status input,
+    .input-table table td .status input {
+      width: 100%;
+      text-align: center; }
+
+.input-table table td span {
+  position: absolute;
+  top: .25em;
+  left: 0;
+  width: 100%; }
+
+.input-table table .sun {
+  color: #f74040; }
+
+.input-table table .sat {
+  color: #4285f4; }
+
+.input-area {
+  margin-bottom: 45px; }
+  .input-area .conts-ttl {
+    margin-bottom: 0; }
+
+.add-btn {
+  text-align: right; }
+
+#location-map {
+  width: 100%;
+  height: 300px; }
+
+.cautions .textarea {
+  min-height: 60px;
+  min-width: auto; }
+
+.save-point {
+  padding: 30px 0; }
+
+.message-body a {
+  text-decoration: none; }
+
+.plan-detail .conts-body .notification {
+  background: white; }
+
+.release .message-header {
+  margin-bottom: 0;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center; }
+
+.release table th .icon,
+.release table td .icon {
+  vertical-align: middle; }
+
+.release table th span,
+.release table td span {
+  vertical-align: middle; }
+
+/* =====================
+  login styles
+===================== */
+body.login footer {
+  background-color: transparent; }
+
+/* =====================
+  order styles
+===================== */
+.order-list th {
+  text-align: center; }
+
+.order-list td {
+  vertical-align: middle; }
+
+.order-list .order-number {
+  text-align: center; }
+
+.order-list .order-name {
+  text-align: center; }
+
+.order-list .order-payment {
+  text-align: center; }
+
+.order-list .order-amount {
+  text-align: right; }
+
+.order-list .order-status {
+  text-align: center; }
+
+.order-list .order-edit {
+  text-align: center; }
+
+/* =====================
+  admin styles
+===================== */
+.admin-list th {
+  text-align: center; }
+
+.admin-list td {
+  vertical-align: middle; }
+
+.admin-list .admin-number {
+  text-align: center; }
+
+.admin-list .admin-status {
+  text-align: center; }
+
+.admin-list .admin-edit {
+  text-align: center; }
+
+/* =====================
+  filter styles
+===================== */
+.filter table th,
+.filter table td {
+  vertical-align: middle; }
+
+/* =====================
+  datepicker
+===================== */
+.ui-state-active {
+  background: #aaa; }
+
+.ui-datepicker {
+  width: 300px;
+  max-width: 100%;
+  text-align: center;
+  background: white;
+  margin: 0 0 10px 0;
+  box-shadow: 0px 0px 1px 1px #aaa; }
+
+.ui-datepicker a {
+  color: #333;
+  border-radius: 50%; }
+
+.ui-datepicker-calendar {
+  width: 100%; }
+
+.ui-datepicker-group {
+  margin: 0 0 10px 0;
+  background: #eee; }
+
+.ui-datepicker-header {
+  color: #333;
+  padding: 15px;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  border-bottom: 1px solid #aaa; }
+
+.ui-datepicker-calendar thead th {
+  color: #333;
+  padding: 10px; }
+
+.ui-datepicker-calendar th, .ui-datepicker-calendar td {
+  font-size: 14px;
+  color: #333;
+  text-align: center; }
+
+.ui-datepicker-calendar td span {
+  display: block;
+  padding: 10px; }
+
+.ui-datepicker-calendar td a {
+  color: #333;
+  display: block;
+  padding: 10px;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease; }
+
+.ui-datepicker-calendar td a:hover {
+  background: #aaa; }
+
+.ui-datepicker-title {
+  clear: both; }
+
+.ui-datepicker-prev {
+  float: left; }
+
+.ui-datepicker-next {
+  float: right; }
+
+/* =====================
+  errors
+===================== */
+.error {
+  color: #ff3860 !important; }
+  .error.has-icon:before {
+    padding-right: .25em;
+    content: "\f12a";
+    font-family: FontAwesome; }
+/*# sourceMappingURL=custom.css.map */

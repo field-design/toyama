@@ -1,0 +1,9 @@
+<script src="http://bulma.io/javascript/bulma.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-smooth-scroll/2.0.0/jquery.smooth-scroll.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.matchHeight/0.7.0/jquery.matchHeight-min.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_ADMIN}assets/js/common.min.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_ADMIN}assets/js/custom.min.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_COMMON}js/partsapi.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_COMMON}js/fileapi.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_COMMON}js/stockcalendar.js"></script>
+<script src="{$smarty.const.URL_ROOT_PATH_COMMON}js/stockmanager.js"></script>
