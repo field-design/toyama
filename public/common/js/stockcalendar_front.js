@@ -67,7 +67,7 @@
             html +='            </span>';
             html +='        </a>';
             html +='        <a class="button current">';
-            html +='            <span>' + input_data.productDate + '</span>';
+            html +='            <span>' + s_yy + '年' + s_mm + '月' + '</span>';
             html +='        </a>';
             html +='        <a class="button next" href="javascript:void(0);" >';
             html +='            <span class="icon">';
@@ -122,18 +122,21 @@
                         var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                         var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
 
-                        if( t_date < today ) {
+                        if( t_date.getTime() < today.getTime() ) {
                             //期限切れ
                             status = 'out';
-                        } else if(day < now.getDate() + settings.closingout_date || (day == now.getDate() + settings.closingout_date && now_time >= settings.closingout_time) ) {
+                        } else if(t_date.getTime() == today.getTime() && ( day < now.getDate() + settings.closingout_date || (day == now.getDate() + settings.closingout_date && now_time >= settings.closingout_time)) ) {
                             //手じまい日
                             status = 'out';
-                        } else if(settings.plan_type == 2) {
-                            //リクエストプラン
-                            status = 'ask';
+                        } else if(t_date.getTime() < new Date(now.getFullYear(), now.getMonth(), now.getDate() + settings.closingout_date).getTime()) {
+                            //手じまい日
+                            status = 'out';
                         } else {
                             if(stock_value <= 0) {
                                 status = 'not';
+                            } else if(settings.plan_type == 2) {
+                                //リクエストプラン
+                                status = 'ask';
                             } else if(stock_value <= settings.few) {
                                 //残りわずか
                                 status = 'few';

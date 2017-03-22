@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/meta.tpl'}
 
-<title>title</title>
+<title>事業者一覧</title>
 <meta name="description" content="">
 <!-- icons -->
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/icon.tpl'}

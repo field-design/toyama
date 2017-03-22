@@ -1,7 +1,7 @@
 <header class="global-header">
     <h1>富山県にいかわ観光エリアを楽しむツアーをいますぐ購入</h1>
     <div class="logo">
-        <a href="{$smarty.const.URL_ROOT_PATH}"><img src="/assets/img/common/logo.svg" alt="いまからえらべるTRAVELinにいかわ"></a>
+        <a href="{$smarty.const.URL_ROOT_PATH}"><img src="/assets/img/common/logo.svg" alt="{$smarty.const.SITE_TITLE_FRONT}"></a>
     </div>
     <!-- START global-nav -->
     <nav class="global-nav">

@@ -4,6 +4,10 @@
 PHP用　コンフィグ
 
 ***********************************************/
+//フロントサイトタイトル
+define('SITE_TITLE_FRONT', 'いまからえらべるTRAVELinにいかわ');
+define('SITE_TITLE_ADMIN', 'いまからえらべるTRAVEL');
+
 //オーナーメールアドレス
 define('OWNER_MAIL', 'support@nanala-it.com');
 
@@ -14,6 +18,10 @@ define('SPIRAL_API_URL', 'https://reg18.smp.ne.jp/api/service');
 
 // 残りわずかしきい値
 define('FEW_THRESHOLD', 5);
+
+// 管理サイト集合場所初期値
+define('ADMIN_INIT_LAT', 36.701612);
+define('ADMIN_INIT_LNG', 137.213263);
 
 // ベースディレクトリ定義（環境変数より取得）
 define('BASE_DIR', $_SERVER['FD_SYS_DIR']);
@@ -39,7 +47,8 @@ define('COM_DIR', PUB_DIR . 'common/');
 define('UPL_DIR', COM_DIR . 'upload/');
 
 // URLフルパス
-define('URL_ROOT_PATH_FULL', (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"]);
+define('URL_ROOT_PATH_HOST', (empty($_SERVER["HTTPS"]) ? "http://" : "https://") . $_SERVER["HTTP_HOST"]);
+define('URL_ROOT_PATH_FULL', URL_ROOT_PATH_HOST . $_SERVER["REQUEST_URI"]);
 
 // URLパス
 define('URL_ROOT_PATH', '/');

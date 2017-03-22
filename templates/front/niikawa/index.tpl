@@ -11,9 +11,9 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>ページタイトル | サイト名</title>
-<meta name="description" content="ディスクリプション">
-<meta name="keywords" content="キーワード,キーワード,キーワード">
+<title>{$smarty.const.SITE_TITLE_FRONT}</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->
@@ -26,12 +26,12 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="サイト名">
+<meta property="og:site_name" content="{$smarty.const.SITE_TITLE_FRONT}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ページタイトル">
-<meta property="og:description" content="ディスクリプション">
-<meta property="og:url" content="">
-<meta property="og:image" content="">
+<meta property="og:title" content="{$smarty.const.SITE_TITLE_FRONT}">
+<meta property="og:description" content="">
+<meta property="og:url" content="{$smarty.const.URL_ROOT_PATH_FULL}">
+<meta property="og:image" content="{$smarty.const.URL_ROOT_PATH_HOST}/assets/img/index/slide01.jpg">
 <meta property="fb:app_id" content="">
 <!-- Twitter Card -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/twitter_card.tpl'}
@@ -64,7 +64,7 @@
     <p>いますぐ えらべる<br>いますぐ とらべる</p>
 </div>
 
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/sns_share.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/sns_share.tpl' url="{$smarty.const.URL_ROOT_PATH_FULL}" title={$smarty.const.SITE_TITLE_FRONT}}
 
 
 <section>

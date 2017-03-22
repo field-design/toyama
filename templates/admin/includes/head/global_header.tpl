@@ -2,8 +2,8 @@
     <nav class="nav has-shadow" id="top">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item" href="../index.html">
-            <h1 class="title is-5">いまからえらべるTRAVEL</h1>
+          <a class="nav-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}">
+            <h1 class="title is-5">いまからえらべるTRAVEL{$smarty.const.SITE_TITLE_ADMIN}</h1>
           </a>
         </div>
         <span class="nav-toggle">

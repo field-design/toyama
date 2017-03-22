@@ -11,9 +11,9 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>ページタイトル | サイト名</title>
-<meta name="description" content="ディスクリプション">
-<meta name="keywords" content="キーワード,キーワード,キーワード">
+<title>越中にいかわ観光圏とは | {$smarty.const.SITE_TITLE_FRONT}</title>
+<meta name="description" content="">
+<meta name="keywords" content="">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->

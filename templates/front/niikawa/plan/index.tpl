@@ -11,9 +11,9 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>ページタイトル | サイト名</title>
-<meta name="description" content="ディスクリプション">
-<meta name="keywords" content="キーワード,キーワード,キーワード">
+<title>{$data.title|default:''} | {$smarty.const.SITE_TITLE_FRONT}</title>
+<meta name="description" content="{$data.ExplanatoryText|default:''}">
+<meta name="keywords" content="">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->
@@ -26,12 +26,12 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="サイト名">
+<meta property="og:site_name" content="{$smarty.const.SITE_TITLE_FRONT}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ページタイトル">
-<meta property="og:description" content="ディスクリプション">
-<meta property="og:url" content="">
-<meta property="og:image" content="">
+<meta property="og:title" content="{$data.title|default:''}">
+<meta property="og:description" content="{$data.ExplanatoryText|default:''}">
+<meta property="og:url" content="{$smarty.const.URL_ROOT_PATH_FULL}">
+<meta property="og:image" content="{$smarty.const.URL_ROOT_PATH_HOST}{$data.main_photo[0]|default:''}">
 <meta property="fb:app_id" content="">
 <!-- Twitter Card -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/twitter_card.tpl'}
@@ -75,7 +75,7 @@
     </div>
 </div>
 
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/sns_share.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/sns_share.tpl' url="{$smarty.const.URL_ROOT_PATH_FULL}" title={$data.title|default:''}}
 
 
 <div class="overview">
@@ -118,13 +118,13 @@
                             {if $data.photo != ''}
                             <p><img src="{$data.photo[$index]}" alt=""></p>
                             {/if}
-                            {if $data.CourseTitle != ''}
+                            {if $data.CourseTitle[$index] != ''}
                             <h4>{$data.CourseTitle[$index]}</h4>
                             {/if}
-                            {if $data.CourseDetail != ''}
+                            {if $data.CourseDetail[$index] != ''}
                             <p>{$data.CourseDetail[$index]|nl2br}</p>
                             {/if}
-                            {if $data.CourseRink != ''}
+                            {if $data.CourseRink[$index] != ''}
                             <div class="more">
                                 <a href="{$data.CourseRink[$index]}" target="_blank">詳しくはこちらへ<i class="fa fa-fw fa-external-link"></i></a>
                             </div>
@@ -172,18 +172,22 @@
                         <th>最大申込人員</th>
                         <td>{$data.largestMember|default:''}名</td>
                     </tr>
+                    {if $data.Operation != ''}
                     <tr>
                         <th>運行会社</th>
                         <td>{$data.Operation|default:''}</td>
                     </tr>
+                    {/if}
                     <tr>
                         <th>予約締切</th>
                         <td>{$data.contractDead|default:''}</td>
                     </tr>
+                    <!--
                     <tr>
                         <th>キーワード</th>
                         <td></td>
                     </tr>
+                    -->
                 </tbody>
             </table>
         </div>
@@ -249,19 +253,10 @@
         </div>
         <div class="planning caption">
             <h5>ー企画実施会社ー</h5>
-            <p>
-                {$person.marketer_type|default:''} TEL {$person.tel_|implode:'-'|default:''}<br>
-                {$person.projectAddress|default:''}<br>
-                旅行業登録：観光庁長官登録旅行業第{$person.projectNumber|default:''}号<br>
-                {$person.projectName|default:''}
-            </p>
+            <p>株式会社観光販売システムズ TEL 050-3775-4727<br>〒450-0002　名古屋市中村区名駅3丁目21番7号<br>旅行業登録：観光庁長官登録旅行業第1600号<br>総合旅行業務取扱管理者：小川達哉</p>
             <ul>
                 <li><a href="https://www.kanko-pro.co.jp/agreement/agreement4.php" target="_blank">約款</a></li>
-                {if $person.file_select == 1}
-                    <li><a href="{$person.file|default:''}" target="_blank">旅行条件書</a></li>
-                {else}
-                    <li><a href="{$person.condition_url|default:''}" target="_blank">旅行条件書</a></li>
-                {/if}
+                <li><a href="https://www.kanko-pro.co.jp/agreement/agreement23.php" target="_blank">旅行条件書</a></li>
                 <li><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">個人情報保護方針</a></li>
             </ul>
         </div>
@@ -269,7 +264,7 @@
 </div>
 
 <div class="btn-entry">
-    <a href="#entry" data-smooth><span><i class="fa fa-calendar-check-o" aria-hidden="true"></i>このツアーに申し込む</span></a>
+    <a href="{$smarty.const.URL_ROOT_PATH}order/?ProductID={$data.ProductID}" data-smooth><span><i class="fa fa-calendar-check-o" aria-hidden="true"></i>このツアーに申し込む</span></a>
 </div>
 
 </main>
@@ -377,13 +372,14 @@
     function myclick(i) {
     	google.maps.event.trigger(gmarkers[i], 'click');
     }
-    function loadScript() {
-    	var script = document.createElement('script');
-    	script.type = 'text/javascript';
-    	script.src = script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&region=jp&' + 'callback=inicializar';
-    	document.body.appendChild(script);
-    }
-    window.onload = loadScript;
+    //function loadScript() {
+    //	var script = document.createElement('script');
+    //	script.type = 'text/javascript';
+    //	script.src = script.src = 'https://maps.googleapis.com/maps/api/js?v=3.exp&region=jp&' + 'callback=inicializar';
+    //	document.body.appendChild(script);
+    //}
+
+    window.onload = inicializar;
 </script>
 <script>
     $(function() {

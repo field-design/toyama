@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/meta.tpl'}
 
-<title>title</title>
+<title>プロフィール</title>
 <meta name="description" content="">
 <!-- icons -->
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/icon.tpl'}
@@ -66,7 +66,7 @@
         <div class="notification">
             <ul class="is-clearfix">
               <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><span>プロフィール設定</span></li>
+              <li><span>プロフィール</span></li>
             </ul>
         </div>
     </div>

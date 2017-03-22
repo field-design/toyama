@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/meta.tpl'}
 
-<title>title</title>
+<title>{if $edit_type == 'new'}商品追加{else}商品編集{/if}</title>
 <meta name="description" content="">
 
 <!-- icons -->
@@ -418,10 +418,7 @@
 
             <label class="label">運行会社</label>
             <p class="control">
-                <input name="Operation" class="input {if $data.Operation == ''}is-danger{/if}" type="text" placeholder="例：〇〇交通" value="{$data.Operation|default:''}">
-                {if isset($err_msg.Operation) && $err_msg.Operation != ''}
-                <span class="error has-icon">{$err_msg.Operation}</span>
-                {/if}
+                <input name="Operation" class="input" type="text" placeholder="例：〇〇交通" value="{$data.Operation|default:''}">
             </p>
 
             <label class="label">予約締切</label>
@@ -465,7 +462,7 @@
             <span class="help">地図のピンを動かして位置を調整してください。</span>
             <div id="location-map"></div>
             <p class="control">
-                <input name="Coordinate" class="input" type="text" value="{$data.Coordinate|default:''}">
+                <input id="coordinate" name="Coordinate" class="input" type="text" value="{$data.Coordinate|default:''}">
             </p>
 
             <div class="control save-point">
@@ -780,35 +777,40 @@
 {literal}
 <script>
   function initMap() {
+    {/literal}
+    var init_lat = {$smarty.const.ADMIN_INIT_LAT};
+    var init_lng = {$smarty.const.ADMIN_INIT_LNG};
+    {literal}
+    var input_pos = $('#coordinate').val().split(',');
+    if(input_pos.length > 1) {
+        init_lat = input_pos[0];
+        init_lng = input_pos[1];
+    }
 
     // マップの初期化
+    var init_center = new google.maps.LatLng(init_lat, init_lng);
     var map = new google.maps.Map(document.getElementById('location-map'), {
       zoom: 13,
-      center: {lat: 36.38992, lng: 139.06065}
+      center: init_center,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    // クリックイベントを追加
-    map.addListener('click', function(e) {
-      getClickLatLng(e.latLng, map);
-    });
-  }
-
-  function getClickLatLng(lat_lng, map) {
-
-    // 座標を表示
-    document.getElementById('lat').textContent = lat_lng.lat();
-    document.getElementById('lng').textContent = lat_lng.lng();
-
-    // マーカーを設置
     var marker = new google.maps.Marker({
-      position: lat_lng,
-      map: map
+        position: init_center,
+        draggable: true,
+        map: map
     });
 
-    // 座標の中心をずらす
-    // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
-    map.panTo(lat_lng);
+    google.maps.event.addListener( marker, 'dragend', function(ev){
+		$('#coordinate').val(ev.latLng.lat() + ',' + ev.latLng.lng());
+	});
+
   }
+
+  //$( function() {
+  //  initMap();
+  //});
+  //window.onload = initMap();
 </script>
 <script>
     /***************************
@@ -891,6 +893,9 @@
                         menuScroll(newIndex);
                     }
                 }
+            },
+            activate: function(event, ui) {
+                initMap();
             }
         });
         //$('.menu-product li:nth-child(' + start_section + ') a').addClass('is-active');

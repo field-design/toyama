@@ -177,10 +177,10 @@ class Product extends Entity {
                 $err_msg['largestMember'] = MESSAGE_ERROR_REQUIRE;
                 $err_msg['nextsection'] = 4;
             }
-            if( empty($data['Operation']) ) {
-                $err_msg['Operation'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
+            //if( empty($data['Operation']) ) {
+            //    $err_msg['Operation'] = MESSAGE_ERROR_REQUIRE;
+            //    $err_msg['nextsection'] = 4;
+            //}
             if( empty($data['contractDead']) ) {
                 $err_msg['contractDead'] = MESSAGE_ERROR_REQUIRE;
                 $err_msg['nextsection'] = 4;
