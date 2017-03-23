@@ -17,7 +17,12 @@ class Login {
     private $email;
     private $pass;
 
+    private $log;
+
     function __construct() {
+
+        $this->log = new Log();
+
         // ユーザー取得
         $this->setPersonID();
         $this->setAuthority();
@@ -134,6 +139,8 @@ class Login {
         //ログイン処理後
         $this->setPersonID($data[0]['PersonID']);
         $this->setAuthority($data[0]['authority']);
+
+        $this->log->setSysLog('login:' . $data[0]['PersonID']);
 
         return '';
     }

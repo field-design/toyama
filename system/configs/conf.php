@@ -31,6 +31,8 @@ define('FRONT_DIR', 'front/');
 define('COMMON_DIR', 'common/');
 define('ADMIN_DIR', 'admin/');
 
+// システムログパス定義
+define('SYS_LOG_DIR', '/var/tmp/logs/');
 // システムエラーパス定義
 define('SYS_ERR_DIR', '/var/tmp/errors/');
 

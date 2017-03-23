@@ -195,6 +195,7 @@ if(!is_array($data)) {
     $data = $settings->getPostData();
 }
 
+$smarty->assign('const_pref', Constant::$aryPref);
 $smarty->assign('data', $data);
 $smarty->assign('err_flg', false);
 $smarty->display(ADMIN_DIR . 'admins/edit/index.tpl');

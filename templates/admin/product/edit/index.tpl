@@ -653,8 +653,8 @@
                         </th>
                         <td>
                             {if $data.mt_disp == 1}
-                            <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?ProductID={$data.ProductID}" target="_blank">
-                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?ProductID={$data.ProductID}
+                            <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}" target="_blank">
+                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}
                                 <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
                             </a>
                             {/if}

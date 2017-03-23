@@ -56,8 +56,6 @@
     </div>
 </div>
 
-{if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
-
 <article>
     <div data-lg>
 
@@ -69,49 +67,62 @@
             </ul>
         </div>
 
-        <h2><span>人数・オプション選択</span></h2>
-        <section class="order-cart">
-            <h3 class="product-ttl">富山入善 ます寿し手作り体験</h3>
-            <table class="order-table">
-                <thead>
-                    <tr>
-                        <th class="text-center">内訳</th>
-                        <th class="text-center">単価</th>
-                        <th class="text-center">数量</th>
-                        <th class="text-center">小計</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="text-left">おとな</td>
-                        <td class="text-right">1,800円</td>
-                        <td class="text-center"><input class="input" type="number" min="0" value="1"></td>
-                        <td class="text-right">3,600円</td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">こども(幼児) </td>
-                        <td class="text-right">1,800円</td>
-                        <td class="text-center"><input class="input" type="number" min="0"></td>
-                        <td class="text-right">1,800円</td>
-                    </tr>
-                </tbody>
-                <tfoot>
-                    <tr>
-                      <th class="text-center" colspan="3">合計</th>
-                      <th class="text-center">5,400円</th>
-                    </tr>
-                </tfoot>
-            </table>
-        </section>
+        <form method="post" action="{$smarty.server.PHP_SELF|replace:'index.php':''}">
 
-        <div class="pagenation">
-            <div class="back">
-                <button onclick="history.back()">戻る</button>
+            <h2><span>人数・オプション選択</span></h2>
+
+            {if isset($global_message)}{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
+            
+            <section class="order-cart">
+                <h3 class="product-ttl">{$product_data.title|default:''}</h3>
+                <table class="order-table">
+                    <thead>
+                        <tr>
+                            <th class="text-center">内訳</th>
+                            <th class="text-center">単価</th>
+                            <th class="text-center">数量</th>
+                            <th class="text-center">小計</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {section name=i start=0 loop=count($product_data.plan_title)}
+                        {assign var='index' value=$smarty.section.i.index}
+                        {assign var='volume' value='volume'|cat:($index + 1)}
+                        {if $product_data.plan_title[$index] != '' || $product_data.plan_Fee[$index] != '' || $product_data.plan_Kind[$index] != ''}
+                        <tr>
+                            <td class="text-left">{$product_data.plan_title_text[$index]}{if $product_data.plan_Kind_text[$index] != ''}({$product_data.plan_Kind_text[$index]}){/if}</td>
+                            <td class="text-right"><span>{$product_data.plan_Fee[$index]|default:0|number_format}</span>円</td>
+                            <td class="text-center">
+                                <input name="amount[]" class="input amount" type="number" min="0" value="{$order_data.$volume|default:0}" />
+                                {if isset($err_msg.$volume) && $err_msg.$volume != ''}
+                                <br /><span class="error has-icon">{$err_msg.$volume}</span>
+                                {/if}
+                            </td>
+                            <td class="text-right"><span class="sum">{$product_data.plan_Fee[$index]|default:0 * $order_data.$volume|default:0}</span>円</td>
+                        </tr>
+                        {/if}
+                        {/section}
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                        <th class="text-center" colspan="3">合計</th>
+                        <th class="text-center"><span id="total">0</span>円</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </section>
+
+            <div class="pagenation">
+                <div class="back">
+                    <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product_data.ProductID}'">戻る</button>
+                </div>
+                <div class="next">
+                    <button name="next" type="submit" id="submit">次へ</button>
+                </div>
             </div>
-            <div class="next">
-                <button type="submit" id="submit">次へ</button>
-            </div>
-        </div>
+            <input name="plan" type="hidden" value="{$order_data.ProductID}" />
+            <input name="ymd" type="hidden" value="{$order_data.oderDate}" />
+        </form>
     </div>
 </article>
 
@@ -135,7 +146,40 @@
 
 
 <!-- Page Script -->
+{literal}
+<script>
+    function calc(obj) {
+        var fee = parseInt($(obj).parent().prev().find('span').html().replace(',', ''));
+        var volume = parseInt($(obj).val());
+        if(!fee) {
+            fee = 0;
+        }
+        if(!volume) {
+            volume = 0;
+        }
+        var sum = fee * volume;
+        $(obj).parent().next().find('span').html(String(sum).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
 
+        var total = 0;
+        $('span.sum').each(function(){
+            var sum = parseInt($(this).html().replace(',', ''));
+            if(!sum) {
+                sum = 0;
+            }
+            total += sum;
+        });
+        $('#total').html(String(total).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'))
+    }
+    $(function(){
+        $('input.amount').bind('keyup mouseup', function(){
+            calc(this);
+        });
+    });
+    $('input.amount').each(function() {
+        calc(this);
+    });
+</script>
+{/literal}
 
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/sns_script.tpl'}
 

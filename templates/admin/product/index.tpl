@@ -158,7 +158,7 @@
               </div>
               <footer class="card-footer">
                 {if $data.mt_disp == 1}
-                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?ProductID={$data.ProductID}" target="_blank">
+                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}" target="_blank">
                     <span class="icon is-small"><i class="fa fa-external-link"></i></span>
                     表示
                 </a>

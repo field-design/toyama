@@ -21,7 +21,7 @@ $settings = new Settings();
 ◆ Ajax処理
 ***********************************************/
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
-    $data = $product->getProductStock(htmlspecialchars($_POST['ProductID']), htmlspecialchars($_POST['ym']));
+    $data = $product->getProductStock(htmlspecialchars($_POST['plan']), htmlspecialchars($_POST['ym']));
     header('Content-Type: application/json');
     echo json_encode($data);
     exit;
@@ -31,8 +31,8 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
 ◆ メイン処理
 ***********************************************/
 
-if( isset($_GET['ProductID']) ) {
-    $data = $product->getProduct(htmlspecialchars($_GET['ProductID']), 1);
+if( isset($_GET['plan']) ) {
+    $data = $product->getProduct(htmlspecialchars($_GET['plan']), 1);
 }
 
 if( !isset($data) || !is_array($data) ) {

@@ -197,53 +197,9 @@
           <span class="select">
             <select name="pref">
                 <option value="">都道府県</option>
-                <option value="1" {if $data.pref=='北海道'}selected{/if}>北海道</option>
-                <option value="2" {if $data.pref=='青森県'}selected{/if}>青森県</option>
-                <option value="3" {if $data.pref=='岩手県'}selected{/if}>岩手県</option>
-                <option value="4" {if $data.pref=='宮城県'}selected{/if}>宮城県</option>
-                <option value="5" {if $data.pref=='秋田県'}selected{/if}>秋田県</option>
-                <option value="6" {if $data.pref=='山形県'}selected{/if}>山形県</option>
-                <option value="7" {if $data.pref=='福島県'}selected{/if}>福島県</option>
-                <option value="8" {if $data.pref=='茨城県'}selected{/if}>茨城県</option>
-                <option value="9" {if $data.pref=='栃木県'}selected{/if}>栃木県</option>
-                <option value="10" {if $data.pref=='群馬県'}selected{/if}>群馬県</option>
-                <option value="11" {if $data.pref=='埼玉県'}selected{/if}>埼玉県</option>
-                <option value="12" {if $data.pref=='千葉県'}selected{/if}>千葉県</option>
-                <option value="13" {if $data.pref=='東京都'}selected{/if}>東京都</option>
-                <option value="14" {if $data.pref=='神奈川県'}selected{/if}>神奈川県</option>
-                <option value="15" {if $data.pref=='新潟県'}selected{/if}>新潟県</option>
-                <option value="16" {if $data.pref=='富山県'}selected{/if}>富山県</option>
-                <option value="17" {if $data.pref=='石川県'}selected{/if}>石川県</option>
-                <option value="18" {if $data.pref=='福井県'}selected{/if}>福井県</option>
-                <option value="19" {if $data.pref=='山梨県'}selected{/if}>山梨県</option>
-                <option value="20" {if $data.pref=='長野県'}selected{/if}>長野県</option>
-                <option value="21" {if $data.pref=='岐阜県'}selected{/if}>岐阜県</option>
-                <option value="22" {if $data.pref=='静岡県'}selected{/if}>静岡県</option>
-                <option value="23" {if $data.pref=='愛知県'}selected{/if}>愛知県</option>
-                <option value="24" {if $data.pref=='三重県'}selected{/if}>三重県</option>
-                <option value="25" {if $data.pref=='滋賀県'}selected{/if}>滋賀県</option>
-                <option value="26" {if $data.pref=='京都府'}selected{/if}>京都府</option>
-                <option value="27" {if $data.pref=='大阪府'}selected{/if}>大阪府</option>
-                <option value="28" {if $data.pref=='兵庫県'}selected{/if}>兵庫県</option>
-                <option value="29" {if $data.pref=='奈良県'}selected{/if}>奈良県</option>
-                <option value="30" {if $data.pref=='和歌山県'}selected{/if}>和歌山県</option>
-                <option value="31" {if $data.pref=='鳥取県'}selected{/if}>鳥取県</option>
-                <option value="32" {if $data.pref=='島根県'}selected{/if}>島根県</option>
-                <option value="33" {if $data.pref=='岡山県'}selected{/if}>岡山県</option>
-                <option value="34" {if $data.pref=='広島県'}selected{/if}>広島県</option>
-                <option value="35" {if $data.pref=='山口県'}selected{/if}>山口県</option>
-                <option value="36" {if $data.pref=='徳島県'}selected{/if}>徳島県</option>
-                <option value="37" {if $data.pref=='香川県'}selected{/if}>香川県</option>
-                <option value="38" {if $data.pref=='愛媛県'}selected{/if}>愛媛県</option>
-                <option value="39" {if $data.pref=='高知県'}selected{/if}>高知県</option>
-                <option value="40" {if $data.pref=='福岡県'}selected{/if}>福岡県</option>
-                <option value="41" {if $data.pref=='佐賀県'}selected{/if}>佐賀県</option>
-                <option value="42" {if $data.pref=='長崎県'}selected{/if}>長崎県</option>
-                <option value="43" {if $data.pref=='熊本県'}selected{/if}>熊本県</option>
-                <option value="44" {if $data.pref=='大分県'}selected{/if}>大分県</option>
-                <option value="45" {if $data.pref=='宮崎県'}selected{/if}>宮崎県</option>
-                <option value="46" {if $data.pref=='鹿児島県'}selected{/if}>鹿児島県</option>
-                <option value="47" {if $data.pref=='沖縄県'}selected{/if}>沖縄県</option>
+                {foreach from=$const_pref item=pref key=key}
+                <option value="{$pref}" {if $data.pref==$pref}selected{/if}>{$pref}</option>                                       
+                {/foreach}
             </select>
           </span>
         </p>

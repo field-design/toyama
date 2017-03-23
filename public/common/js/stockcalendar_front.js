@@ -105,7 +105,7 @@
                         setDay++;
                         if (setDay <= last){
                           day = setDay;
-                          ymd = s_yy + settings.delimiter + s_mm + settings.delimiter + setDay;
+                          ymd = s_yy + '-' + getLeftZero(s_mm, 2) + '-' + getLeftZero(setDay, 2);
                         } else {
                           day = '';
                         }
@@ -119,17 +119,14 @@
                         var stock_value = eval('input_data.stock' + day);
                         var t_date = new Date(yyyy, (mmmm - 1) + i, day);
                         var now = new Date();
-                        var today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                         var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
+                        var now_plus_closingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + settings.closingout_date);
 
-                        if( t_date.getTime() < today.getTime() ) {
-                            //期限切れ
+                        if( t_date.getTime() < now_plus_closingout.getTime() ) {
+                            //手じまい日未満は期限切れ
                             status = 'out';
-                        } else if(t_date.getTime() == today.getTime() && ( day < now.getDate() + settings.closingout_date || (day == now.getDate() + settings.closingout_date && now_time >= settings.closingout_time)) ) {
-                            //手じまい日
-                            status = 'out';
-                        } else if(t_date.getTime() < new Date(now.getFullYear(), now.getMonth(), now.getDate() + settings.closingout_date).getTime()) {
-                            //手じまい日
+                        } else if( t_date.getTime() == now_plus_closingout.getTime() && now_time >= settings.closingout_time ) {
+                            //手じまい日の手じまい時刻以降は期限切れ
                             status = 'out';
                         } else {
                             if(stock_value <= 0) {
@@ -146,7 +143,11 @@
                         }
 
                         html +='      <div class="order-status">';
-                        html +='          <div class="' + status + '"></div>';
+                        if( status == 'ask' || status == 'few' || status == 'many' ) {
+                            html +='          <a href="' + settings.url_root + 'order/?plan=' + settings.plan + '&ymd=' + ymd + '"><div class="' + status + '"></div></a>';
+                        } else {
+                            html +='          <div class="' + status + '"></div>';
+                        }
                         html +='      </div>';
                     }
 

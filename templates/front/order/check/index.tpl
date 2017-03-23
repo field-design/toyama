@@ -71,7 +71,7 @@
 
         <h2><span>ご予約内容確認</span></h2>
         <section class="order-check cart">
-            <h3 class="product-ttl">富山入善 ます寿し手作り体験</h3>
+            <h3 class="product-ttl">{$order_data.title}</h3>
             <table class="order-table">
                 <thead>
                     <tr>
@@ -82,23 +82,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td class="text-left">おとな</td>
-                        <td class="text-right">1,800円</td>
-                        <td class="text-center">2</td>
-                        <td class="text-right">3,600円</td>
-                    </tr>
-                    <tr>
-                        <td class="text-left">こども(幼児) </td>
-                        <td class="text-right">1,800円</td>
-                        <td class="text-center">1</td>
-                        <td class="text-right">1,800円</td>
-                    </tr>
+                    {section name=i start=0 loop=count($product_data.plan_title)}
+                        {assign var='index' value=$smarty.section.i.index}
+                        {assign var='volume' value='volume'|cat:($index + 1)}
+                        {if $product_data.plan_title[$index] != '' || $product_data.plan_Fee[$index] != '' || $product_data.plan_Kind[$index] != ''}
+                        <tr>
+                            <td class="text-left">{$product_data.plan_title_text[$index]}{if $product_data.plan_Kind_text[$index] != ''}({$product_data.plan_Kind_text[$index]}){/if}</td>
+                            <td class="text-right"><span>{$product_data.plan_Fee[$index]|default:0|number_format}</span>円</td>
+                            <td class="text-center"><span class="amount">{$order_data.$volume|default:0|number_format}</span></td>
+                            <td class="text-right"><span class="sum"></span>円</td>
+                        </tr>
+                        {/if}
+                    {/section}
                 </tbody>
                 <tfoot>
                     <tr>
                       <th class="text-center" colspan="3">合計</th>
-                      <th class="text-center">5,400円</th>
+                      <th class="text-center"><span id="total"></span>円</th>
                     </tr>
                 </tfoot>
             </table>
@@ -110,42 +110,42 @@
                 <tbody>
                     <tr>
                         <th class="text-center">お名前</th>
-                        <td class="text-left">山田 太郎</td>
+                        <td class="text-left">{$order_data.nameSei} {$order_data.nameMei}</td>
                     </tr>
                     <tr>
                         <th class="text-center">フリガナ</th>
-                        <td class="text-left">ヤマダ タロウ</td>
+                        <td class="text-left">{$order_data.kanaSei} {$order_data.kanaMei}</td>
                     </tr>
                     <tr>
                         <th class="text-center">メールアドレス</th>
-                        <td class="text-left">sample@example.com</td>
+                        <td class="text-left">{$order_data.mail}</td>
                     </tr>
                     <tr>
                         <th class="text-center">ご住所</th>
                         <td class="text-left">
-                            〒000-0000<br />
-                            富山県 富山市 〇〇町 0-0-0 〇〇ビル3F
+                            〒{$order_data.zipCode[0]}-{$order_data.zipCode[1]}<br />
+                            {$order_data.pref} {$order_data.adress}
                         </td>
                     </tr>
                     <tr>
                         <th class="text-center">お電話番号</th>
-                        <td class="text-left">000-0000-0000</td>
+                        <td class="text-left">{$order_data.tel_[0]}-{$order_data.tel_[1]}-{$order_data.tel_[2]}</td>
                     </tr>
                     <tr>
                         <th class="text-center">携帯電話番号</th>
-                        <td class="text-left">000-0000-0000</td>
+                        <td class="text-left">{$order_data.mobile[0]}-{$order_data.mobile[1]}-{$order_data.mobile[2]}</td>
                     </tr>
                     <tr>
                         <th class="text-center">ご生年月日</th>
-                        <td class="text-left">1980年01月01日</td>
+                        <td class="text-left">{$order_data.birthday[0]}年{$order_data.birthday[1]}月{$order_data.birthday[2]}日</td>
                     </tr>
                     <tr>
                         <th class="text-center">性別</th>
-                        <td class="text-left">男性</td>
+                        <td class="text-left">{$order_data.gender_text}</td>
                     </tr>
                     <tr>
                         <th class="text-center">ご職業</th>
-                        <td class="text-left">会社員</td>
+                        <td class="text-left">{$order_data.job_text}</td>
                     </tr>
                 </tbody>
             </table>
@@ -184,7 +184,7 @@
 
         <div class="pagenation">
             <div class="back">
-                <button onclick="history.back()">戻る</button>
+                <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">戻る</button>
             </div>
             <div class="next">
                 <button type="submit" id="submit">決済画面へ移動</button>
@@ -213,7 +213,35 @@
 
 
 <!-- Page Script -->
+{literal}
+<script>
+    function calc(obj) {
+        var fee = parseInt($(obj).parent().prev().find('span').html().replace(',', ''));
+        var volume = parseInt($(obj).html().replace(',', ''));
+        if(!fee) {
+            fee = 0;
+        }
+        if(!volume) {
+            volume = 0;
+        }
+        var sum = fee * volume;
+        $(obj).parent().next().find('span').html(String(sum).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
 
+        var total = 0;
+        $('span.sum').each(function(){
+            var sum = parseInt($(this).html().replace(',', ''));
+            if(!sum) {
+                sum = 0;
+            }
+            total += sum;
+        });
+        $('#total').html(String(total).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'))
+    }
+    $('.amount').each(function() {
+        calc(this);
+    });
+</script>
+{/literal}
 
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/sns_script.tpl'}
 

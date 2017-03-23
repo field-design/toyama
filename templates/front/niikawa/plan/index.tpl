@@ -91,11 +91,11 @@
         <div class="cost caption">
             <h3>料 金</h3>
             <p>
-                {$data.plan_title_text[0]}{if $data.plan_Kind_text[0] != ''}({$data.plan_Kind_text[0]}){/if} <span>{$data.plan_Fee[0]}</span>円
+                {$data.plan_title_text[0]}{if $data.plan_Kind_text[0] != ''}({$data.plan_Kind_text[0]}){/if} <span>{$data.plan_Fee[0]|number_format}</span>円
                 {section name=i start=1 loop=count($data.plan_title)}
                     {assign var='index' value=$smarty.section.i.index}
-                    {if $data.plan_title[$index] != '' || $data.plan_Fee[$index] != '' || $data.plan_Kind[$index]}
-                     ／ {$data.plan_title_text[$index]}{if $data.plan_Kind_text[$index] != ''}({$data.plan_Kind_text[$index]}){/if} <span>{$data.plan_Fee[$index]}</span>円
+                    {if $data.plan_title[$index] != '' || $data.plan_Fee[$index] != '' || $data.plan_Kind[$index] != ''}
+                     ／ {$data.plan_title_text[$index]}{if $data.plan_Kind_text[$index] != ''}({$data.plan_Kind_text[$index]}){/if} <span>{$data.plan_Fee[$index]|number_format}</span>円
                     {/if}
                 {/section}
             </p>
@@ -263,9 +263,11 @@
     </div>
 </div>
 
+<!--
 <div class="btn-entry">
-    <a href="{$smarty.const.URL_ROOT_PATH}order/?ProductID={$data.ProductID}" data-smooth><span><i class="fa fa-calendar-check-o" aria-hidden="true"></i>このツアーに申し込む</span></a>
+    <a href="{$smarty.const.URL_ROOT_PATH}order/?plan={$data.ProductID}" data-smooth><span><i class="fa fa-calendar-check-o" aria-hidden="true"></i>このツアーに申し込む</span></a>
 </div>
+-->
 
 </main>
 <!-- END main -->
@@ -388,20 +390,30 @@
         stockcalendar_front.js
         ****************************/
         {/literal}
-        var product_id = '{$data.ProductID|default:''}';
+        var plan = '{$data.ProductID|default:''}';
         var few = {$smarty.const.FEW_THRESHOLD};
         var plan_type = {$data.plan_type|default:1};
         var now_ym = '{$smarty.now|date_format:'%Y/%m'}';
         var closingout_date = {$data.ClosingOut_date|default:0};
-        var closingout_time = '{$data.ClosingOut_time|replace:':':''|default:'2400'}';
+        var closingout_time = '{$data.ClosingOut_time|replace:':':''|default:'0000'}';
+        var url_root = '{$smarty.const.URL_ROOT_PATH}';
         {literal}
         function setStockCalendar(ym){
             $.ajax({
                 type: "POST",
                 url: location.pathname,
-                data: { 'addtype' : 'calendar', 'ym' : ym, 'ProductID' : product_id },
+                data: { 'addtype' : 'calendar', 'ym' : ym, 'plan' : plan },
                 success: function(data){
-                    $('#entry .order-table-section').stockcalendar({'start':ym, 'data':data, 'few':few, 'plan_type':plan_type, 'closingout_date':closingout_date, 'closingout_time':closingout_time });
+                    $('#entry .order-table-section').stockcalendar({
+                        'start':ym,
+                        'data':data,
+                        'few':few,
+                        'plan_type':plan_type,
+                        'closingout_date':closingout_date,
+                        'closingout_time':closingout_time,
+                        'url_root':url_root,
+                        'plan':plan
+                    });
                     $('#entry .order-table-section a.button.prev').click(function() {
                         setStockCalendar(data.prevMonth);
                     });

@@ -7,6 +7,8 @@
 機能名：
 　受注管理
 *******************************************/
+define('SESSION_ORDER_DATA', 'session_order_data');
+
 class Order extends Entity {
 
     function __construct() {
@@ -137,6 +139,112 @@ class Order extends Entity {
         //会員ID
         $this->columns[] = 'MemberID';
         $this->columnsDef[] = '';
+    }
+
+    /******************************
+    人数・オプション入力チェック
+    *******************************/
+    function checkInputVolume($data, $stock) {
+        $err_msg = array();
+
+        $volume_input = array();
+        for($i = 1; $i <= 5; $i++) {
+
+            $volume_input[] = $data['volume' . $i] == '' ? 0 : $data['volume' . $i];
+            
+            if( !is_numeric($data['volume' . $i]) ) {
+                $err_msg['volume' . $i] = MESSAGE_ERROR_NUMBER;
+                continue;
+            }
+        }
+    
+        if( count($err_msg) == 0) {
+            if( array_sum($volume_input) == 0) {
+                $err_msg['volume'] = MESSAGE_ERROR_NO_VOLUME;
+            } elseif( array_sum($volume_input) > $stock ) {
+                $err_msg['volume'] = MESSAGE_ERROR_OVER_STOCK;
+            }
+        }
+
+        return $err_msg;
+    }
+
+    /******************************
+    お客様情報入力チェック
+    *******************************/
+    function checkInputCustomer($data) {
+        $err_msg = array();
+
+        if( empty($data['nameSei']) ) {
+            $err_msg['nameSei'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['nameMei']) ) {
+            $err_msg['nameMei'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['kanaSei']) ) {
+            $err_msg['kanaSei'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['kanaMei']) ) {
+            $err_msg['kanaMei'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['mail']) ) {
+            $err_msg['mail'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['zipCode'][0]) || empty($data['zipCode'][1]) ) {
+            $err_msg['zipCode'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['pref']) ) {
+            $err_msg['pref'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['adress']) ) {
+            $err_msg['adress'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['tel_'][0]) || empty($data['tel_'][1]) || empty($data['tel_'][2]) ) {
+            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['mobile'][0]) || empty($data['mobile'][1]) || empty($data['mobile'][2]) ) {
+            $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['birthday'][0]) || empty($data['birthday'][1]) || empty($data['birthday'][2]) ) {
+            $err_msg['birthday'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['gender']) ) {
+            $err_msg['gender'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['job_']) ) {
+            $err_msg['job_'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( $data['settlementType'] == '' ) {
+            $err_msg['settlementType'] = MESSAGE_ERROR_REQUIRE;
+        }
+    
+        return $err_msg;
+    }
+
+    /******************************
+    データ保持
+    *******************************/
+    function setOrderToSession($data) {
+        $_SESSION[SESSION_ORDER_DATA] = $data;
+    }
+    /******************************
+    保持データ取得
+    *******************************/
+    function setSessionToOrder($data) {
+
+        if( isset($_SESSION[SESSION_ORDER_DATA]) ) {
+            $session_data = $_SESSION[SESSION_ORDER_DATA];
+        } else {
+            return '';
+        } 
+
+        foreach($data as $key => &$value) {
+            if( (is_null($value) || $value == '') && isset($session_data[$key]) ) {
+                $value = $session_data[$key];
+            }
+        }
+
+        return $data;
     }
 
     /******************************

@@ -9,7 +9,12 @@
 *******************************************/
 class Product extends Entity {
 
+    private $log;
+
     function __construct() {
+
+        $this->log = new Log();
+
         $this->columns = array();
         $this->columnsDef = array();
 
@@ -229,6 +234,28 @@ class Product extends Entity {
                 $err_msg['main_photo'] = MESSAGE_ERROR_REQUIRE_IMAGE;
                 $err_msg['nextsection'] = 0;
             }
+        }
+
+        return $err_msg;
+    }
+
+    /******************************
+    手じまい日チェック
+    *******************************/
+    function checkClosingOut($data, $order_date) {
+        $err_msg = '';
+
+        $now = time();
+        $now_plus_closingout = strtotime('+' . intval($data['ClosingOut_date']) . ' day', $now);
+        $closingout_time = '0000';
+        if( isset($data['ClosingOut_time']) && $data['ClosingOut_time'] != '' ) {
+            $closingout_time = str_replace(':', '', $data['ClosingOut_time']);
+        }
+
+        if( date('Ymd', $order_date) < date('Ymd', $now_plus_closingout) ) {
+            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+        } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_closingout) && date('Hi', $now) >= $closingout_time ) {
+            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
         }
 
         return $err_msg;
@@ -742,6 +769,7 @@ class Product extends Entity {
             $update_data['lastupdate'] = $time_stamp;
             $serch_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
             $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
+
         } else {
             //登録
             $spiral = new SpiralApi('database/insert', 'ProductmanageDB');
@@ -750,6 +778,9 @@ class Product extends Entity {
             $update_data['lastupdate'] = $time_stamp;
             $update_data['PersonID'] = $personID;
             $spiral->setInsertParam($update_columns, $update_data);
+
+            $this->log->setSysLog('insert');
+            $this->log->setSysLog($update_data);
         }
 
         $err_msg = $spiral->exec();

@@ -908,9 +908,64 @@ h2 span {
   color: white;
 }
 
+.order-cart,
+.order-input,
+.order-check,
+.order-payment {
+  max-width: 650px;
+  margin: auto;
+}
+
+.product-ttl {
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.order-info {
+  padding: 0;
+  margin: 0;
+}
+
+.order-info li {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  list-style: none;
+}
+
+.order-info li span:after {
+  content: "：";
+}
+
 .order-table {
   width: 100%;
-  margin: auto;
+  border-collapse: collapse;
+}
+
+.order-table th,
+.order-table td {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  border: 1px solid #dbdbdb;
+  border-width: 0 0 1px;
+  padding: .5em .75em;
+  vertical-align: top;
+}
+
+.order-table thead th,
+.order-table thead td {
+  border-width: 0 0 2px;
+  color: #7a7a7a;
+}
+
+.order-table tfoot th,
+.order-table tfoot td {
+  border-width: 2px 0 0;
+  color: #7a7a7a;
+}
+
+.order-table tbody .input {
+  text-align: center;
+  max-width: 3em;
 }
 
 .order-table .text-left {
@@ -923,5 +978,125 @@ h2 span {
 
 .order-table .text-center {
   text-align: center;
+}
+
+.order-input .input-ttl,
+.order-payment .input-ttl {
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.order-input .input-area label,
+.order-payment .input-area label {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.order-input .input-field input, .order-input .input-field textarea,
+.order-payment .input-field input,
+.order-payment .input-field textarea {
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 3px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  font-size: 1rem;
+  height: 2.285em;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  line-height: 1.5;
+  padding-left: .75em;
+  padding-right: .75em;
+  background-color: #fff;
+  border: 1px solid #dbdbdb;
+  color: #363636;
+  box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
+  width: 100%;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+.order-input .input-field *:focus,
+.order-payment .input-field *:focus {
+  outline: 0;
+  border-color: #00d1b2;
+}
+
+.pagenation {
+  margin: 30px 0;
+  text-align: center;
+}
+
+.pagenation .back,
+.pagenation .next {
+  display: inline-block;
+}
+
+.pagenation button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  outline: none;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  padding: .25em 2em;
+  margin: 1em;
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+  color: #666;
+  border: 1px solid;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+.pagenation button:hover {
+  color: white;
+  background: #666;
+}
+
+.conditions {
+  max-width: 650px;
+  margin: 50px auto 25px;
+  padding: 10px 20px;
+  letter-spacing: 1px;
+  border: solid 1px #00a5b3;
+}
+
+.conditions h5 {
+  margin: 0;
+  padding-left: 23px;
+  position: relative;
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.conditions ul {
+  margin: 5px 0;
+}
+
+.conditions ul li {
+  font-size: 13px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.mod_form_importance_btn {
+  max-width: 650px;
+  margin: auto;
+  text-align: center;
+}
+
+.mod_form_importance_btn .check {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.mod_form_importance_btn .note {
+  font: 400 12px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
 }
 /*# sourceMappingURL=order.css.map */
