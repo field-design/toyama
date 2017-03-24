@@ -30,18 +30,20 @@ if(!is_array($order_data)) {
 if( !$err_flg ) {
     //保持データ取得
     $order_data = $order->setSessionToOrder($order_data);
-    if($order_data['gender'] != '') {
-        $order_data['gender_text'] = Constant::$aryGender[$order_data['gender']];
-    }
-    if($order_data['job_'] != '') {
-        $order_data['job_text'] = Constant::$aryJob[$order_data['job_']];
-    }
+ 
     if(!is_array($order_data)) {
         //データが取得できなければリダイレクト
         header('Location: ' . URL_ROOT_PATH . 'niikawa/');
         $log->setErrorLog(MESSAGE_ERROR_SYSTEM_NO_SESSION_DATA);
         exit;
     }
+    if($order_data['gender'] != '') {
+        $order_data['gender_text'] = Constant::$aryGender[$order_data['gender']];
+    }
+    if($order_data['job_'] != '') {
+        $order_data['job_text'] = Constant::$aryJob[$order_data['job_']];
+    }
+
 }
 
 //商品データチェック
@@ -79,6 +81,33 @@ if( !$err_flg ) {
         $err_flg = true;
     }
 }
+
+/**********************************************
+◆ 申し込み処理
+***********************************************/
+if( isset($_POST['create_order']) ) {
+
+    if($err_flg) {
+        $msg = $smarty->get_template_vars('global_message');
+        header('Content-Type: application/json');
+        echo json_encode($msg);
+        exit;
+    }
+    //データ登録
+    $order_data = $order->update($order_data, $product_data);
+
+    if(!is_array($order_data)) {
+        header('Content-Type: application/json');
+        echo json_encode($order_data);
+        exit;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode('create order!!');
+    exit;
+}
+
+
 
 $smarty->assign('product_data', $product_data);
 $smarty->assign('order_data', $order_data);

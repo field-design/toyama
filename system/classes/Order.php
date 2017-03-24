@@ -16,8 +16,17 @@ class Order extends Entity {
         $this->columns = array();
         $this->columnsDef = array();
 
+        $this->columns[] = 'registDate';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'lastupDate';
+        $this->columnsDef[] = '';
+
         //商品ID
         $this->columns[] = 'ProductID';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'PersonID';
         $this->columnsDef[] = '';
 
         //申込ID
@@ -113,7 +122,7 @@ class Order extends Entity {
         //数量
         for($i = 1; $i <=5; $i++) {
             $this->columns[] = 'volume' . $i;
-            $this->columnsDef[] = 0;
+            $this->columnsDef[] = '';
         }
 
         //対応状況
@@ -152,7 +161,7 @@ class Order extends Entity {
 
             $volume_input[] = $data['volume' . $i] == '' ? 0 : $data['volume' . $i];
             
-            if( !is_numeric($data['volume' . $i]) ) {
+            if( !is_numeric($volume_input[$i - 1]) ) {
                 $err_msg['volume' . $i] = MESSAGE_ERROR_NUMBER;
                 continue;
             }
@@ -213,9 +222,6 @@ class Order extends Entity {
         }
         if( empty($data['job_']) ) {
             $err_msg['job_'] = MESSAGE_ERROR_REQUIRE;
-        }
-        if( $data['settlementType'] == '' ) {
-            $err_msg['settlementType'] = MESSAGE_ERROR_REQUIRE;
         }
     
         return $err_msg;
@@ -365,6 +371,66 @@ class Order extends Entity {
         }
 
         return $selectData;
+    }
+
+    /******************************
+    申し込み登録
+    *******************************/
+    function update($data, $product_data) {
+
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $update_columns = array();
+        $update_data = array();
+
+        foreach($this->columns as $column) {
+            if($column == 'zipCode') {
+                $update_columns[] = $column;
+                $update_data[$column] = $data[$column][0] . '-' . $data[$column][1];
+            } elseif($column == 'tel_' || $column == 'mobile') {
+                $update_columns[] = $column;
+                $update_data[$column] = $data[$column][0] . '-' . $data[$column][1] . '-' . $data[$column][2];
+            } elseif($column == 'birthday') {
+                $update_columns[] = $column;
+                $update_data[$column] = $data[$column][0] . '/' . $data[$column][1] . '/' . $data[$column][2];
+            } elseif(strpos($column, 'plan_title') !== false || strpos($column, 'plan_Fee') !== false || strpos($column, 'plan_Kind') !== false) {
+                $update_columns[] = $column;
+
+                $product_column = substr($column, 0, -1);
+                $product_value_index = intval(substr($column, -1)) - 1;
+                $update_data[$column] = $product_data[$product_column][$product_value_index]; //商品データより取得
+            } else {
+                $update_columns[] = $column;
+                $update_data[$column] = $data[$column];
+            }
+        }
+
+        //登録
+        $spiral = new SpiralApi('database/insert', 'oderDB');
+
+        $update_data['registDate'] = $time_stamp;
+        $update_data['lastupDate'] = $time_stamp;
+        $update_data['PersonID'] = $product_data['PersonID'];
+        $update_data['ProductID'] = $product_data['ProductID'];
+        $update_data['Correspondence'] = $product_data['plan_type'] == 2 ? 1 : 5; // 1:承認待ち 5:決済処理中
+
+        $spiral->setInsertParam($update_columns, $update_data);
+
+        $err_msg = $spiral->exec();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $response = $spiral->getResponse();
+
+        //orderID設定
+        if( isset($response['id']) ) {
+            $data['OderID'] = 'order' . sprintf('%06d', $response['id']);
+        }
+
+        return $data;
     }
 
 }

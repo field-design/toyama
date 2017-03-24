@@ -626,6 +626,11 @@ class Product extends Entity {
         $columns = array();
         $columns[] = 'OderID';
         $columns[] = 'oderDate';
+        $columns[] = 'volume1';
+        $columns[] = 'volume2';
+        $columns[] = 'volume3';
+        $columns[] = 'volume4';
+        $columns[] = 'volume5';
 
         $serch_condition = array();
         $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
@@ -648,10 +653,11 @@ class Product extends Entity {
         foreach( $orderData as $order ) {
             $date = DateTime::createFromFormat('Y年m月d日 H時i分', $order['oderDate']);
             $date = $date->format('Y/m/j'); //日付0なし
+            $volume = intval($order['volume1']) + intval($order['volume2']) + intval($order['volume3']) + intval($order['volume4']) + intval($order['volume5']);
             if( !array_key_exists($date, $orderSumData) ) {
-                $orderSumData[$date] = 1;
+                $orderSumData[$date] = $volume;
             } else {
-                $orderSumData[$date] += 1;
+                $orderSumData[$date] += $volume;
             }
         }
 
@@ -719,32 +725,52 @@ class Product extends Entity {
         foreach($this->columns as $column) {
 
             if($column == 'main_photo') {
-                for($i = 0; $i < count($data[$column]); $i++) {
+                for($i = 0; $i < 5; $i++) {
                     $update_columns[] = $column . ($i + 1);
-                    if($i == 0) {
-                        //メイン画像１はファイル名を固定
-                        $update_data[$column . ($i + 1)] = PRODUCT_MAIN_PHOTO1_NAME;
+                    if(count($data[$column]) > $i) {
+                        if($i == 0) {
+                            //メイン画像１はファイル名を固定
+                            $update_data[$column . ($i + 1)] = PRODUCT_MAIN_PHOTO1_NAME;
+                        } else {
+                            $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
+                        }
                     } else {
-                        $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
+                        $update_data[$column . ($i + 1)] = '';
                     }
                 }
             } elseif ($column == 'photo') {
-                for($i = 0; $i < count($data[$column]); $i++) {
+                for($i = 0; $i < 10; $i++) {
                     $update_columns[] = $column . ($i + 1);
-                    $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
+                    if(count($data[$column]) > $i) {
+                        $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
+                    } else {
+                        $update_data[$column . ($i + 1)] = '';
+                    }
+                }
+            } elseif ($column == 'plan_title' ||
+                      $column == 'plan_Fee' ||
+                      $column == 'plan_Kind' ||
+                      $column == 'importantPoints' ||
+                      $column == 'Other') {
+                for($i = 0; $i < 5; $i++) {
+                    $update_columns[] = $column . ($i + 1);
+                    if(count($data[$column]) > $i) {
+                        $update_data[$column . ($i + 1)] = $data[$column][$i];
+                    } else {
+                        $update_data[$column . ($i + 1)] = '';
+                    }
                 }
             } elseif ($column == 'CourseTitle' ||
                       $column == 'CourseDetail' ||
                       $column == 'CourseRink' ||
-                      $column == 'plan_included' ||
-                      $column == 'importantPoints' ||
-                      $column == 'Other' ||
-                      $column == 'plan_title' ||
-                      $column == 'plan_Fee' ||
-                      $column == 'plan_Kind') {
-                for($i = 0; $i < count($data[$column]); $i++) {
+                      $column == 'plan_included') {
+                for($i = 0; $i < 10; $i++) {
                     $update_columns[] = $column . ($i + 1);
-                    $update_data[$column . ($i + 1)] = $data[$column][$i];
+                    if(count($data[$column]) > $i) {
+                        $update_data[$column . ($i + 1)] = $data[$column][$i];
+                    } else {
+                        $update_data[$column . ($i + 1)] = '';
+                    }
                 }
             } elseif($column == 'area' ||
                      $column == 'Category') {
@@ -779,8 +805,6 @@ class Product extends Entity {
             $update_data['PersonID'] = $personID;
             $spiral->setInsertParam($update_columns, $update_data);
 
-            $this->log->setSysLog('insert');
-            $this->log->setSysLog($update_data);
         }
 
         $err_msg = $spiral->exec();
@@ -795,6 +819,10 @@ class Product extends Entity {
         //productID設定
         if( isset($response['id']) ) {
             $data['ProductID'] = 'plan' . sprintf('%06d', $response['id']);
+        }
+        //personID設定
+        if( $data['PersonID'] == '' ) {
+            $data['PersonID'] = $personID;
         }
 
         //画像設定

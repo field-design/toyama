@@ -13,7 +13,7 @@
         </div>
     </nav>
     <label class="label">画像</label>
-    <span class="help">横幅700px以上の画像を登録してください。</span>
+    <span class="help">横幅800px以上の画像を登録してください。横長画像を推奨。</span>
     {if $photo != ''}
         {assign var='image_style' value=''}
     {else}

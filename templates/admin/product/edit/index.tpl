@@ -112,7 +112,7 @@
 
             <label class="label">
                 メイン画像
-                <span class="help">横幅1,000px以上の画像を登録してください。</span>
+                <span class="help">横幅1,000px以上の画像を登録してください。横長画像を推奨。最大5枚。</span>
             </label>
             {foreach from=$data.main_photo item=url}
                 {if $url != ''}
@@ -488,7 +488,7 @@
         <div class="conts-body message-body">
             <label class="label">
                 注意事項
-                <span class="help">最大10件まで追加可能</span>
+                <span class="help">最大5件まで追加可能</span>
             </label>
             <div id="caution_container" class="control sortable">
                 {foreach from=$data.importantPoints item=value name=count}
@@ -508,7 +508,7 @@
 
             <label class="label">
                 その他
-                <span class="help">最大10件まで追加可能</span>
+                <span class="help">最大5件まで追加可能</span>
             </label>
             <div id="other_container" class="control sortable">
                 {foreach from=$data.Other item=value name=count}

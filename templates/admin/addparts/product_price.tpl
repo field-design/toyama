@@ -1,4 +1,5 @@
-<div class="columns">
+<div class="columns notification">
+    <button type="button" class="delete" onclick="$(this).parent().next().remove();$(this).parent().remove();"></button>
     <div class="column">
         <label class="label">料金タイトル</label>
         <p class="control has-icon has-icon-right">

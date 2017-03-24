@@ -71,7 +71,7 @@
 
         <h2><span>ご予約内容確認</span></h2>
         <section class="order-check cart">
-            <h3 class="product-ttl">{$order_data.title}</h3>
+            <h3 class="product-ttl">{$product_data.title}</h3>
             <table class="order-table">
                 <thead>
                     <tr>
@@ -151,18 +151,6 @@
             </table>
         </section>
 
-        <section class="order-check payment">
-            <h3 class="product-ttl">お支払方法</h3>
-            <table class="order-table">
-                <tbody>
-                    <tr>
-                        <th class="text-center">決済種別</th>
-                        <td class="text-left">クレジットカード決済</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
-
         <div class="conditions">
             <h5>旅行条件書</h5>
             <ul>
@@ -186,8 +174,8 @@
             <div class="back">
                 <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">戻る</button>
             </div>
-            <div class="next">
-                <button type="submit" id="submit">決済画面へ移動</button>
+            <div class="next mod_form_btn">
+                <button type="button" id="submit">決済画面へ移動</button>
             </div>
         </div>
     </div>
@@ -215,6 +203,22 @@
 <!-- Page Script -->
 {literal}
 <script>
+// 送信ボタン表示制御
+$(function(){
+	//送信ボタンの無効、チェックボックスを外す
+	$(".mod_form_btn button").css({opacity:"0.5",cursor:"default"}).attr("disabled","disabed");
+	$(".mod_form_importance_btn input:checkbox").attr('checked',false);
+	//チェックボックスがクリックされると送信ボタン有効
+	$(".mod_form_importance_btn label,.mod_form_importance_btn input").click(function(){
+		if($(".mod_form_importance_btn input:checkbox").is(':checked')){
+			$(".mod_form_btn button").css({opacity:"1",cursor:"pointer"}).removeAttr("disabled");
+		}else{
+			 $(".mod_form_btn button").css({opacity:"0.5",cursor:"default"}).attr("disabled","disabed");
+	}
+	})
+});
+</script>
+<script>
     function calc(obj) {
         var fee = parseInt($(obj).parent().prev().find('span').html().replace(',', ''));
         var volume = parseInt($(obj).html().replace(',', ''));
@@ -240,6 +244,27 @@
     $('.amount').each(function() {
         calc(this);
     });
+</script>
+<script>
+$(function(){
+    /*********************
+    登録ボタン処理
+    **********************/
+    $('#submit').click(function(){
+        $.ajax({
+            type: "POST",
+            url: location.pathname,
+            data: { 'create_order' : '1' },
+            error: function(){
+                alert('データ登録に失敗しました。');
+            },
+            success: function(response){
+                alert(response);
+            }
+        });
+    });
+
+});
 </script>
 {/literal}
 

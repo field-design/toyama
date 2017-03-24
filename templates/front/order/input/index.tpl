@@ -279,28 +279,6 @@
                 </div>
             </section>
 
-            <section class="order-payment">
-                <h3 class="input-ttl">お支払方法</h3>
-                <div class="input-wrap">
-
-                    <div class="input-area">
-                        <label class="label">決済種別</label>
-                        <div class="input-field">
-                            <span class="select">
-                                <select name="settlementType">
-                                    <option value="3" {if ($order_data.settlementType) == 3}selected{/if}>コンビニ決済</option>
-                                    <option value="0" {if ($order_data.settlementType) == 0}selected{/if}>クレジットカード決済</option>
-                                </select>
-                            </span>
-                        </div>
-                        {if isset($err_msg.settlementType) && $err_msg.settlementType != ''}
-                        <span class="error has-icon">{$err_msg.settlementType}</span>
-                        {/if}
-                    </div>
-
-                </div>
-            </section>
-
             <div class="pagenation">
                 <div class="back">
                     <button name="prev" type="submit">戻る</button>

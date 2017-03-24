@@ -130,7 +130,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'plan_info' ) {
 // 注意事項その他
 //=============
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'caution' ) {
-    if(intval($_POST['count']) >= 10) {
+    if(intval($_POST['count']) >= 5) {
         exit;
     }
     $smarty->assign('placeholder', '例：おとな1名 こども1名でお申込みの場合は、おとな2名での価格として取り扱いさせていただきます。');
@@ -140,7 +140,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'caution' ) {
     exit;
 }
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'other' ) {
-    if(intval($_POST['count']) >= 10) {
+    if(intval($_POST['count']) >= 5) {
         exit;
     }
     $smarty->assign('placeholder', '例：ます寿し1/8カットサイズの試食ができます。店舗は当日のお任せになります。');

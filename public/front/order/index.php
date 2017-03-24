@@ -99,9 +99,9 @@ if( !$err_flg ) {
 //=============
 // 入力データチェック
 //=============
-
 if ( isset($_POST['next']) ) {
     $err_msg = $order->checkInputVolume($order_data, $stock_data['stock' . date('j', $order_date)]);
+
     if( !empty(implode('', $err_msg)) ) {
         $smarty->assign('err_msg', $err_msg);
         if(isset($err_msg['volume'])) {
