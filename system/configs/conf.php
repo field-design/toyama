@@ -11,6 +11,9 @@ define('SITE_TITLE_ADMIN', 'いまからえらべるTRAVEL');
 //オーナーメールアドレス
 define('OWNER_MAIL', 'support@nanala-it.com');
 
+//システムメールFrom
+define('SYS_MAIL_FROM', 'khs.nagano@kanko-pro.co.jp');
+
 // Spiral用
 define('SPIRAL_API_TOKEN', '00011Kj13Ve97942151ad95fbdd9b5149de462e3f6e55d13fa92');
 define('SPIRAL_API_SECRET', '448d8abaab325d53025555cd2275aa6c820d4c78');

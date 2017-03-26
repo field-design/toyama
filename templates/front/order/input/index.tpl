@@ -248,8 +248,8 @@
                         <div class="input-field">
                             <span class="select">
                                 <select name="gender">
-                                    <option value="1" {if ($order_data.gender|default:1) == 1}selected{/if}>男性</option>
-                                    <option value="2" {if ($order_data.gender|default:1) == 2}selected{/if}>女性</option>
+                                    <option value="1" {if ($order_data.gender|default:1) == 1}selected{/if}>男</option>
+                                    <option value="2" {if ($order_data.gender|default:1) == 2}selected{/if}>女</option>
                                 </select>
                             </span>
                         </div>

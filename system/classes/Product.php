@@ -578,7 +578,7 @@ class Product extends Entity {
     /******************************
     商品在庫取得
     *******************************/
-    function getProductStock($productID, $ym) {
+    function getProductStock($productID, $ym, $orderID = null) {
 
         //============
         //在庫取得
@@ -637,6 +637,9 @@ class Product extends Entity {
         $serch_condition[] = array('name' => 'Correspondence', 'value' => 3, 'operator' => '!=');
         $serch_condition[] = array('name' => 'oderDate', 'value' => $start_date . ' 00:00:00', 'operator' => '>=');
         $serch_condition[] = array('name' => 'oderDate', 'value' => $end_date . ' 00:00:00', 'operator' => '<');
+        if( !is_null($orderID) ) {
+            $serch_condition[] = array('name' => 'OderID', 'value' => $orderID, 'operator' => '<=');
+        }
 
         $spiral->setSelectParam($columns, $serch_condition);
 

@@ -101,6 +101,21 @@ class Order extends Entity {
         $this->columns[] = 'Payment';
         $this->columnsDef[] = '';
 
+        //タイトル
+        $this->columns[] = 'title';
+        $this->columnsDef[] = '';
+
+        //サブタイトル
+        $this->columns[] = 'SubTitle';
+        $this->columnsDef[] = '';
+
+        //集合場所／場所名
+        $this->columns[] = 'locationname';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'plan_type';
+        $this->columnsDef[] = 1;
+
         //料金タイトル
         for($i = 1; $i <=5; $i++) {
             $this->columns[] = 'plan_title' . $i;
@@ -208,12 +223,48 @@ class Order extends Entity {
         if( empty($data['adress']) ) {
             $err_msg['adress'] = MESSAGE_ERROR_REQUIRE;
         }
-        if( empty($data['tel_'][0]) || empty($data['tel_'][1]) || empty($data['tel_'][2]) ) {
-            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+
+        $tel_input_cnt = 0;
+        if( $data['tel_'][0] != '' ) {
+            $tel_input_cnt++;
         }
-        if( empty($data['mobile'][0]) || empty($data['mobile'][1]) || empty($data['mobile'][2]) ) {
-            $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+        if( $data['tel_'][1] != '' ) {
+            $tel_input_cnt++;
         }
+        if( $data['tel_'][2] != '' ) {
+            $tel_input_cnt++;
+        }
+        $mb_input_cnt = 0;
+        if( $data['mobile'][0] != '' ) {
+            $mb_input_cnt++;
+        }
+        if( $data['mobile'][1] != '' ) {
+            $mb_input_cnt++;
+        }
+        if( $data['mobile'][2] != '' ) {
+            $mb_input_cnt++;
+        }
+
+        if( $tel_input_cnt == 0 && $mb_input_cnt == 0 ) {
+            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE_TEL;
+            $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE_TEL;
+        } elseif( $tel_input_cnt > 0 && $mb_input_cnt == 0  ) {
+            if( $tel_input_cnt != 3 ) {
+                $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+            }
+        } elseif( $tel_input_cnt == 0 && $mb_input_cnt > 0 ) {
+            if( $mb_input_cnt != 3 ) {
+                $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+            }
+        } else {
+            if( $tel_input_cnt != 3 ) {
+                $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( $mb_input_cnt != 3 ) {
+                $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+            }
+        }
+
         if( empty($data['birthday'][0]) || empty($data['birthday'][1]) || empty($data['birthday'][2]) ) {
             $err_msg['birthday'] = MESSAGE_ERROR_REQUIRE;
         }
@@ -336,7 +387,7 @@ class Order extends Entity {
         $page = 1;
 
         $sort = array();
-        $sort[] = array('name' => 'oderDate', 'order' => 'desc');
+        $sort[] = array('name' => 'registDate', 'order' => 'desc');
 
         $spiral->setSelectParam($this->columns, $serch_condition, null, $lines_per_page, $page, $sort);
 
@@ -351,6 +402,9 @@ class Order extends Entity {
 
         //DB値調整
         foreach($selectData as &$data) {
+            $regDate = DateTime::createFromFormat('Y年m月d日 H時i分s秒', $data['registDate']);
+            $data['registDate'] = $regDate->format('Y/m/d H:i');
+
             $oderDate = DateTime::createFromFormat('Y年m月d日 H時i分', $data['oderDate']);
             $data['oderDate'] = $oderDate->format('Y/m/d H:i');
 
@@ -358,6 +412,10 @@ class Order extends Entity {
 
             if($data['Payment'] != '') {
                 $data['Payment'] = Constant::$aryPayment[$data['Payment']];
+            }
+
+            if($data['settlementType'] != '') {
+                $data['settlementType'] = Constant::$arySettlementType[$data['settlementType']];
             }
 
             $main_photo_thumb = UPL_DIR . $data['ProductID'] . '/thumb_' . PRODUCT_MAIN_PHOTO1_NAME;
@@ -389,7 +447,11 @@ class Order extends Entity {
                 $update_data[$column] = $data[$column][0] . '-' . $data[$column][1];
             } elseif($column == 'tel_' || $column == 'mobile') {
                 $update_columns[] = $column;
-                $update_data[$column] = $data[$column][0] . '-' . $data[$column][1] . '-' . $data[$column][2];
+                if(implode('', $data[$column]) != '') {
+                    $update_data[$column] = $data[$column][0] . '-' . $data[$column][1] . '-' . $data[$column][2];
+                } else {
+                    $update_data[$column] = '';
+                }
             } elseif($column == 'birthday') {
                 $update_columns[] = $column;
                 $update_data[$column] = $data[$column][0] . '/' . $data[$column][1] . '/' . $data[$column][2];
@@ -399,6 +461,12 @@ class Order extends Entity {
                 $product_column = substr($column, 0, -1);
                 $product_value_index = intval(substr($column, -1)) - 1;
                 $update_data[$column] = $product_data[$product_column][$product_value_index]; //商品データより取得
+
+                //申し込みデータに設定
+                $data[$column] = $update_data[$column];
+            } elseif($column == 'gender') {
+                $update_columns[] = $column;
+                $update_data[$column] = $data[$column . '_text'];
             } else {
                 $update_columns[] = $column;
                 $update_data[$column] = $data[$column];
@@ -410,6 +478,10 @@ class Order extends Entity {
 
         $update_data['registDate'] = $time_stamp;
         $update_data['lastupDate'] = $time_stamp;
+        $update_data['title'] = $product_data['title'];
+        $update_data['SubTitle'] = $product_data['SubTitle'];
+        $update_data['locationname'] = $product_data['locationname'];
+        $update_data['plan_type'] = $product_data['plan_type'];
         $update_data['PersonID'] = $product_data['PersonID'];
         $update_data['ProductID'] = $product_data['ProductID'];
         $update_data['Correspondence'] = $product_data['plan_type'] == 2 ? 1 : 5; // 1:承認待ち 5:決済処理中
@@ -428,6 +500,47 @@ class Order extends Entity {
         //orderID設定
         if( isset($response['id']) ) {
             $data['OderID'] = 'order' . sprintf('%06d', $response['id']);
+        }
+
+        return $data;
+    }
+
+
+    /******************************
+    決済結果登録
+    *******************************/
+    function update_payment($data) {
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $update_columns = array();
+        $update_data = array();
+        $serch_condition = array();
+
+        $spiral = new SpiralApi('database/update', 'oderDB');
+
+        $update_columns[] = 'lastupDate';
+        $update_columns[] = 'Payment';
+        $update_columns[] = 'settlementType';
+        $update_columns[] = 'CreditNumber';
+        $update_columns[] = 'Correspondence';
+        $update_columns[] = 'settlement';
+
+        $update_data['lastupDate'] = $time_stamp;
+        $update_data['Payment'] = $data['Payment'];
+        $update_data['settlementType'] = $data['settlementType'];
+        $update_data['CreditNumber'] = $data['CreditNumber'];
+        $update_data['Correspondence'] = $data['Correspondence'];
+        $update_data['settlement'] = $data['settlement'];
+
+        $serch_condition[] = array('name' => 'OderID', 'value' => $data['OderID']);
+
+        $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
+
+        $err_msg = $spiral->exec();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
         }
 
         return $data;

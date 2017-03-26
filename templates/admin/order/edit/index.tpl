@@ -90,7 +90,7 @@
             </tr>
             <tr>
                 <th>決済金額</th>
-                <td>{$data.settlement|default:''}円</td>
+                <td>{$data.settlement|number_format|default:''}円</td>
             </tr>
           </tbody>
         </table>
@@ -103,10 +103,14 @@
           <tbody>
             <tr>
                 <th>受注番号</th>
-                <td>{$data.OrdersNumber|default:''}</td>
+                <td>{$data.OderID|default:''}</td>
             </tr>
             <tr>
                 <th>受注日</th>
+                <td>{$data.registDate|default:''}</td>
+            </tr>
+            <tr>
+                <th>予約日</th>
                 <td>{$data.oderDate|default:''}</td>
             </tr>
             <tr>
@@ -205,7 +209,7 @@
                 {assign var='volume' value='volume'|cat:($index+1)}
                 {if $data.$plan_title != '' || $data.$plan_Fee != '' || $data.$plan_Kind}
                 <tr>
-                <td class="order-product-name">{$data.$plan_title}({$data.$plan_Kind})</td>
+                <td class="order-product-name">{$data.$plan_title}{if $data.$plan_Kind != ''}({$data.$plan_Kind}){/if}</td>
                 <td class="order-amount">{$data.$plan_Fee|number_format}円</td>
                 <td class="order-number">{$data.$volume|number_format}</td>
                 <td class="order-amount">{($data.$plan_Fee * $data.$volume)|number_format}円</td>

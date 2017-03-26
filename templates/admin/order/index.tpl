@@ -209,7 +209,7 @@
           <th class="order-date">受注日</th>
           <th class="order-number">注文番号</th>
           <th class="order-name">お名前</th>
-          <th class="order-payment">支払方法</th>
+          <th class="order-payment">決済種別</th>
           <th class="order-amount">合計金額</th>
           <th class="order-status">対応状況</th>
           <th class="order-edit">詳細</th>
@@ -223,10 +223,10 @@
                 <img src="{$order.main_photo|default:''}">
                 </p>
             </td>
-            <td class="order-date">{$order.oderDate|replace:' ':'<br />'}</td>
+            <td class="order-date">{$order.registDate|replace:' ':'<br />'}</td>
             <td class="order-number">{$order.OrderNumber|string_format:'%06d'}</td>
             <td class="order-name">{$order.nameSei} {$order.nameMei}</td>
-            <td class="order-payment">{$order.Payment}</td>
+            <td class="order-payment">{$order.settlementType}</td>
             <td class="order-amount">{($order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5)|number_format}</td>
             <td class="order-status">{$order.Correspondence}</td>
             <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$order.OderID}">詳細</a></td>

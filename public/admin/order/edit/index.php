@@ -32,5 +32,7 @@ if(!is_array($data)) {
     $data = array();
 }
 
+$data['oderDate'] = date('Y月m日d', strtotime($data['oderDate']));
+
 $smarty->assign('data', $data);
 $smarty->display(ADMIN_DIR . 'order/edit/index.tpl');

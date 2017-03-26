@@ -67,7 +67,7 @@ if( !$err_flg ) {
     for($i = 1; $i <=5; $i++) {
         $select_volume += is_numeric($order_data['volume' . $i]) ? intval($order_data['volume' . $i]) : 0;
     }
-    if( $stock_data['stock' . date('j', $order_date)] - $select_volume <= 0 ) {
+    if( $stock_data['stock' . date('j', $order_date)] - $select_volume < 0 ) {
         $smarty->assign('global_message', MESSAGE_ERROR_DB_NO_STOCK);
         $err_flg = true;
     }

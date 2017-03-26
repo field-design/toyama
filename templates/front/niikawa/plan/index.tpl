@@ -200,6 +200,7 @@
         </div>
     </div>
     <div data-lg>
+        {if $data.importantPoints|implode:'' != ''}
         <div class="caution caption">
             <h5>ー注意事項ー</h5>
             <ul>
@@ -210,6 +211,8 @@
                 {/foreach}
             </ul>
         </div>
+        {/if}
+        {if $data.Other|implode:'' != ''}
         <div class="other caption">
             <h5>ーその他ー</h5>
             <ul>
@@ -220,6 +223,7 @@
                 {/foreach}
             </ul>
         </div>
+        {/if}
         <div class="cancel caption">
             <h5>ー取消料ー</h5>
             <p>契約成立後、お客様のご都合で契約を解除する場合、旅行代金に対してお客様1名につき下記の料率で取消料をいただきます。なお、複数人数のご参加で、一部のお客様が契約を解除される場合は、ご参加のお客様から運送・宿泊機関等の（1台・1室あたりの）ご利用人数の変更に対する差額代金をそれぞれいただきます。</p>

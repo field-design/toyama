@@ -259,7 +259,16 @@ $(function(){
                 alert('データ登録に失敗しました。');
             },
             success: function(response){
-                alert(response);
+                if(!response.status) {
+                    alert(response);
+                    return;
+                };
+
+                var form = $('<form/>', {action: response.action , method: 'post'});
+                Object.keys(response).forEach(function (key) {
+                    form.append($('<input/>', {type: 'hidden', name: key, value: response[key]}));
+                });
+                form.appendTo(document.body).submit();
             }
         });
     });

@@ -13,6 +13,7 @@ define('MESSAGE_ERROR_NO_USER', 'メールアドレスまたはパスワード�
 define('MESSAGE_ERROR_REQUIRE', '必須項目を入力してください。');
 define('MESSAGE_ERROR_REQUIRE_IMAGE', '画像を１つ以上登録してください。');
 define('MESSAGE_ERROR_REQUIRE_IMAGE_ONE', '画像を登録してください。');
+define('MESSAGE_ERROR_REQUIRE_TEL', '電話番号または携帯電話番号を入力してください。');
 define('MESSAGE_ERROR_DATE', '日付が不正です。');
 define('MESSAGE_ERROR_NUMBER', '数値を入力してください。');
 
@@ -24,4 +25,6 @@ define('MESSAGE_ERROR_MAIL_MISMATCH', 'メールアドレスとメールアド�
 define('MESSAGE_ERROR_MAIL_SEND', 'メール送信に失敗しました。');
 
 define('MESSAGE_ERROR_SYSTEM_NO_PRODUCT_DATA', 'NO_PRODUCT_DATA');
+define('MESSAGE_ERROR_SYSTEM_NO_ORDER_DATA', 'NO_ORDER_DATA');
+define('MESSAGE_ERROR_SYSTEM_NO_POST_DATA', 'NO_POST_DATA');
 define('MESSAGE_ERROR_SYSTEM_NO_SESSION_DATA', 'NO_SESSION_DATA');
