@@ -376,11 +376,14 @@ class Order extends Entity {
     $num：
       デフォルト５件
     *******************************/
-    function getOrderListView($num = 5) {
+    function getOrderListView($num = 5, $order_date = null) {
 
         $spiral = new SpiralApi('database/select', 'oderDB');
 
         $serch_condition = array();
+        if( !is_null($order_date) ) {
+            $serch_condition[] = array('name' => 'oderDate', 'value' => date('Y/m/d', strtotime($order_date)) . ' 00:00' );
+        }
 
         $lines_per_page = $num;
 
@@ -505,7 +508,6 @@ class Order extends Entity {
         return $data;
     }
 
-
     /******************************
     決済結果登録
     *******************************/
@@ -524,6 +526,7 @@ class Order extends Entity {
         $update_columns[] = 'CreditNumber';
         $update_columns[] = 'Correspondence';
         $update_columns[] = 'settlement';
+        $update_columns[] = 'paymentDate';
 
         $update_data['lastupDate'] = $time_stamp;
         $update_data['Payment'] = $data['Payment'];
@@ -531,6 +534,7 @@ class Order extends Entity {
         $update_data['CreditNumber'] = $data['CreditNumber'];
         $update_data['Correspondence'] = $data['Correspondence'];
         $update_data['settlement'] = $data['settlement'];
+        $update_data['paymentDate'] = $data['paymentDate'];
 
         $serch_condition[] = array('name' => 'OderID', 'value' => $data['OderID']);
 
@@ -542,6 +546,41 @@ class Order extends Entity {
             //エラー処理
             return $err_msg;
         }
+
+        return $data;
+    }
+
+    /******************************
+    承認登録
+    *******************************/
+    function update_approval($data) {
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $update_columns = array();
+        $update_data = array();
+        $serch_condition = array();
+
+        $spiral = new SpiralApi('database/update', 'oderDB');
+
+        $update_columns[] = 'lastupDate';
+        $update_columns[] = 'Correspondence';
+
+        $update_data['lastupDate'] = $time_stamp;
+        $update_data['Correspondence'] = 5;
+
+        $serch_condition[] = array('name' => 'OderID', 'value' => $data['OderID']);
+
+        $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
+
+        $err_msg = $spiral->exec();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $data['request'] = 0;
+        $data['Correspondence'] = Constant::$aryCorrespondence[5];
 
         return $data;
     }

@@ -275,7 +275,7 @@ class Contact {
         $message .= "\r\n";
         $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエスト頂きありがとうございます。\r\n";
         $message .= "下記の内容にて、リクエストを承りました。\r\n";
-        $message .= "3日以内に主催事業者より、リクエストの回答を致しますのでしばらくお待ちください。\r\n";
+        $message .= "参加日より３日前までにお申し込みの場合２４時間／参加日の前日・前々日にお申し込みの場合は3時間以内にご連絡いたします。（※上記時間内にご連絡がない場合は、お手数ですが各事業者の営業時間内にお問い合わせください。）\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderInfo($order_data, 'リクエスト');
         $message .= "\r\n";
@@ -305,7 +305,7 @@ class Contact {
         $message .= "\r\n";
         $message .= $this->getOrderInfo($order_data, 'リクエスト');
         $message .= "\r\n";
-        $message .= $this->getOrderPerson($order_data);
+        $message .= $this->getOrderPerson($order_data, 'リクエスト');
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
@@ -316,19 +316,55 @@ class Contact {
         return '';
     }
 
+    /*******************
+    承認完了
+    ********************/
+    function sendRequestApproval($order_data, $settings_data) {
+
+        $enc_id = sha1(ORDER_ID_SALT . $order_data['OderID']);
+
+        //============
+        //お客様宛
+        //============
+        $to      = $order_data['mail'];
+        $subject = 'リクエストが承認されました';
+
+        $message = '';
+        $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
+        $message .= "\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエスト頂きありがとうございます。\r\n";
+        $message .= "お客様のリクエストが承認されましたので、下記のページより決済をお願いいたします。\r\n";
+        $message .= "\r\n";
+        $message .= "【決済ページ】\r\n";
+        $message .= URL_ROOT_PATH_HOST . "/order/requestapp/?order=" . $enc_id . "&date=" . date('Y-m-d', strtotime($order_data['oderDate'])) . " \r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfo($order_data, 'リクエスト');
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderPerson($order_data, 'リクエスト');
+        $message .= "\r\n";
+        $message .= $this->getProductSettings($settings_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !mb_send_mail($to, $subject, $message, $headers) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+    }
+
     function getOrderInfo($order_data, $type_name = '申込') {
         $message = '';
         $message .= "********************\r\n";
         $message .= $type_name . "内容\r\n";
         $message .= "********************\r\n";
-        $message .= "・" . $type_name . "日時：" . date('Y年m月d日 H:i', strtotime($order_data['registDate'])) . "\r\n";
+        $message .= "・" . $type_name . "日時：" . $order_data['registDate'] . "\r\n";
         $message .= "・" . $type_name . "番号：" . $order_data['OderID'] . "\r\n";
         $message .= "\r\n";
         $message .= "*********************\r\n";
         $message .= $type_name . "プラン\r\n";
         $message .= "*********************\r\n";
         $message .= "・プラン名：" . $order_data['title'] . "\r\n";
-        $message .= "・出発日：" . date('Y年m月d日', strtotime($order_data['oderDate'])) . "\r\n";
+        $message .= "・参加日：" . date('Y年m月d日', strtotime($order_data['oderDate'])) . "\r\n";
         $message .= "・集合場所：" . $order_data['locationname'] . "\r\n";
         $message .= "・人数：\r\n";
 
@@ -368,7 +404,13 @@ class Contact {
         $message .= "・電話：" . $order_data['tel_'] . "\r\n";
         $message .= "・携帯電話：" . $order_data['mobile'] . "\r\n";
         $message .= "・メール：" . $order_data['mail'] . "\r\n";
-        $message .= "・支払方法：" . Constant::$aryPayment[$order_data['Payment']] . "\r\n";
+        if( $type_name == '申込' ) {
+            if( $order_data['settlementType'] == 3 ) {
+                $message .= "・支払方法：コンビニ" . "\r\n";
+            } else {
+                $message .= "・支払方法：" . Constant::$aryPayment[$order_data['Payment']] . "\r\n";
+            }
+        }
 
         return $message;
     }

@@ -26,6 +26,9 @@ define('FEW_THRESHOLD', 5);
 define('ADMIN_INIT_LAT', 36.701612);
 define('ADMIN_INIT_LNG', 137.213263);
 
+// 承認メール用ソルト
+define('ORDER_ID_SALT', 'fd_sys_salt');
+
 // ベースディレクトリ定義（環境変数より取得）
 define('BASE_DIR', $_SERVER['FD_SYS_DIR']);
 

@@ -8,6 +8,8 @@ define('MESSAGE_ERROR_ORDER_EXPIRE', '指定したツアーのお申し込みは
 define('MESSAGE_ERROR_OVER_STOCK', 'お申し込み数が上限を超えています。');
 define('MESSAGE_ERROR_NO_VOLUME', '数量を入力してください。');
 
+define('MESSAGE_ERROR_ALREADY_COMP', 'すでに処理済みです。');
+
 define('MESSAGE_ERROR_INPUT', '入力エラーがあります。');
 define('MESSAGE_ERROR_NO_USER', 'メールアドレスまたはパスワードが違います。');
 define('MESSAGE_ERROR_REQUIRE', '必須項目を入力してください。');
@@ -27,4 +29,5 @@ define('MESSAGE_ERROR_MAIL_SEND', 'メール送信に失敗しました。');
 define('MESSAGE_ERROR_SYSTEM_NO_PRODUCT_DATA', 'NO_PRODUCT_DATA');
 define('MESSAGE_ERROR_SYSTEM_NO_ORDER_DATA', 'NO_ORDER_DATA');
 define('MESSAGE_ERROR_SYSTEM_NO_POST_DATA', 'NO_POST_DATA');
+define('MESSAGE_ERROR_SYSTEM_NO_GET_DATA', 'NO_GET_DATA');
 define('MESSAGE_ERROR_SYSTEM_NO_SESSION_DATA', 'NO_SESSION_DATA');

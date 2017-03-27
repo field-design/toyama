@@ -227,6 +227,9 @@
         </table>
     </section>
 
+    <form method="post" action="{$smarty.server.PHP_SELF|replace:'index.php':''}">
+        <input name="OderID" type="hidden" value="{$data.OderID}" />
+    </form>
 </main>
 <!-- END main -->
         </div>
@@ -317,6 +320,16 @@
             'timeFormat': 'H:i',
             'scrollDefault': 'now',
             'step': 15
+        });
+    });
+</script>
+<script>
+    $(function() {
+        /***************************
+        submitボタン設定
+        ****************************/
+        $('a.button.is-success').click(function(){
+            $('form').submit();
         });
     });
 </script>
