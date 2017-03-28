@@ -5,8 +5,8 @@ define('MESSAGE_ERROR_DB_NO_DATA', '指定したデータはありません。')
 
 define('MESSAGE_ERROR_DB_NO_STOCK', '指定したツアーのお申し込みは終了しました。');
 define('MESSAGE_ERROR_ORDER_EXPIRE', '指定したツアーのお申し込みは終了しました。');
-define('MESSAGE_ERROR_OVER_STOCK', 'お申し込み数が上限を超えています。');
-define('MESSAGE_ERROR_NO_VOLUME', '数量を入力してください。');
+define('MESSAGE_ERROR_OVER_STOCK', 'お申し込み人数が上限を超えています。');
+define('MESSAGE_ERROR_NO_VOLUME', '人数を入力してください。');
 
 define('MESSAGE_ERROR_ALREADY_COMP', 'すでに処理済みです。');
 

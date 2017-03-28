@@ -431,7 +431,10 @@ class Product extends Entity {
         $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
         $serch_condition[] = array('name' => 'productDate', 'value' => date('Y/m'), 'operator' => '>=');
 
-        $spiral->setSelectParam($columns, $serch_condition);
+        $sort = array();
+        $sort[] = array('name' => 'productDate', 'order' => 'asc');
+
+        $spiral->setSelectParam($columns, $serch_condition, null, 10, 1, $sort);
 
         $err_msg = $spiral->exec();
 
@@ -609,7 +612,7 @@ class Product extends Entity {
         if( count($stockData) == 0 ) {
             $stockData = array();
             $stockData[] = array();
-            $stockData[0]['productDate'] = substr($ym, 0, 4) . '年' . substr($ym, 4, 6) . '月';
+            $stockData[0]['productDate'] = substr($ym, 0, 4) . '年' . substr($ym, 4, 2) . '月';
             for($i = 1; $i <= 31; $i++) {
                 $stockData[0]['stock' . $i] = 0;
             }
@@ -883,19 +886,19 @@ class Product extends Entity {
         //==============
 
         $spiral_select = new SpiralApi('database/select', 'stockDB');
-        $select_columns = array();
-        $select_columns[] = 'ProductID';
-        $select_condition = array();
-        $select_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);        
 
         foreach( $data['stock_calen_ym'] as $ym) {
+            $select_columns = array();
+            $select_columns[] = 'ProductID';
+            $select_condition = array();
+            $select_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
 
             //入力のない月は登録しない
             if(array_sum($data['stock_calen_data_' . $ym]) == 0) {
                 continue;
             }
 
-            $select_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 6));
+            $select_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 2));
 
             $spiral_select->setSelectParam($select_columns, $select_condition);
 
@@ -930,7 +933,7 @@ class Product extends Entity {
                 $update_data['lastupdate'] = $time_stamp;
 
                 $update_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
-                $update_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 6));
+                $update_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 2));
   
                 $spiral_update->setUpdateParam($update_columns, $update_data, $update_condition);
             } else {
@@ -945,7 +948,7 @@ class Product extends Entity {
                 $update_data['registDate'] = $time_stamp;
                 $update_data['lastupdate'] = $time_stamp;
                 $update_data['ProductID'] = $data['ProductID'];
-                $update_data['productDate'] = substr($ym, 0, 4) . '/' . substr($ym, 4, 6);
+                $update_data['productDate'] = substr($ym, 0, 4) . '/' . substr($ym, 4, 2);
 
                 $spiral_update->setInsertParam($update_columns, $update_data);
             }

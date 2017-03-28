@@ -120,6 +120,7 @@ class Sales extends Entity {
 
         $columns = array();
         $columns[] = 'ProductID';
+        $columns[] = 'title';
         for($i = 1; $i <=5; $i++) {
           $columns[] = 'plan_Fee' . $i;
         }
@@ -132,7 +133,7 @@ class Sales extends Entity {
         $serch_condition[] = array('name' => 'paymentDate', 'value' => date("Y/m/01", strtotime("+1 month")), 'operator' => '<');
         $serch_condition[] = array('name' => 'Correspondence', 'value' => '4');
 
-        $spiral->setSelectParam($columns, $serch_condition);
+        $spiral->setSelectParam($columns, $serch_condition, null, 999);
 
         $err_msg = $spiral->exec();
 
@@ -145,6 +146,7 @@ class Sales extends Entity {
 
         $result = array('sales' => 0, 'amount' => 0, 'product5' => '', 'sales5' => '');
         $top5 = array();
+        $top5_text = array();
         foreach($selectData as $data) {
 
             $sales = 0;
@@ -165,6 +167,7 @@ class Sales extends Entity {
 
             if ( !array_key_exists($data['ProductID'], $top5) ) {
                 $top5[$data['ProductID']] = $sales;
+                $top5_text[$data['ProductID']] = $data['title'];
             } else {
                 $top5[$data['ProductID']] += $sales;
             }
@@ -174,8 +177,13 @@ class Sales extends Entity {
         arsort($top5);
         $top5 = array_slice($top5, 0, 5);
 
-        $result['product5'] = implode('","', array_keys($top5));
-        $result['sales5'] = implode(',', array_values($top5));
+        foreach($top5 as $key => $value) {
+            $result['product5'] .= $top5_text[$key] . '","';
+            $result['sales5'] .= $value . ',';
+        }
+
+        $result['product5'] = trim($result['product5'], "\",\"");
+        $result['sales5'] = trim($result['sales5'], ",");
 
         return $result;
     }

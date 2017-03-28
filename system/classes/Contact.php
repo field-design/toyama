@@ -216,7 +216,13 @@ class Contact {
         $message .= "払込票URL：" . $order_data['CvsReceiptUrl'] . "\r\n";
         //$message .= "支払期限：2017年03月26日（日）\r\n";
         $message .= "\r\n";
-        $message .= "※コンビニでのお支払方法は、こちらをご覧ください。→https://www.gmo-pg.com/sep/customer-convenience-store/\r\n";
+        $message .= "※コンビニでのお支払方法は、こちらをご覧ください。\r\n";
+        $message .= "https://www.gmo-pg.com/sep/customer-convenience-store/\r\n";
+        $message .= "\r\n";
+        $message .= "入金完了メールや発券完了メールは配信しておりません。\r\n";
+        $message .= "お受け取りいただきましたレシート又は決済領収書、受領書が発券された証明となります。\r\n";
+        $message .= "※レシート又は決済領収書、受領書は大切に保管してください。\r\n";
+        $message .= "\r\n";
         $message .= "\r\n";
         $message .= $this->getProductSettings($settings_data);
 
@@ -358,7 +364,7 @@ class Contact {
         $message .= $type_name . "内容\r\n";
         $message .= "********************\r\n";
         $message .= "・" . $type_name . "日時：" . $order_data['registDate'] . "\r\n";
-        $message .= "・" . $type_name . "番号：" . $order_data['OderID'] . "\r\n";
+        $message .= "・申込番号：" . $order_data['OderID'] . "\r\n";
         $message .= "\r\n";
         $message .= "*********************\r\n";
         $message .= $type_name . "プラン\r\n";
@@ -425,6 +431,7 @@ class Contact {
         $message .= "・住所：〒" . $settings_data['zipcode'][0] . "-" . $settings_data['zipcode'][1] . $settings_data['pref'] . $settings_data['address'] . "\r\n";
         $message .= "・メール：" . $settings_data['email'] . "\r\n";
         $message .= "・旅行業登録：観光庁長官登録旅行業者第" . $settings_data['projectNumber'] . "号\r\n";
+        $message .= "・営業時間：" . $settings_data['service_time'] . "\r\n";
         $message .= "\r\n";
         $message .= "※ご予約のお取消・変更につきましては、上記連絡先までご連絡をお願い致します。\r\n";
 

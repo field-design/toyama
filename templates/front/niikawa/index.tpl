@@ -2,9 +2,9 @@
 システム名：
 　旅行商品予約システム
 ビュー名：
-　トップページ
+　にいかわトップページ
 機能名：
-　トップページ
+　にいかわトップページ
 ******************************************************}
 <!DOCTYPE html>
 <html lang="ja">
@@ -57,9 +57,9 @@
 
 <div class="mainvisual">
     <div class="bxslider">
-        <div class="slide" style="background-image: url(/assets/img/index/slide01.jpg);"></div>
-        <div class="slide" style="background-image: url(/assets/img/index/slide01.jpg);"></div>
-        <div class="slide" style="background-image: url(/assets/img/index/slide01.jpg);"></div>
+        <div class="slide" style="background-image: url(/assets/img/niikawa/slide01.jpg);"></div>
+        <div class="slide" style="background-image: url(/assets/img/niikawa/slide02.jpg);"></div>
+        <div class="slide" style="background-image: url(/assets/img/niikawa/slide03.jpg);"></div>
     </div>
     <p>いますぐ えらべる<br>いますぐ とらべる</p>
 </div>
@@ -74,7 +74,7 @@
             <div class="sub-ttl">
                 <img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/sub_ttl.svg" alt="水が織りなす、奇跡の物語">
             </div>
-            <p>コピーが入ります。コピーが入ります。コピーが<br>コピーが入ります。コピーが入ります。コピーが入り<br>コピーが入ります。コピーが入ります。</p>
+            <p>いのちを育む「水」。<br>雨が降り注ぎ、地に染み込み、川をたどり、海へ流れ、<br>水蒸気となって、また雨となる。<br>水は、多くの恵みを運びます。<br>山から海へ、はじまりから終わりまでを物語る、水の旅。<br>水に沿って広がる物語の舞台。<br>それが「富山湾・黒部峡谷・越中にいかわ観光圏」です。<br>さあ、美しき水の冒険へ。</p>
             <div class="more">
                 <a href="{$smarty.const.URL_ROOT_PATH}niikawa/about/">詳しくみる</a>
             </div>
@@ -132,7 +132,7 @@
                                     {assign var='plan_Fee' value='plan_Fee'|cat:($index + 1)}
                                     {assign var='plan_Kind' value='plan_Kind'|cat:($index + 1)}
                                     {if isset($product.$plan_title) }
-                                    <li>{$product.$plan_title}{if $product.$plan_Kind != ''}({$product.$plan_Kind}){/if} {$product.$plan_Fee}円</li>
+                                    <li>{$product.$plan_title}{if $product.$plan_Kind != ''}({$product.$plan_Kind}){/if} {$product.$plan_Fee|number_format}円</li>
                                     {/if}
                                 {/section}
                             </ul>
@@ -192,30 +192,47 @@
 {literal}
 <script type="text/javascript">
     $(function(){
-        $('.bxslider').bxSlider({
-            mode: 'fade',
-            auto: true,
-            speed: 2000,
-            pause: 6000,
-            // pager: false,
-            controls: false,
-            adaptiveHeight: true,
-            adaptiveHeightSpeed: 0,
-            touchEnabled: false,
-        });
+        var sliderImg = $('.bxslider .slide').length;
+        if(sliderImg > 1){
+            $('.bxslider').bxSlider({
+                mode: 'fade',
+                auto: true,
+                speed: 2000,
+                pause: 6000,
+                // pager: false,
+                controls: false,
+                adaptiveHeight: true,
+                adaptiveHeightSpeed: 0,
+                touchEnabled: false,
+            });
+        }
     });
 </script>
 <script>
     $(function(){
         $(".choice .area").on("click", function() {
-            $(".area-accordion").slideToggle();
-            $(this).toggleClass("active");//追加部分
+            if ($(".area-accordion").css('display') == 'none'){
+                $(".area-accordion").slideDown();
+                $(".choice .area").addClass("active");
+                $(".choice .genre").removeClass("active");
+                $(".genre-accordion").slideUp();
+            } else {
+                $(".area-accordion").slideUp();
+                $(".choice .area").removeClass("active");
+            }
         });
     });
     $(function(){
         $(".choice .genre").on("click", function() {
-            $(".genre-accordion").slideToggle();
-            $(this).toggleClass("active");//追加部分
+            if ($(".genre-accordion").css('display') == 'none'){
+                $(".genre-accordion").slideDown();
+                $(".choice .genre").addClass("active");
+                $(".choice .area").removeClass("active");
+                $(".area-accordion").slideUp();
+            } else {
+                $(".genre-accordion").slideUp();
+                $(".choice .genre").removeClass("active");
+            }
         });
     });
 </script>

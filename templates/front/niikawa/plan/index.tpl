@@ -100,40 +100,6 @@
                 {/section}
             </p>
         </div>
-        <div class="calendar caption" id="entry">
-            <h3>予約カレンダー</h3>
-            <div class="order-table-section">
-            </div>
-        </div>
-        <div class="details caption">
-            <h3>プラン詳細</h3>
-            <div class="btn-hide">
-                コースの内容を隠す
-            </div>
-            <div class="accordion">
-                {section name=i start=0 loop=count($data.CourseTitle)}
-                    {assign var='index' value=$smarty.section.i.index}
-                    {if !($data.photo[$index] == '' && $data.CourseTitle[$index] == '' && $data.CourseDetail[$index] == '' && $data.CourseRink[$index] == '')}
-                        <div class="detail">
-                            {if $data.photo != ''}
-                            <p><img src="{$data.photo[$index]}" alt=""></p>
-                            {/if}
-                            {if $data.CourseTitle[$index] != ''}
-                            <h4>{$data.CourseTitle[$index]}</h4>
-                            {/if}
-                            {if $data.CourseDetail[$index] != ''}
-                            <p>{$data.CourseDetail[$index]|nl2br}</p>
-                            {/if}
-                            {if $data.CourseRink[$index] != ''}
-                            <div class="more">
-                                <a href="{$data.CourseRink[$index]}" target="_blank">詳しくはこちらへ<i class="fa fa-fw fa-external-link"></i></a>
-                            </div>
-                            {/if}
-                        </div>
-                    {/if}
-                {/section}
-            </div>
-        </div>
         <div class="information caption">
             <h5>ープラン情報ー</h5>
             <table>
@@ -264,6 +230,38 @@
                 <li><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">個人情報保護方針</a></li>
             </ul>
         </div>
+
+        <div class="calendar caption" id="entry">
+            <h3>お申し込み<br />予約カレンダー</h3>
+            <div class="order-table-section">
+            </div>
+        </div>
+        <div class="details caption">
+            <h3>プラン内容</h3>
+            <div class="accordion">
+                {section name=i start=0 loop=count($data.CourseTitle)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {if !($data.photo[$index] == '' && $data.CourseTitle[$index] == '' && $data.CourseDetail[$index] == '' && $data.CourseRink[$index] == '')}
+                        <div class="detail">
+                            {if $data.photo != ''}
+                            <p><img src="{$data.photo[$index]}" alt=""></p>
+                            {/if}
+                            {if $data.CourseTitle[$index] != ''}
+                            <h4>{$data.CourseTitle[$index]}</h4>
+                            {/if}
+                            {if $data.CourseDetail[$index] != ''}
+                            <p>{$data.CourseDetail[$index]|nl2br}</p>
+                            {/if}
+                            {if $data.CourseRink[$index] != ''}
+                            <div class="more">
+                                <a href="{$data.CourseRink[$index]}" target="_blank">詳しくはこちらへ<i class="fa fa-fw fa-external-link"></i></a>
+                            </div>
+                            {/if}
+                        </div>
+                    {/if}
+                {/section}
+            </div>
+        </div>
     </div>
 </div>
 
@@ -298,17 +296,20 @@
 {literal}
 <script type="text/javascript">
     $(function(){
-        $('.bxslider').bxSlider({
-            mode: 'fade',
-            auto: true,
-            speed: 2000,
-            pause: 6000,
-            // pager: false,
-            controls: false,
-            adaptiveHeight: true,
-            adaptiveHeightSpeed: 0,
-            touchEnabled: false,
-        });
+        var sliderImg = $('.bxslider .slide').length;
+        if(sliderImg > 1){
+            $('.bxslider').bxSlider({
+                mode: 'fade',
+                auto: true,
+                speed: 2000,
+                pause: 6000,
+                // pager: false,
+                controls: false,
+                adaptiveHeight: true,
+                adaptiveHeightSpeed: 0,
+                touchEnabled: false,
+            });
+        }
     });
 </script>
 <script>

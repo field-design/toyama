@@ -950,14 +950,36 @@ img {
   }
 }
 
+@media screen and (max-width: 479px) {
+  .introduction h2 {
+    font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+    font-family: "Sawarabi Mincho";
+    margin: 15px 0 10px;
+  }
+  .introduction h2 span {
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+    font-family: "Sawarabi Mincho";
+  }
+}
+
 .introduction .sub-ttl {
-  max-width: 700px;
+  max-width: 676px;
   margin: auto;
+  padding-bottom: 15px;
 }
 
 @media screen and (max-width: 767px) {
   .introduction .sub-ttl {
-    max-width: 600px;
+    max-width: 550px;
+    padding-bottom: 5px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .introduction .sub-ttl {
+    max-width: 350px;
   }
 }
 
@@ -981,6 +1003,12 @@ img {
 }
 
 @media screen and (max-width: 479px) {
+  .introduction p {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+    font-family: "Sawarabi Mincho";
+    line-height: 1.8;
+  }
   .introduction p br {
     display: none;
   }
@@ -1000,6 +1028,14 @@ img {
   border: solid 1px #416f8e;
 }
 
+@media screen and (max-width: 479px) {
+  .introduction .more a {
+    font: 400 15px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.5rem/160% "Noto Sans Japanese", sans-serif;
+    margin: 10px auto 40px;
+  }
+}
+
 .introduction .more a:before {
   content: "";
   width: 12px;
@@ -1014,6 +1050,14 @@ img {
   top: 50%;
   right: 30px;
   margin-top: -6px;
+}
+
+@media screen and (max-width: 479px) {
+  .introduction .more a:before {
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+  }
 }
 
 .introduction .more a:hover {
@@ -1055,8 +1099,8 @@ img {
 
 @media screen and (max-width: 479px) {
   .btn-wrap .purchase a {
-    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
     font-weight: 200;
     padding: 12px 0;
   }
@@ -1103,8 +1147,8 @@ img {
 
 @media screen and (max-width: 479px) {
   .btn-wrap .choice .area p {
-    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
     font-weight: 200;
     padding: 12px 0;
     letter-spacing: 1px;
@@ -1200,8 +1244,8 @@ img {
 
 @media screen and (max-width: 479px) {
   .btn-wrap .choice .genre p {
-    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
     font-weight: 200;
     padding: 12px 0;
     letter-spacing: 1px;
@@ -1229,6 +1273,8 @@ img {
   -ms-transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
   transform: rotate(135deg);
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
   position: absolute;
   top: 50%;
   right: -25px;

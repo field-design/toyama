@@ -1,7 +1,7 @@
 <header class="global-header">
-    <h1>富山県にいかわ観光エリアを楽しむツアーをいますぐ購入</h1>
+    <h1>{if ($title|default:'') != ''}{$title}{else}富山県にいかわ観光エリア{/if}を楽しむツアーをいますぐ購入</h1>
     <div class="logo">
-        <a href="{$smarty.const.URL_ROOT_PATH}"><img src="/assets/img/common/logo.svg" alt="{$smarty.const.SITE_TITLE_FRONT}"></a>
+        <a href="{$smarty.const.URL_ROOT_PATH}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/common/{$logo_pref|default:''}logo.svg" alt="{$smarty.const.SITE_TITLE_FRONT}"></a>
     </div>
     <!-- START global-nav -->
     <nav class="global-nav">
@@ -13,13 +13,16 @@
             </button>
             <nav class="drawer-nav" role="navigation">
                 <ul class="drawer-menu">
-                    <li class="sns-btn">
+                    <!-- <li class="sns-btn">
                         <a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                         <a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a>
                         <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                    </li>
+                    </li> -->
                     <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}">トップページ</a></li>
-                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/about/">越中にいかわ観光圏とは</a></li>
+                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/">越中にいかわ観光圏</a></li>
+                    <li class="nav-dropdown">
+                        <a href="{$smarty.const.URL_ROOT_PATH}niikawa/about/">越中にいかわ観光圏とは</a>
+                    </li>
                     <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">ツアーを購入する</a></li>
                     <li class="nav-dropdown">
                         <a href="#" data-toggle="dropdown">地域でえらぶ</a>
@@ -40,6 +43,7 @@
                         </ul>
                     </li>
                     <li class="inquiry"><a href="{$smarty.const.URL_ROOT_PATH}contact/"><i class="fa fa-envelope-o" aria-hidden="true"></i>お問い合わせ</a></li>
+                    <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}guide/">サイトのご利用案内</a></li>
                     <li class="sub"><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">プライバシーポリシー</a></li>
                 </ul>
             </nav>

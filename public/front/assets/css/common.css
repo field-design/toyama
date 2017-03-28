@@ -928,6 +928,13 @@ a:hover {
   margin: 5px 10px;
 }
 
+@media screen and (max-width: 479px) {
+  .global-header h1 {
+    font: 400 10px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .global-header .logo {
   text-align: center;
   margin: 15px auto 25px;
@@ -935,9 +942,15 @@ a:hover {
   height: auto;
 }
 
+@media screen and (max-width: 767px) {
+  .global-header .logo {
+    max-width: 120px;
+  }
+}
+
 @media screen and (max-width: 479px) {
   .global-header .logo {
-    max-width: 130px;
+    max-width: 85px;
   }
 }
 
@@ -1259,6 +1272,12 @@ a:hover {
   opacity: 0.70;
 }
 
+@media screen and (max-width: 479px) {
+  .share ul li a, .share ul li .btn {
+    padding: 5px 0;
+  }
+}
+
 .share ul li a i, .share ul li .btn i {
   font-size: 2.1em;
   vertical-align: middle;
@@ -1560,7 +1579,7 @@ a:hover {
   font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
   color: #fff;
   display: inline-block;
-  margin-right: 5px;
+  margin: 0 5px 5px 0;
   padding: 0 5px;
 }
 
@@ -1696,8 +1715,15 @@ a:hover {
 }
 
 .global-footer .nav-footer table td {
-  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
-  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+@media screen and (min-width: 480px) {
+  .global-footer .nav-footer table td {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .global-footer .nav-footer table td:nth-child(1) a {
@@ -1715,12 +1741,12 @@ a:hover {
 }
 
 .global-footer .nav-footer table td a {
-  text-decoration: none;
+  text-decoration: underline;
   color: #666666;
 }
 
 .global-footer .nav-footer table td a:hover {
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .global-footer .copyright {
@@ -1736,6 +1762,10 @@ a:hover {
     font: 400 11px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.1rem/160% "Noto Sans Japanese", sans-serif;
   }
+}
+
+.global-footer .copyright a {
+  color: #666666;
 }
 
 .section-style {

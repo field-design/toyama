@@ -1037,6 +1037,10 @@
             var dt = new Date('{$ym|substr:0:4}/{$ym|substr:4:6}/01');
 		    stockmanager.changeCalendar(dt, data);
         {/foreach}
+        {if count($data.stock_calen_ym) > 0}
+        var init_dt = new Date('{$data.stock_calen_ym[0]|substr:0:4}/{$data.stock_calen_ym[0]|substr:4:6}/01');
+        stockmanager.changeCalendar(init_dt);
+        {/if}
         {literal}
         $('#calen_input_all a').click(function(){
             $('#stock_calendars > div').each(function(){

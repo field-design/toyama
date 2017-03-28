@@ -70,14 +70,42 @@
         </div>
 
         <h2><span>ご予約内容確認</span></h2>
-        <section class="order-check cart">
-            <h3 class="product-ttl">{$product_data.title}</h3>
+
+        <section class="order-style">
+          <h3 class="order-ttl">お申し込みプラン</h3>
+          <table class="order-table">
+              <tbody>
+                  <tr>
+                      <th class="text-center">主催者</th>
+                      <td class="text-left">{$settings_data.display_name}</td>
+                  </tr>
+                  <tr>
+                      <th class="text-center">プラン名</th>
+                      <td class="text-left">{$product_data.title}</td>
+                  </tr>
+                  <tr>
+                      <th class="text-center">出発日</th>
+                      <td class="text-left">{$order_data.oderDate_text}</td>
+                  </tr>
+                  <tr>
+                      <th class="text-center">集合場所</th>
+                      <td class="text-left">{$product_data.locationname}</td>
+                  </tr>
+              </tbody>
+          </table>
+          <ul class="notes-list">
+              <li>本プランは上記主催者との契約になります。</li>
+          </ul>
+        </section>
+
+        <section class="order-style order-check cart">
+            <h3 class="product-ttl">人数・ご旅行代金</h3>
             <table class="order-table">
                 <thead>
                     <tr>
                         <th class="text-center">内訳</th>
                         <th class="text-center">単価</th>
-                        <th class="text-center">数量</th>
+                        <th class="text-center">人数</th>
                         <th class="text-center">小計</th>
                     </tr>
                 </thead>
@@ -104,7 +132,7 @@
             </table>
         </section>
 
-        <section class="order-check input">
+        <section class="order-style order-check input">
             <h3 class="product-ttl">お申込者様の情報</h3>
             <table class="order-table">
                 <tbody>
@@ -160,7 +188,7 @@
             </ul>
         </div>
 
-        <div class="mod_form_importance_btn row">
+        <div class="agreement mod_form_importance_btn">
             <div class="check">
                 <p>
 	                <input type="checkbox" id="privacy" name="privacy" value="同意する">
@@ -174,9 +202,15 @@
             <div class="back">
                 <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">戻る</button>
             </div>
+            {if $product_data.plan_type == 2}
+            <div class="next mod_form_btn">
+                <button type="button" id="submit">リクエスト依頼</button>
+            </div>
+            {else}
             <div class="next mod_form_btn">
                 <button type="button" id="submit">決済画面へ移動</button>
             </div>
+            {/if}
         </div>
     </div>
 </article>

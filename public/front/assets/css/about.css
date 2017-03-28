@@ -883,7 +883,7 @@ img {
 }
 
 .overview h2 {
-  margin: 25px 0 10px;
+  margin: 25px 0 20px;
   padding-bottom: 3px;
   font: 400 20px/160% "Noto Sans Japanese", sans-serif;
   font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
@@ -893,13 +893,29 @@ img {
   display: inline-block;
 }
 
+@media screen and (max-width: 479px) {
+  .overview h2 {
+    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+    margin: 25px 0 10px;
+  }
+}
+
 .overview p {
   margin: 5px 0;
-  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
-  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   text-align: left;
   line-height: 1.8;
   letter-spacing: 1px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview p {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 1.8;
+  }
 }
 
 .map {
@@ -937,6 +953,15 @@ img {
   line-height: 1;
 }
 
+@media screen and (max-width: 479px) {
+  .point .item .inner .number {
+    font: 400 29px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 2.9rem/160% "Noto Sans Japanese", sans-serif;
+    font-family: Palatino;
+    line-height: 1;
+  }
+}
+
 .point .item .inner .number i {
   color: #40708d;
 }
@@ -955,11 +980,25 @@ img {
   color: #40708d;
 }
 
+@media screen and (max-width: 479px) {
+  .point .item .inner .text h3 {
+    font: 400 17px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.7rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .point .item .inner .text p {
   margin: 0;
   font: 400 15px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.5rem/160% "Noto Sans Japanese", sans-serif;
   letter-spacing: 1px;
   color: #40708d;
+}
+
+@media screen and (max-width: 479px) {
+  .point .item .inner .text p {
+    font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 /*# sourceMappingURL=about.css.map */

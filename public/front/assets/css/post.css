@@ -902,9 +902,15 @@ img {
   margin: 0 auto 10px;
 }
 
+@media screen and (max-width: 767px) {
+  .overview .title .now {
+    max-width: 190px;
+  }
+}
+
 @media screen and (max-width: 479px) {
   .overview .title .now {
-    max-width: 200px;
+    max-width: 150px;
   }
 }
 
@@ -920,6 +926,14 @@ img {
   .overview .title p {
     font: 400 15px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.5rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 1.8;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .overview .title p {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
     line-height: 1.8;
   }
 }
@@ -940,6 +954,13 @@ img {
   }
 }
 
+@media screen and (max-width: 479px) {
+  .overview .title .sub-ttl {
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .title h2 {
   font: 400 24px/160% "Noto Sans Japanese", sans-serif;
   font: 400 2.4rem/160% "Noto Sans Japanese", sans-serif;
@@ -947,10 +968,17 @@ img {
   margin: 0;
 }
 
+@media screen and (max-width: 767px) {
+  .overview .title h2 {
+    font: 400 21px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 2.1rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 @media screen and (max-width: 479px) {
   .overview .title h2 {
-    font: 400 22px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 2.2rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
   }
 }
 
@@ -971,7 +999,15 @@ img {
   font: 400 20px/160% "Noto Sans Japanese", sans-serif;
   font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
   letter-spacing: 3px;
-  margin: 0;
+  text-indent: 3px;
+  margin: 0 0 30px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .caption h3 {
+    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .caption h5 {
@@ -980,6 +1016,13 @@ img {
   color: #40708d;
   letter-spacing: 3px;
   margin: 0 0 15px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .caption h5 {
+    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .cost p {
@@ -991,8 +1034,8 @@ img {
 
 @media screen and (max-width: 479px) {
   .overview .cost p {
-    font: 400 15px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 1.5rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
   }
 }
 
@@ -1003,8 +1046,8 @@ img {
 
 @media screen and (max-width: 479px) {
   .overview .cost p span {
-    font: 400 20px/160% "Noto Sans Japanese", sans-serif;
-    font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+    font: 400 19px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.9rem/160% "Noto Sans Japanese", sans-serif;
   }
 }
 
@@ -1019,6 +1062,13 @@ img {
   border: solid 1px #40708d;
   margin: 30px 0;
   padding: 10px 45px 10px 20px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .details .btn-hide {
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .details .btn-hide:before {
@@ -1037,6 +1087,14 @@ img {
   top: 50%;
   right: 20px;
   margin-top: -3px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .details .btn-hide:before {
+    width: 10px;
+    height: 10px;
+    margin-top: -2px;
+  }
 }
 
 .overview .details .btn-hide.active:before {
@@ -1059,6 +1117,13 @@ img {
   margin: 10px 0;
 }
 
+@media screen and (max-width: 479px) {
+  .overview .details .accordion h4 {
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .details .accordion p {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
@@ -1070,13 +1135,20 @@ img {
 
 @media screen and (min-width: 480px) {
   .overview .details .accordion p {
-    text-align: center;
     max-width: 675px;
     margin: auto;
   }
 }
 
+@media screen and (max-width: 479px) {
+  .overview .details .accordion p {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .details .accordion img {
+  width: 100%;
   max-width: 675px;
   height: auto;
 }
@@ -1114,12 +1186,26 @@ img {
   letter-spacing: 1px;
 }
 
+@media screen and (max-width: 479px) {
+  .overview .information table th {
+    font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .information table td {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   text-align: left;
   padding: 10px 20px;
   letter-spacing: 1px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .information table td {
+    font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .map {
@@ -1143,6 +1229,13 @@ img {
   font: 400 1.7rem/160% "Noto Sans Japanese", sans-serif;
   color: #000;
   letter-spacing: 2px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .map #side_bar a {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .map #side_bar a i {
@@ -1190,6 +1283,13 @@ img {
   letter-spacing: 1px;
 }
 
+@media screen and (max-width: 479px) {
+  .overview .caution ul li, .overview .other ul li {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .caution ul li:before, .overview .other ul li:before {
   position: absolute;
   content: "・";
@@ -1204,6 +1304,14 @@ img {
   line-height: 1.8;
   letter-spacing: 1px;
   margin: 0 0 10px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .cancel p {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 1.8;
+  }
 }
 
 .overview .cancel table {
@@ -1221,12 +1329,26 @@ img {
   padding: 10px 5px;
 }
 
+@media screen and (max-width: 479px) {
+  .overview .cancel table th {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 .overview .cancel table td {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   letter-spacing: 1px;
   border: solid 1px #e3e2e2;
   padding: 10px 5px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .cancel table td {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .cancel ul {
@@ -1244,6 +1366,14 @@ img {
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   line-height: 1.8;
   letter-spacing: 1px;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .cancel ul li {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 1.8;
+  }
 }
 
 .overview .cancel ul li:before {
@@ -1268,12 +1398,15 @@ img {
 @media screen and (max-width: 479px) {
   .overview .planning p {
     letter-spacing: 1px;
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 1.8;
   }
 }
 
 .overview .planning ul {
   list-style: none;
-  margin: 0;
+  margin: 0 0 10px;
   padding: 0;
   text-align: left;
   text-align: center;
@@ -1286,6 +1419,13 @@ img {
   padding-left: 1em;
   letter-spacing: 1px;
   display: inline-block;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .planning ul li {
+    font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 .overview .planning ul li a {
@@ -1304,6 +1444,12 @@ img {
   border-color: transparent transparent transparent #4d4d4d;
   top: 8px;
   left: 0;
+}
+
+@media screen and (max-width: 479px) {
+  .overview .planning ul li a:before {
+    border-width: 4px 0 4px 6.9px;
+  }
 }
 
 .order-table-section {
@@ -1500,6 +1646,14 @@ img {
   vertical-align: middle;
 }
 
+@media screen and (max-width: 479px) {
+  .btn-entry a {
+    font: 400 17px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.7rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 40px;
+  }
+}
+
 .btn-entry a span {
   position: relative;
   margin-left: -20px;
@@ -1521,6 +1675,14 @@ img {
   top: 50%;
   right: -20px;
   margin-top: -6px;
+}
+
+@media screen and (max-width: 479px) {
+  .btn-entry a span:after {
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+  }
 }
 
 .btn-entry a i {

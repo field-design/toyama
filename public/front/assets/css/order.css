@@ -874,6 +874,11 @@ img {
   height: 100%;
 }
 
+.logo img {
+  max-width: 80px;
+  height: auto;
+}
+
 h2 {
   text-align: center;
   font: 400 20px/160% "Noto Sans Japanese", sans-serif;
@@ -887,52 +892,125 @@ h2 span {
   padding: 0 5px 5px;
 }
 
+.steps {
+  max-width: 650px;
+  margin: 15px auto 30px;
+  overflow: hidden;
+}
+
 .steps ul {
+  margin: 0;
   padding: 0;
-  margin: 0 auto;
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+  counter-reset: step;
 }
 
-.steps .step {
-  padding: 1em;
-  list-style: none;
-  display: table-cell;
-  border: 1px solid #ddd;
+.steps li {
+  list-style-type: none;
+  width: 33%;
+  float: left;
+  font-size: 12px;
+  position: relative;
   text-align: center;
+  text-transform: uppercase;
+  color: #7d7d7d;
 }
 
-.steps .step.current {
-  background: #333;
-  color: white;
+.steps li:before {
+  width: 30px;
+  height: 30px;
+  content: counter(step);
+  counter-increment: step;
+  line-height: 30px;
+  border: 2px solid #7d7d7d;
+  display: block;
+  text-align: center;
+  margin: 0 auto 10px auto;
+  border-radius: 50%;
+  background-color: white;
+}
+
+.steps li:after {
+  width: 100%;
+  height: 2px;
+  content: '';
+  position: absolute;
+  background-color: #7d7d7d;
+  top: 15px;
+  left: -50%;
+  z-index: -1;
+}
+
+.steps li:first-child:after {
+  content: none;
+}
+
+.steps li.current {
+  color: green;
+}
+
+.steps li.current:before {
+  border-color: #55b776;
+}
+
+.steps li.current + li:after {
+  background-color: #55b776;
+}
+
+.order-style {
+  max-width: 650px;
+  margin: auto;
+  padding: 10px 0;
 }
 
 .order-cart,
 .order-input,
 .order-check,
-.order-payment {
+.order-payment,
+.order-complete,
+.order-contact {
   max-width: 650px;
   margin: auto;
 }
 
-.product-ttl {
+.product-ttl,
+.order-ttl,
+.contact-ttl {
+  color: #4d4d4d;
   font: 400 20px/160% "Noto Sans Japanese", sans-serif;
   font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+  letter-spacing: 3px;
+  background-color: #ededed;
+  text-align: center;
 }
 
-.order-info {
-  padding: 0;
-  margin: 0;
+.complete-ttl {
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+  letter-spacing: 3px;
+  text-align: center;
 }
 
-.order-info li {
+.order-desc,
+.complete-desc {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
-  list-style: none;
 }
 
-.order-info li span:after {
+.order-contact {
+  margin-bottom: 60px;
+}
+
+.contact-info {
+  padding: 0;
+}
+
+.contact-info li {
+  list-style: none;
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.contact-info li span:after {
   content: "：";
 }
 
@@ -943,8 +1021,8 @@ h2 span {
 
 .order-table th,
 .order-table td {
-  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
-  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
   border: 1px solid #dbdbdb;
   border-width: 0 0 1px;
   padding: .5em .75em;
@@ -963,9 +1041,26 @@ h2 span {
   color: #7a7a7a;
 }
 
+.order-table tbody tr:hover {
+  background-color: #fafafa;
+}
+
+.order-table tbody tr th {
+  width: 8em;
+}
+
 .order-table tbody .input {
   text-align: center;
   max-width: 3em;
+}
+
+.order-table tbody ul {
+  margin: 0;
+  padding: 0;
+}
+
+.order-table tbody ul li {
+  list-style: none;
 }
 
 .order-table .text-left {
@@ -986,43 +1081,168 @@ h2 span {
   font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
 }
 
+.order-input .input-area,
+.order-payment .input-area {
+  margin: 10px 0;
+}
+
 .order-input .input-area label,
 .order-payment .input-area label {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
 }
 
-.order-input .input-field input, .order-input .input-field textarea,
+.order-input .input-area .label,
+.order-payment .input-area .label {
+  display: block;
+  margin-bottom: .25em;
+}
+
+.order-input .input-area .radio,
+.order-input .input-area .checkbox,
+.order-payment .input-area .radio,
+.order-payment .input-area .checkbox {
+  margin-right: .5em;
+}
+
+.order-input .input-field,
+.order-payment .input-field {
+  display: inline;
+  box-sizing: border-box;
+}
+
+.order-input .input-field input,
+.order-input .input-field textarea,
+.order-input .input-field select,
 .order-payment .input-field input,
-.order-payment .input-field textarea {
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+.order-payment .input-field textarea,
+.order-payment .input-field select {
   border-radius: 3px;
-  display: -webkit-inline-box;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  font-size: 1rem;
+  display: inline;
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   height: 2.285em;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
   line-height: 1.5;
-  padding-left: .75em;
-  padding-right: .75em;
+  padding: .25em 1em;
+  margin: .25em;
   background-color: #fff;
   border: 1px solid #dbdbdb;
   color: #363636;
   box-shadow: inset 0 1px 2px rgba(10, 10, 10, 0.1);
-  width: 100%;
   -webkit-transition: all .2s ease;
   transition: all .2s ease;
+  box-sizing: border-box;
+}
+
+.order-input .input-field textarea,
+.order-payment .input-field textarea {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: 100px;
+}
+
+.order-input .input-field input[type="radio"],
+.order-input .input-field input[type="checkbox"],
+.order-payment .input-field input[type="radio"],
+.order-payment .input-field input[type="checkbox"] {
+  border: none;
+  box-shadow: none;
+  vertical-align: middle;
+}
+
+.order-input .input-field .notes,
+.order-payment .input-field .notes {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
 }
 
 .order-input .input-field *:focus,
 .order-payment .input-field *:focus {
   outline: 0;
   border-color: #00d1b2;
+}
+
+.order-input .input-field .short,
+.order-payment .input-field .short {
+  width: calc(30% - 1em);
+}
+
+@media screen and (min-width: 480px) {
+  .order-input .input-field .short,
+  .order-payment .input-field .short {
+    max-width: 120px;
+  }
+}
+
+.order-input .input-field .medium,
+.order-payment .input-field .medium {
+  width: 100%;
+}
+
+@media screen and (min-width: 480px) {
+  .order-input .input-field .medium,
+  .order-payment .input-field .medium {
+    max-width: 230px;
+  }
+}
+
+.order-input .input-field .long,
+.order-payment .input-field .long {
+  width: 100%;
+}
+
+@media screen and (min-width: 480px) {
+  .order-input .input-field .long,
+  .order-payment .input-field .long {
+    max-width: 400px;
+  }
+}
+
+.order-input .input-field .full,
+.order-payment .input-field .full {
+  width: 100%;
+}
+
+@media screen and (max-width: 479px) {
+  .order-input .input-field.box,
+  .order-payment .input-field.box {
+    position: relative;
+  }
+  .order-input .input-field.box .select,
+  .order-payment .input-field.box .select {
+    width: calc(100% - 3em);
+  }
+  .order-input .input-field.box .select select,
+  .order-payment .input-field.box .select select {
+    width: inherit;
+  }
+  .order-input .input-field.box .notes,
+  .order-payment .input-field.box .notes {
+    width: 1em;
+  }
+}
+
+.notes-list {
+  padding: 0;
+  margin: 1em;
+}
+
+.notes-list li {
+  position: relative;
+  padding-left: 1.25em;
+  font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  list-style: none;
+}
+
+.notes-list li:before {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1em;
+  height: 1em;
+  content: "※";
 }
 
 .pagenation {
@@ -1060,7 +1280,7 @@ h2 span {
 
 .conditions {
   max-width: 650px;
-  margin: 50px auto 25px;
+  margin: 50px auto 50px;
   padding: 10px 20px;
   letter-spacing: 1px;
   border: solid 1px #00a5b3;
@@ -1084,18 +1304,16 @@ h2 span {
   line-height: 1.6;
 }
 
-.mod_form_importance_btn {
-  max-width: 650px;
-  margin: auto;
+.agreement {
   text-align: center;
 }
 
-.mod_form_importance_btn .check {
+.agreement .check {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
 }
 
-.mod_form_importance_btn .note {
+.agreement .note {
   font: 400 12px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
 }

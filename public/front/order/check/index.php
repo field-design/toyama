@@ -11,10 +11,12 @@
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Product.php');
 require_once(CLS_DIR . 'Order.php');
+require_once(CLS_DIR . 'Settings.php');
 
 $smarty = new SmartyExtends();
 $product = new Product();
 $order = new Order();
+$settings = new Settings();
 $log = new Log();
 
 $order_data = $order->getNewData();
@@ -57,6 +59,8 @@ if( !$err_flg ) {
         header('Location: ' . URL_ROOT_PATH . 'niikawa/');
         exit;
     }
+
+    $order_data['oderDate_text'] = date('Y年m月d日', $order_date);
 }
 
 //在庫チェック
@@ -80,6 +84,13 @@ if( !$err_flg ) {
         $smarty->assign('global_message', $msg);
         $err_flg = true;
     }
+}
+
+//事業者情報取得
+$settings_data = $settings->getSettings($product_data['PersonID']);
+if(!is_array($settings_data)) {
+    $smarty->assign('global_message', $settings_data);
+    $err_flg = true;
 }
 
 /**********************************************
@@ -148,8 +159,7 @@ if( isset($_POST['create_order']) ) {
     exit;
 }
 
-
-
 $smarty->assign('product_data', $product_data);
 $smarty->assign('order_data', $order_data);
+$smarty->assign('settings_data', $settings_data);
 $smarty->display(FRONT_DIR . 'order/check/index.tpl');

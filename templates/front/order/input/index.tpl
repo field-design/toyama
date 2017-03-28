@@ -81,13 +81,13 @@
                         <label class="label">お名前</label>
                         <div class="input-group">
                             <div class="input-field">
-                                <input name="nameSei" class="input" type="text" placeholder="姓" value="{$order_data.nameSei|default:''}">
+                                <input name="nameSei" class="input medium" type="text" placeholder="姓" value="{$order_data.nameSei|default:''}">
                                 {if isset($err_msg.nameSei) && $err_msg.nameSei != ''}
                                 <span class="error has-icon">{$err_msg.nameSei}</span>
                                 {/if}
                             </div>
                             <div class="input-field">
-                                <input name="nameMei" class="input" type="text" placeholder="名" value="{$order_data.nameMei|default:''}">
+                                <input name="nameMei" class="input medium" type="text" placeholder="名" value="{$order_data.nameMei|default:''}">
                                 {if isset($err_msg.nameMei) && $err_msg.nameMei != ''}
                                 <span class="error has-icon">{$err_msg.nameMei}</span>
                                 {/if}
@@ -99,13 +99,13 @@
                         <label class="label">フリガナ</label>
                         <div class="input-group">
                             <div class="input-field">
-                                <input name="kanaSei" class="input" type="text" placeholder="セイ" value="{$order_data.kanaSei|default:''}">
+                                <input name="kanaSei" class="input medium" type="text" placeholder="セイ" value="{$order_data.kanaSei|default:''}">
                                 {if isset($err_msg.kanaSei) && $err_msg.kanaSei != ''}
                                 <span class="error has-icon">{$err_msg.kanaSei}</span>
                                 {/if}
                             </div>
                             <div class="input-field">
-                                <input name="kanaMei" class="input" type="text" placeholder="メイ" value="{$order_data.kanaMei|default:''}">
+                                <input name="kanaMei" class="input medium" type="text" placeholder="メイ" value="{$order_data.kanaMei|default:''}">
                                 {if isset($err_msg.kanaMei) && $err_msg.kanaMei != ''}
                                 <span class="error has-icon">{$err_msg.kanaMei}</span>
                                 {/if}
@@ -116,7 +116,7 @@
                     <div class="input-area">
                         <label class="label">メールアドレス</label>
                         <div class="input-field">
-                            <input name="mail" class="input" type="email" placeholder="例：sample@example.com" value="{$order_data.mail|default:''}">
+                            <input name="mail" class="input long" type="email" placeholder="例：sample@example.com" value="{$order_data.mail|default:''}">
                             {if isset($err_msg.mail) && $err_msg.mail != ''}
                             <span class="error has-icon">{$err_msg.mail}</span>
                             {/if}
@@ -127,10 +127,10 @@
                         <label class="label">郵便番号</label>
                         <div class="input-group">
                             <div class="input-field">
-                                <input name="zipCode[]" class="input" type="number" min="0" placeholder="例：123" value="{$order_data.zipCode[0]|default:''}">
+                                <input name="zipCode[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.zipCode[0]|default:''}">
                             </div>
                             <div class="input-field">
-                                <input name="zipCode[]" class="input" type="number" min="0" placeholder="例：4567" value="{$order_data.zipCode[0]|default:''}">
+                                <input name="zipCode[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.zipCode[0]|default:''}">
                             </div>
                         </div>
                         {if isset($err_msg.zipCode) && $err_msg.zipCode != ''}
@@ -141,8 +141,8 @@
                     <div class="input-area">
                         <label class="label">都道府県</label>
                         <div class="input-group">
-                            <span class="select">
-                                <select name="pref">
+                            <span class="select input-field">
+                                <select name="pref" class="short">
                                     <option value="">都道府県</option>
                                     {foreach from=$const_pref item=pref key=key}
                                     <option value="{$pref}" {if $order_data.pref==$pref}selected{/if}>{$pref}</option>                                       
@@ -158,7 +158,7 @@
                     <div class="input-area">
                         <label class="label">市区町村、丁目・番地、ビル・マンション名等</label>
                         <div class="input-field">
-                            <input name="adress" class="input" type="text" placeholder="例：〇〇市〇〇 1丁目123 〇〇ビル101" value="{$order_data.adress|default:''}">
+                            <input name="adress" class="input full" type="text" placeholder="例：〇〇市〇〇 1丁目123 〇〇ビル101" value="{$order_data.adress|default:''}">
                             {if isset($err_msg.adress) && $err_msg.adress != ''}
                             <span class="error has-icon">{$err_msg.adress}</span>
                             {/if}
@@ -169,13 +169,13 @@
                         <label class="label">電話番号</label>
                         <div class="input-group">
                             <div class="input-field">
-                                <input name="tel_[]" class="input" type="number" min="0" placeholder="例：123" value="{$order_data.tel_[0]|default:''}">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.tel_[0]|default:''}">
                             </div>
                             <div class="input-field">
-                                <input name="tel_[]" class="input" type="number" min="0" placeholder="例：4567" value="{$order_data.tel_[1]|default:''}">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.tel_[1]|default:''}">
                             </div>
                             <div class="input-field">
-                                <input name="tel_[]" class="input" type="number" min="0" placeholder="例：8901" value="{$order_data.tel_[2]|default:''}">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：8901" value="{$order_data.tel_[2]|default:''}">
                             </div>
                         </div>
                         {if isset($err_msg.tel_) && $err_msg.tel_ != ''}
@@ -187,13 +187,13 @@
                         <label class="label">携帯電話番号</label>
                         <div class="input-group">
                             <div class="input-field">
-                                <input name="mobile[]" class="input" type="number" min="0" placeholder="例：123" value="{$order_data.mobile[0]|default:''}">
+                                <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.mobile[0]|default:''}">
                             </div>
                             <div class="input-field">
-                                <input name="mobile[]" class="input" type="number" min="0" placeholder="例：4567" value="{$order_data.mobile[1]|default:''}">
+                                <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.mobile[1]|default:''}">
                             </div>
                             <div class="input-field">
-                                <input name="mobile[]" class="input" type="number" min="0" placeholder="例：8901" value="{$order_data.mobile[2]|default:''}">
+                                <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：8901" value="{$order_data.mobile[2]|default:''}">
                             </div>
                         </div>
                         {if isset($err_msg.mobile) && $err_msg.mobile != ''}
@@ -206,7 +206,7 @@
                         <div class="input-group">
                             <div class="input-field">
                                 <span class="select">
-                                    <select name="birthday[]">
+                                    <select name="birthday[]" class="short">
                                         {section name=i start=1900 loop=($smarty.now|date_format:'%Y')}
                                         {assign var='index' value=$smarty.section.i.index}
                                         <option value="{$index}" {if ($order_data.birthday[0]|default:1900) == $index}selected{/if}>{$index}</option>
@@ -217,7 +217,7 @@
                             </div>
                             <div class="input-field">
                                 <span class="select">
-                                    <select name="birthday[]">
+                                    <select name="birthday[]" class="short">
                                         {section name=i start=1 loop=13}
                                         {assign var='index' value=$smarty.section.i.index}
                                         <option value="{$index}" {if ($order_data.birthday[1]|default:1) == $index}selected{/if}>{$index}</option>
@@ -228,7 +228,7 @@
                             </div>
                             <div class="input-field">
                                 <span class="select">
-                                    <select name="birthday[]">
+                                    <select name="birthday[]" class="short">
                                         {section name=i start=1 loop=32}
                                         {assign var='index' value=$smarty.section.i.index}
                                         <option value="{$index}" {if ($order_data.birthday[2]|default:1) == $index}selected{/if}>{$index}</option>
@@ -246,12 +246,8 @@
                     <div class="input-area">
                         <label class="label">性別</label>
                         <div class="input-field">
-                            <span class="select">
-                                <select name="gender">
-                                    <option value="1" {if ($order_data.gender|default:1) == 1}selected{/if}>男</option>
-                                    <option value="2" {if ($order_data.gender|default:1) == 2}selected{/if}>女</option>
-                                </select>
-                            </span>
+                            <label class="radio"><input type="radio" name="gender" value="1" {if ($order_data.gender|default:1) == 1}checked="checked"{/if}> 男性</label>
+                            <label class="radio"><input type="radio" name="gender" value="2" {if ($order_data.gender|default:1) == 2}checked="checked"{/if}> 女性</label>
                         </div>
                         {if isset($err_msg.gender) && $err_msg.gender != ''}
                         <span class="error has-icon">{$err_msg.gender}</span>
@@ -262,7 +258,7 @@
                         <label class="label">職業</label>
                         <div class="input-field">
                             <span class="select">
-                                <select name="job_">
+                                <select name="job_" class="short">
                                     <option value="1" {if ($order_data.job_|default:1) == 1}selected{/if}>学生</option>
                                     <option value="2" {if ($order_data.job_|default:1) == 2}selected{/if}>会社員</option>
                                     <option value="3" {if ($order_data.job_|default:1) == 3}selected{/if}>自営</option>

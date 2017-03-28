@@ -882,6 +882,14 @@ h2 {
   letter-spacing: 2px;
 }
 
+@media screen and (max-width: 479px) {
+  h2 {
+    font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
+    margin-bottom: 20px;
+  }
+}
+
 h2 span {
   border-bottom: solid 1px #000;
   padding: 0 5px 5px;
@@ -899,11 +907,25 @@ form dl dt {
   letter-spacing: 1px;
 }
 
+@media screen and (max-width: 479px) {
+  form dl dt {
+    font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  }
+}
+
 form dl dd {
   font: 400 16px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
   margin: 0;
   letter-spacing: 1px;
+}
+
+@media screen and (max-width: 479px) {
+  form dl dd {
+    font: 400 13px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.3rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 form dl dd input {
@@ -938,6 +960,13 @@ form .send button {
   background-color: #acacac;
   color: #fff;
   padding: 8px 40px;
+}
+
+@media screen and (max-width: 479px) {
+  form .send button {
+    font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+    font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  }
 }
 
 form .send button:hover {

@@ -72,15 +72,43 @@
             <h2><span>人数・オプション選択</span></h2>
 
             {if isset($global_message)}{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
-            
+
+            <section class="order-style">
+                <h3 class="order-ttl">お申し込みプラン</h3>
+
+                <table class="order-table">
+                    <tbody>
+                        <tr>
+                            <th class="text-center">主催者</th>
+                            <td class="text-left">{$settings_data.display_name}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">プラン名</th>
+                            <td class="text-left">{$product_data.title}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">出発日</th>
+                            <td class="text-left">{$order_data.oderDate_text}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">集合場所</th>
+                            <td class="text-left">{$product_data.locationname}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <ul class="notes-list">
+                    <li>本プランは上記主催者との契約になります。</li>
+                </ul>
+            </section>
             <section class="order-cart">
-                <h3 class="product-ttl">{$product_data.title|default:''}</h3>
+                <h3 class="product-ttl">人数選択</h3>
+                <p class="order-desc">お申し込みされる人数を入力してください。</p>
                 <table class="order-table">
                     <thead>
                         <tr>
                             <th class="text-center">内訳</th>
                             <th class="text-center">単価</th>
-                            <th class="text-center">数量</th>
+                            <th class="text-center">人数</th>
                             <th class="text-center">小計</th>
                         </tr>
                     </thead>
@@ -93,7 +121,16 @@
                             <td class="text-left">{$product_data.plan_title_text[$index]}{if $product_data.plan_Kind_text[$index] != ''}({$product_data.plan_Kind_text[$index]}){/if}</td>
                             <td class="text-right"><span>{$product_data.plan_Fee[$index]|default:0|number_format}</span>円</td>
                             <td class="text-center">
-                                <input name="amount[]" class="input amount" type="number" min="0" value="{$order_data.$volume|default:0}" />
+                                <div class="input-field">
+                                    <span class="select">
+                                        <select class="amount" name="amount[]">
+                                            {section name=j start=0 loop=11}
+                                            {assign var='index_j' value=$smarty.section.j.index}
+                                            <option value="{$index_j}" {if ($order_data.$volume|default:0) == $index_j}selected{/if}>{$index_j}</option>
+                                            {/section}
+                                        </select>
+                                    </span>
+                                </div>
                                 {if isset($err_msg.$volume) && $err_msg.$volume != ''}
                                 <br /><span class="error has-icon">{$err_msg.$volume}</span>
                                 {/if}
@@ -149,7 +186,7 @@
 {literal}
 <script>
     function calc(obj) {
-        var fee = parseInt($(obj).parent().prev().find('span').html().replace(',', ''));
+        var fee = parseInt($(obj).parents('td').prev().find('span').html().replace(',', ''));
         var volume = parseInt($(obj).val());
         if(!fee) {
             fee = 0;
@@ -158,7 +195,7 @@
             volume = 0;
         }
         var sum = fee * volume;
-        $(obj).parent().next().find('span').html(String(sum).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
+        $(obj).parents('td').next().find('span').html(String(sum).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'));
 
         var total = 0;
         $('span.sum').each(function(){
@@ -171,11 +208,11 @@
         $('#total').html(String(total).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, '$1,'))
     }
     $(function(){
-        $('input.amount').bind('keyup mouseup', function(){
+        $('select.amount').change(function(){
             calc(this);
         });
     });
-    $('input.amount').each(function() {
+    $('select.amount').each(function() {
         calc(this);
     });
 </script>
