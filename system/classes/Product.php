@@ -514,6 +514,7 @@ class Product extends Entity {
         $lines_per_page = $num;
 
         $sort = array();
+        $sort[] = array('name' => 'author', 'order' => 'asc');
         $sort[] = array('name' => 'registDate', 'order' => 'desc');
 
         $spiral->setSelectParam($columns, $serch_condition, null, $lines_per_page, $page, $sort);

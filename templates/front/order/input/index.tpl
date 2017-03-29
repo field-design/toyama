@@ -209,7 +209,7 @@
                                     <select name="birthday[]" class="short">
                                         {section name=i start=1900 loop=($smarty.now|date_format:'%Y')}
                                         {assign var='index' value=$smarty.section.i.index}
-                                        <option value="{$index}" {if ($order_data.birthday[0]|default:1900) == $index}selected{/if}>{$index}</option>
+                                        <option value="{$index}" {if ($order_data.birthday[0]|default:1980) == $index}selected{/if}>{$index}</option>
                                         {/section}
                                     </select>
                                 </span>

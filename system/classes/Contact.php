@@ -281,7 +281,7 @@ class Contact {
         $message .= "\r\n";
         $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエスト頂きありがとうございます。\r\n";
         $message .= "下記の内容にて、リクエストを承りました。\r\n";
-        $message .= "参加日より３日前までにお申し込みの場合２４時間／参加日の前日・前々日にお申し込みの場合は3時間以内にご連絡いたします。（※上記時間内にご連絡がない場合は、お手数ですが各事業者の営業時間内にお問い合わせください。）\r\n";
+        $message .= "参加日より3日前までにお申し込みの場合24時間以内／参加日の前日・前々日にお申し込みの場合は3時間以内にご連絡いたします。（※上記時間内にご連絡がない場合は、お手数ですが各事業者の営業時間内にお電話でお問い合わせください。）\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderInfo($order_data, 'リクエスト');
         $message .= "\r\n";
@@ -307,6 +307,7 @@ class Contact {
         $message .= "\r\n";
         $message .= "いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエストがありました。\r\n";
         $message .= "下記の内容にて承りましたので、内容の確認後、お客様へリクエスト回答をお願い致します。\r\n";
+        $message .= URL_ROOT_PATH_HOST . "/admin/\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderInfo($order_data, 'リクエスト');
