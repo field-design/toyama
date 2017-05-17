@@ -85,206 +85,473 @@
     <h2 class="title is-3">プロフィール</h2>
 
     <form method="POST">
-    
-    <div class="control">
-        <label class="label">表示名</label>
-        <p class="control">
-            <input name="display_name" class="input {if $data.display_name == ''}is-danger{/if} is-outlined" type="text" placeholder="例：観光販売システムズ" value="{$data.display_name|default:''}">
-            {if isset($err_msg.display_name) && $err_msg.display_name != ''}
-            <span class="error has-icon">{$err_msg.display_name}</span>
-            {/if}
-        </p>
-    </div>
 
-    <div class="control">
-        <label class="label">画像</label>
-        <p class="control">
-            <label class="button {if $data.photo_text == ''}is-danger{/if} is-outlined" for="main_img"><i class="fa fa-fw fa-picture-o"></i>画像を選択してください</label>
-            <input type="file" name="main_img" id="main_img" style="display:none;">
-            {if isset($err_msg.photo_text) && $err_msg.photo_text != ''}
-            <span class="error has-icon">{$err_msg.photo_text}</span>
-            {/if}
-        </p>
-        {if $data.photo_text != ''}
-        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_image.tpl' input_name='photo_text' image_url=$data.photo_text}
-        {/if}
-    </div>
+    <section class="profile">
+        <h2 class="conts-ttl subtitle">
+            会社情報
+        </h2>
 
-    <div class="control">
-        <label class="label">ロゴマーク</label>
-        <p class="control">
-            <label class="button {if $data.logomark == ''}is-danger{/if} is-outlined" for="logo_img"><i class="fa fa-fw fa-picture-o"></i>画像を選択してください</label>
-            <input type="file" name="logo_img" id="logo_img" style="display:none;">
-            {if isset($err_msg.logomark) && $err_msg.logomark != ''}
-            <span class="error has-icon">{$err_msg.logomark}</span>
+        <div class="control">
+            <label class="label">会社名<span class="must">必須</span></label>
+            <p class="control">
+            <input name="company_name" class="input {if $data.company_name == ''}is-danger{/if}" type="text" placeholder="例：株式会社観光販売システムズ" value="{$data.company_name|default:''}">
+            {if isset($err_msg.company_name) && $err_msg.company_name != ''}
+            <span class="error has-icon">{$err_msg.company_name}</span>
             {/if}
-        </p>
-        {if $data.logomark != ''}
-        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_image.tpl' input_name='logomark' image_url=$data.logomark}
-        {/if}
-    </div>
+            </p>
+        </div>
+
+        <div class="control">
+            <label class="label">表示名</label>
+            <p class="control">
+                <input name="display_name" class="input is-outlined" type="text" placeholder="例：観光販売システムズ" value="{$data.display_name|default:''}">
+            </p>
+        </div>
+
+        <div class="control">
+            <label class="label">画像</label>
+            <p class="control">
+                <label class="button is-outlined" for="main_img"><i class="fa fa-fw fa-picture-o"></i>画像を選択してください</label>
+                <input type="file" name="main_img" id="main_img" style="display:none;">
+                {if isset($err_msg.photo_text) && $err_msg.photo_text != ''}
+                <span class="error has-icon">{$err_msg.photo_text}</span>
+                {/if}
+            </p>
+            {if $data.photo_text != ''}
+            {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_image.tpl' input_name='photo_text' image_url=$data.photo_text}
+            {/if}
+        </div>
+
+        <div class="control">
+            <label class="label">ロゴマーク</label>
+            <p class="control">
+                <label class="button is-outlined" for="logo_img"><i class="fa fa-fw fa-picture-o"></i>画像を選択してください</label>
+                <input type="file" name="logo_img" id="logo_img" style="display:none;">
+                {if isset($err_msg.logomark) && $err_msg.logomark != ''}
+                <span class="error has-icon">{$err_msg.logomark}</span>
+                {/if}
+            </p>
+            {if $data.logomark != ''}
+            {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_image.tpl' input_name='logomark' image_url=$data.logomark}
+            {/if}
+        </div>
+
+        <hr>
+
+        <div class="control">
+            <label class="label">郵便番号<span class="must">必須</span></label>
+            <div class="control is-horizontal">
+                <div class="control is-grouped">
+                    <p class="control is-expanded">
+                        <input name="zipcode[]" class="input {if $data.zipcode[0] == ''}is-danger{/if}" type="number" min="0" placeholder="例：123" value="{$data.zipcode[0]|default:''}" />
+                        {if isset($err_msg.zipcode) && $err_msg.zipcode != ''}
+                        <span class="error has-icon">{$err_msg.zipcode}</span>
+                        {/if}
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="zipcode[]" class="input {if $data.zipcode[1] == ''}is-danger{/if}" type="number" min="0" placeholder="例：4567" value="{$data.zipcode[1]|default:''}" />
+                    </p>
+                </div>
+            </div>
+
+            <label class="label">都道府県<span class="must">必須</span></label>
+            <p class="control">
+            <span class="select">
+                <select name="pref" class="{if $data.pref == ''}is-danger{/if}">
+                    <option value="">都道府県</option>
+                    {foreach from=$const_pref item=pref key=key}
+                    <option value="{$pref}" {if $data.pref==$pref}selected{/if}>{$pref}</option>
+                    {/foreach}
+                </select>
+            </span>
+            {if isset($err_msg.pref) && $err_msg.pref != ''}
+            <span class="error has-icon">{$err_msg.pref}</span>
+            {/if}
+            </p>
+
+            <label class="label">市区町村、丁目・番地、ビル・マンション名等<span class="must">必須</span></label>
+            <p class="control">
+                <input name="address" class="input {if $data.address == ''}is-danger{/if}" type="text" placeholder="例：〇〇市〇〇 1丁目123 〇〇ビル101" value="{$data.address|default:''}" />
+                {if isset($err_msg.address) && $err_msg.address != ''}
+                <span class="error has-icon">{$err_msg.address}</span>
+                {/if}
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="control">
+            <label class="label">電話番号</label>
+            <div class="control is-horizontal">
+                <div class="control is-grouped">
+                    <p class="control is-expanded">
+                        <input name="tel_[]" class="input {if $data.tel_[0] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：123" value="{$data.tel_[0]|default:''}" />
+                        {if isset($err_msg.tel_) && $err_msg.tel_ != ''}
+                        <span class="error has-icon">{$err_msg.tel_}</span>
+                        {/if}
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="tel_[]" class="input {if $data.tel_[1] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：4567" value="{$data.tel_[1]|default:''}" />
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="tel_[]" class="input {if $data.tel_[2] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：8901" value="{$data.tel_[2]|default:''}" />
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control">
+            <label class="label">FAX番号</label>
+            <div class="control is-horizontal">
+                <div class="control is-grouped">
+                    <p class="control is-expanded">
+                        <input name="fax_[]" class="input" type="number" min="0" placeholder="例：123" value="{$data.fax_[0]|default:''}" />
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="fax_[]" class="input" type="number" min="0" placeholder="例：4567" value="{$data.fax_[1]|default:''}" />
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="fax_[]" class="input" type="number" min="0" placeholder="例：8901" value="{$data.fax_[2]|default:''}" />
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control">
+            <label class="label">営業時間</label>
+            <p class="control">
+            <input name="service_time" class="input {if $data.service_time == ''}is-danger{/if}" type="text" placeholder="例：平日9:00〜17:00" value="{$data.service_time|default:''}" />
+            {if isset($err_msg.service_time) && $err_msg.service_time != ''}
+            <span class="error has-icon">{$err_msg.service_time}</span>
+            {/if}
+            </p>
+        </div>
+
+        <hr>
+
+        <div class="control">
+            <label class="label">ホームページ URL</label>
+            <p class="control">
+            <input name="website_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.website_url|default:''}" />
+            </p>
+        </div>
+
+        <div class="control">
+            <label class="label">Facebookページ URL</label>
+            <p class="control">
+            <input name="facebook_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.facebook_url|default:''}" />
+            </p>
+        </div>
+
+        <div class="control">
+            <label class="label">Twitter URL</label>
+            <p class="control">
+            <input name="twitter_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.twitter_url|default:''}" />
+            </p>
+        </div>
+
+        <div class="control">
+            <label class="label">Instagram URL</label>
+            <p class="control">
+            <input name="instagram_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.instagram_url|default:''}" />
+            </p>
+        </div>
+
+        <hr>
+
+    </section>
 
     <hr>
 
-    <div class="control">
-        <label class="label">担当者名</label>
-        <div class="control is-horizontal">
-            <div class="control is-grouped">
-                <p class="control is-expanded">
-                    <input name="name01" class="input {if $data.name01 == ''}is-danger{/if} is-outlined" type="text" placeholder="姓" value="{$data.name01|default:''}">
-                    {if isset($err_msg.name01) && $err_msg.name01 != ''}
-                    <span class="error has-icon">{$err_msg.name01}</span>
+    <section class="staff">
+        <h2 class="conts-ttl subtitle">
+            担当者情報
+        </h2>
+
+        <div class="control">
+            <label class="label">担当者名<span class="must">必須</span></label>
+            <div class="control is-horizontal">
+                <div class="control is-grouped">
+                    <p class="control is-expanded">
+                        <input name="name01" class="input {if $data.name01 == ''}is-danger{/if} is-outlined" type="text" placeholder="姓" value="{$data.name01|default:''}" />
+                        {if isset($err_msg.name01) && $err_msg.name01 != ''}
+                        <span class="error has-icon">{$err_msg.name01}</span>
+                        {/if}
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="name02" class="input {if $data.name02 == ''}is-danger{/if} is-outlined" type="text" placeholder="名" value="{$data.name02|default:''}" />
+                        {if isset($err_msg.name02) && $err_msg.name02 != ''}
+                        <span class="error has-icon">{$err_msg.name02}</span>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control">
+            <label class="label">フリガナ<span class="must">必須</span></label>
+            <div class="control is-horizontal">
+                <div class="control is-grouped">
+                    <p class="control is-expanded">
+                        <input name="kana01" class="input {if $data.kana01 == ''}is-danger{/if}" type="text" placeholder="セイ" value="{$data.kana01|default:''}" />
+                        {if isset($err_msg.kana01) && $err_msg.kana01 != ''}
+                        <span class="error has-icon">{$err_msg.kana01}</span>
+                        {/if}
+                    </p>
+                    <p class="control is-expanded">
+                        <input name="kana02" class="input {if $data.kana02 == ''}is-danger{/if}" type="text" placeholder="メイ" value="{$data.kana02|default:''}" />
+                        {if isset($err_msg.kana02) && $err_msg.kana02 != ''}
+                        <span class="error has-icon">{$err_msg.kana02}</span>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="control">
+            <label class="label">メールアドレス<span class="must">必須</span></label>
+            <p class="control">
+                <input name="email" class="input {if $data.email == ''}is-danger{/if} is-outlined" type="email" placeholder="例：sample@firld-desing.jp" value="{$data.email|default:''}" />
+                {if isset($err_msg.email) && $err_msg.email != ''}
+                <span class="error has-icon">{$err_msg.email}</span>
+                {/if}
+            </p>
+        </div>
+    </section>
+
+    <hr>
+
+    <section class="agency">
+        <h2 class="conts-ttl subtitle">
+            旅行業について
+        </h2>
+
+        <div class="control">
+            <label class="label">旅行業に基づく旅行商品の取り扱い<span class="must">必須</span></label>
+            <p class="control">
+                <label class="radio">
+                    <input type="radio" name="agency" value="1" {if $data.agency==1}checked='checked'{/if}> 取り扱いあり
+                </label>
+                <label class="radio">
+                    <input type="radio" name="agency" value="0" {if $data.agency==0}checked='checked'{/if}> 取り扱いなし
+                </label>
+            </p>
+        </div>
+
+        <div class="travel-agency-input">
+            <div class="control">
+
+                <label class="label">登録先<span class="must">必須</span></label>
+                <p class="control">
+                  <span class="select">
+                    <select name="Registered" class="{if $data.Registered == ''}is-danger{/if}">
+                        <option value="" selected>選択してください</option>
+                        {foreach from=ConstantMy::$aryGovernor item=item key=key}
+                        <option value="{$key}" {if $data.Registered==$key}selected{/if}>{$item}</option>                                       
+                        {/foreach}
+                    </select>
+                  </span>
+                  {if isset($err_msg.Registered) && $err_msg.Registered != ''}
+                  <span class="error has-icon">{$err_msg.Registered}</span>
+                  {/if}
+                </p>
+
+                <label class="label">企画旅行業者の登録番号<span class="must">必須</span></label>
+                <p class="control has-addons">
+                    <span class="select">
+                      <select name="Travel" class="{if $data.Travel == ''}is-danger{/if}">
+                          <option value="" selected>選択してください</option>
+                          {foreach from=ConstantMy::$aryTravel item=item key=key}
+                          <option value="{$key}" {if $data.Travel==$key}selected{/if}>{$item}</option>                                       
+                          {/foreach}
+                      </select>
+                    </span>
+                    <span class="button is-disabled">第</span>
+                    <input name="projectNumber" class="input {if $data.projectNumber == ''}is-danger{/if}" type="number" placeholder="例：1" value="{$data.projectNumber|default:''}"/>
+                    <span class="button is-disabled">号</span>
+                    {if isset($err_msg.Travel) && $err_msg.Travel != ''}
+                    <span class="error has-icon" style="margin-left:10px;">{$err_msg.Travel}</span>
+                    {elseif isset($err_msg.projectNumber) && $err_msg.projectNumber != ''}
+                    <span class="error has-icon" style="margin-left:10px;">{$err_msg.projectNumber}</span>
                     {/if}
                 </p>
-                <p class="control is-expanded">
-                    <input name="name02" class="input {if $data.name02 == ''}is-danger{/if} is-outlined" type="text" placeholder="名" value="{$data.name02|default:''}">
-                    {if isset($err_msg.name02) && $err_msg.name02 != ''}
-                    <span class="error has-icon">{$err_msg.name02}</span>
+
+                <label class="label">氏名又は名称<span class="must">必須</span></label>
+                <p class="control">
+                    <input name="marketer_type" class="input {if $data.marketer_type == ''}is-danger{/if}" type="text" placeholder="例：観光販売システムズ" value="{$data.marketer_type|default:''}"/>
+                    {if isset($err_msg.marketer_type) && $err_msg.marketer_type != ''}
+                    <span class="error has-icon">{$err_msg.marketer_type}</span>
                     {/if}
                 </p>
+
+                <label class="label">本社所在地<span class="must">必須</span></label>
+                <p class="control">
+                    <input name="projectAddress" class="input {if $data.projectAddress == ''}is-danger{/if}" type="text" placeholder="例：愛知県名古屋市中村区名駅3丁目21番7号　名古屋三交ビル9階" value="{$data.projectAddress|default:''}"/>
+                    {if isset($err_msg.projectAddress) && $err_msg.projectAddress != ''}
+                    <span class="error has-icon">{$err_msg.projectAddress}</span>
+                    {/if}
+                </p>
+
+                <label class="label">旅行取扱管理者<span class="must">必須</span></label>
+                <p class="control">
+                    <input name="TravelAdmin" class="input {if $data.TravelAdmin == ''}is-danger{/if}" type="text" placeholder="例：観光 健斗" value="{$data.TravelAdmin|default:''}"/>
+                    {if isset($err_msg.TravelAdmin) && $err_msg.TravelAdmin != ''}
+                    <span class="error has-icon">{$err_msg.TravelAdmin}</span>
+                    {/if}
+                </p>
+
+                <label class="label">営業所1</label>
+                <p class="control">
+                    <input name="SalesOffice1" class="input" type="text" placeholder="例：愛知県名古屋市中村区名駅3丁目21番7号　名古屋三交ビル9階" value="{$data.SalesOffice1|default:''}"/>
+                </p>
+
+                <label class="label">営業所2</label>
+                <p class="control">
+                    <input name="SalesOffice2" class="input" type="text" placeholder="例：愛知県名古屋市中村区名駅3丁目21番7号　名古屋三交ビル9階" value="{$data.SalesOffice2|default:''}"/>
+                </p>
+
+                <label class="label">営業所3</label>
+                <p class="control">
+                    <input name="SalesOffice3" class="input" type="text" placeholder="例：愛知県名古屋市中村区名駅3丁目21番7号　名古屋三交ビル9階" value="{$data.SalesOffice3|default:''}"/>
+                </p>
+
+                <label class="label">約款<span class="must">必須</span></label>
+                <p class="control">
+                    <label class="radio">
+                        <input type="radio" name="Clause" value="1" {if $data.Clause==1}checked='checked'{/if}> 標準旅行業約款を使用する
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="Clause" value="2" {if $data.Clause==2}checked='checked'{/if}> PDFファイルをアップロードする
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="Clause" value="3" {if $data.Clause==3}checked='checked'{/if}> URLリンクを入力する
+                    </label>
+                </p>
+
+                <div class="control agreement-pdf">
+                    <label class="label">約款 PDF<span class="must">必須</span></label>
+                    <p class="control">
+                        <label class="button is-outlined" for="pdf_file2">ファイルを選択してください</label>
+                        <input type="file" name="pdf_file2" id="pdf_file2" style="display:none;">
+                    </p>
+                    {if $data.file2 != ''}
+                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_pdf_file.tpl' input_name="file2" url=$data.file2}
+                    {/if}
+                    {if isset($err_msg.file2) && $err_msg.file2 != ''}
+                    <div><span class="error has-icon">{$err_msg.file2}</span></div>
+                    {/if}
+                </div>
+
+                <div class="control agreement-url">
+                    <label class="label">約款 URL<span class="must">必須</span></label>
+                    <p class="control">
+                      <input name="ClauseURL" class="input {if $data.ClauseURL == ''}is-danger{/if}" type="text" placeholder="例：http://example.com" value="{$data.ClauseURL|default:''}"/>
+                      {if isset($err_msg.ClauseURL) && $err_msg.ClauseURL != ''}
+                      <span class="error has-icon">{$err_msg.ClauseURL}</span>
+                      {/if}
+                    </p>
+                </div>
+
+                <label class="label">旅行条件書<span class="must">必須</span></label>
+                <p class="control">
+                    <label class="radio">
+                        <input type="radio" name="file_select" value="1" {if $data.file_select==1}checked="checked"{/if}> PDFファイルをアップロードする
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="file_select" value="2" {if $data.file_select==2}checked="checked"{/if}> URLリンクを入力する
+                    </label>
+                </p>
+
+                <div class="control condition-pdf">
+                    <label class="label">旅行条件書 PDF</label>
+                    <p class="control">
+                        <label class="button is-outlined" for="pdf_file">ファイルを選択してください</label>
+                        <input type="file" name="pdf_file" id="pdf_file" style="display:none;">
+                    </p>
+                    {if $data.file != ''}
+                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_pdf_file.tpl' input_name="file" url=$data.file}
+                    {/if}
+                </div>
+
+                <div class="control condition-url">
+                    <label class="label">旅行条件書 URL</label>
+                    <p class="control">
+                    <input class="input {if $data.condition_url == ''}is-danger{/if}" name="condition_url" type="text" placeholder="例：http://example.com" value="{$data.condition_url|default:''}">
+                    {if isset($err_msg.condition_url) && $err_msg.condition_url != ''}
+                    <span class="error has-icon">{$err_msg.condition_url}</span>
+                    {/if}
+                    </p>
+                </div>
+
+                <label class="label">プライバシーポリシー<span class="must">必須</span></label>
+                <p class="control">
+                    <label class="radio">
+                        <input type="radio" name="privacypolicy" value="1" {if $data.privacypolicy==1}checked="checked"{/if} /> PDFファイルをアップロードする
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="privacypolicy" value="2" {if $data.privacypolicy==2}checked="checked"{/if} /> URLリンクを入力する
+                    </label>
+                </p>
+
+                <div class="control policy-pdf">
+                    <label class="label">プライバシーポリシー PDF</label>
+                    <p class="control">
+                        <label class="button is-outlined" for="pdf_file3">ファイルを選択してください</label>
+                        <input type="file" name="pdf_file3" id="pdf_file3" style="display:none;">
+                    </p>
+                    {if $data.file3 != ''}
+                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_pdf_file.tpl' input_name="file3" url=$data.file3}
+                    {/if}
+                </div>
+
+                <div class="control policy-url">
+                    <label class="label">プライバシーポリシー URL<span class="must">必須</span></label>
+                    <p class="control">
+                      <input name="PrivacyURL" class="input {if $data.PrivacyURL == ''}is-danger{/if}" type="text" placeholder="例：http://example.com" value="{$data.PrivacyURL|default:''}"/>
+                      {if isset($err_msg.PrivacyURL) && $err_msg.PrivacyURL != ''}
+                      <span class="error has-icon">{$err_msg.PrivacyURL}</span>
+                      {/if}
+                    </p>
+                </div>
+
+                <label class="label">旅行業務取扱料金表<span class="must">必須</span></label>
+                <p class="control">
+                    <label class="radio">
+                        <input type="radio" name="TravelPriceList" value="1" {if $data.TravelPriceList==1}checked="checked"{/if} /> PDFファイルをアップロードする
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="TravelPriceList" value="2" {if $data.TravelPriceList==2}checked="checked"{/if} /> URLリンクを入力する
+                    </label>
+                </p>
+
+                <div class="control charges-pdf">
+                    <label class="label">旅行業務取扱料金表 PDF<span class="must">必須</span></label>
+                    <p class="control">
+                        <label class="button is-outlined" for="pdf_file4">ファイルを選択してください</label>
+                        <input type="file" name="pdf_file4" id="pdf_file4" style="display:none;">
+                    </p>
+                    {if $data.file4 != ''}
+                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_pdf_file.tpl' input_name="file4" url=$data.file4}
+                    {/if}
+                </div>
+
+                <div class="control charges-url">
+                    <label class="label">旅行業務取扱料金表 URL<span class="must">必須</span></label>
+                    <p class="control">
+                      <input name="PricelistURL" class="input {if $data.PricelistURL == ''}is-danger{/if}" type="text" placeholder="例：http://example.com" value="{$data.PricelistURL|default:''}"/>
+                      {if isset($err_msg.PricelistURL) && $err_msg.PricelistURL != ''}
+                      <span class="error has-icon">{$err_msg.PricelistURL}</span>
+                      {/if}
+                    </p>
+                </div>
+
+                <label class="label">加入旅行業協会名（加入会社のみ）</label>
+                <p class="control">
+                    <input name="projectName" class="input" type="text" placeholder="例：一般社団法人日本旅行業協会（JATA）正会員" value="{$data.projectName|default:''}"/>
+                </p>
             </div>
         </div>
-    </div>
-
-    <div class="control">
-        <label class="label">フリガナ</label>
-        <div class="control is-horizontal">
-            <div class="control is-grouped">
-                <p class="control is-expanded">
-                    <input name="kana01" class="input" type="text" placeholder="セイ" value="{$data.kana01|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="kana02" class="input" type="text" placeholder="メイ" value="{$data.kana02|default:''}">
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="control">
-        <label class="label">メールアドレス</label>
-        <p class="control">
-            <input name="email" class="input {if $data.email == ''}is-danger{/if} is-outlined" type="email" placeholder="例：sample@firld-desing.jp" value="{$data.email|default:''}">
-            {if isset($err_msg.email) && $err_msg.email != ''}
-            <span class="error has-icon">{$err_msg.email}</span>
-            {/if}
-        </p>
-    </div>
-
-    <hr>
-
-    <div class="control">
-        <label class="label">会社名</label>
-        <p class="control">
-          <input name="company_name" class="input" type="text" placeholder="例：株式会社観光販売システムズ" value="{$data.company_name|default:''}">
-        </p>
-    </div>
-
-    <div class="control">
-        <label class="label">郵便番号</label>
-        <div class="control is-horizontal">
-            <div class="control is-grouped">
-                <p class="control is-expanded">
-                    <input name="zipcode[]" class="input" type="number" min="0" placeholder="例：123" value="{$data.zipcode[0]|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="zipcode[]" class="input" type="number" min="0" placeholder="例：4567" value="{$data.zipcode[1]|default:''}">
-                </p>
-            </div>
-        </div>
-
-        <label class="label">都道府県</label>
-        <p class="control">
-          <span class="select">
-            <select name="pref">
-                <option value="">都道府県</option>
-                {foreach from=$const_pref item=pref key=key}
-                <option value="{$pref}" {if $data.pref==$pref}selected{/if}>{$pref}</option>                                       
-                {/foreach}
-            </select>
-          </span>
-        </p>
-
-        <label class="label">市区町村、丁目・番地、ビル・マンション名等</label>
-        <p class="control">
-            <input name="address" class="input" type="text" placeholder="例：〇〇市〇〇 1丁目123 〇〇ビル101" value="{$data.address|default:''}">
-        </p>
-    </div>
-
-    <hr>
-
-    <div class="control">
-        <label class="label">電話番号</label>
-        <div class="control is-horizontal">
-            <div class="control is-grouped">
-                <p class="control is-expanded">
-                    <input name="tel_[]" class="input {if $data.tel_[0] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：123" value="{$data.tel_[0]|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="tel_[]" class="input {if $data.tel_[1] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：4567" value="{$data.tel_[1]|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="tel_[]" class="input {if $data.tel_[2] == ''}is-danger{/if} is-outlined" type="number" min="0" placeholder="例：8901" value="{$data.tel_[2]|default:''}">
-                </p>
-            </div>
-        </div>
-        {if isset($err_msg.tel_) && $err_msg.tel_ != ''}
-        <span class="error has-icon">{$err_msg.tel_}</span>
-        {/if}
-    </div>
-
-    <div class="control">
-        <label class="label">FAX番号</label>
-        <div class="control is-horizontal">
-            <div class="control is-grouped">
-                <p class="control is-expanded">
-                    <input name="fax_[]" class="input" type="number" min="0" placeholder="例：123" value="{$data.fax_[0]|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="fax_[]" class="input" type="number" min="0" placeholder="例：4567" value="{$data.fax_[1]|default:''}">
-                </p>
-                <p class="control is-expanded">
-                    <input name="fax_[]" class="input" type="number" min="0" placeholder="例：8901" value="{$data.fax_[2]|default:''}">
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="control">
-        <label class="label">営業時間</label>
-        <p class="control">
-          <input name="service_time" class="input" type="text" placeholder="例：平日9:00〜17:00" value="{$data.service_time|default:''}">
-        </p>
-    </div>
-
-    <hr>
-
-    <div class="control">
-        <label class="label">ホームページ URL</label>
-        <p class="control">
-          <input name="website_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.website_url|default:''}">
-        </p>
-    </div>
-
-    <div class="control">
-        <label class="label">Facebookページ URL</label>
-        <p class="control">
-          <input name="facebook_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.facebook_url|default:''}">
-        </p>
-    </div>
-
-    <div class="control">
-        <label class="label">Twitter URL</label>
-        <p class="control">
-          <input name="twitter_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.twitter_url|default:''}">
-        </p>
-    </div>
-
-    <div class="control">
-        <label class="label">Instagram URL</label>
-        <p class="control">
-          <input name="instagram_url" class="input" type="text" placeholder="例：http://example.com" value="{$data.instagram_url|default:''}">
-        </p>
-    </div>
+    </section>
 
     <hr>
 
@@ -293,26 +560,22 @@
             取消料
         </h2>
         <div class="conts-body">
-            <label class="label">説明文</label>
-            <p class="control">
-                <textarea name="cancel_version" class="textarea {if $data.cancel_version == ''}is-danger{/if}" placeholder="例：契約成立後、お客様のご都合で契約を解除する場合、旅行代金に対してお客様1名につき下記の料率で取消料をいただきます。なお、複数人数のご参加で、一部のお客様が契約を解除される場合は、ご参加のお客様から運送・宿泊機関等の（1台・1室あたりの）ご利用人数の変更に対する差額代金をそれぞれいただきます。">{$data.cancel_version|default:''}</textarea>
-                {if isset($err_msg.cancel_version) && $err_msg.cancel_version != ''}
-                <span class="error has-icon">{$err_msg.cancel_version}</span>
-                {/if}
-            </p>
 
             <label class="label">
-                料率
+                料率<span class="must">必須</span>
                 <span class="help">最大10件まで追加可能</span>
             </label>
             <div id="cancel_container" class="sortable">
-                {section name=i start=0 loop=count($data.mt_cancel_ttl)}
+                {section name=i start=0 loop=count($data.mt_cancel_text)}
                     {assign var='index' value=$smarty.section.i.index}
-                    {if $index == 0 || $data.mt_cancel_ttl[$index] != '' || $data.MtCancelRatio[$index] != ''}
-                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_cancel.tpl' mt_cancel_ttl=$data.mt_cancel_ttl[$index] MtCancelRatio=$data.MtCancelRatio[$index]}
+                    {if $index == 0 || $data.mt_cancel_text[$index] != ''}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_cancel.tpl' MtCancelRatio=$data.MtCancelRatio[$index] mt_cancel_text=$data.mt_cancel_text[$index]}
                     {/if}
                 {/section}
             </div>
+            {if isset($err_msg.mt_cancel_text) && $err_msg.mt_cancel_text != ''}
+            <div><span class="error has-icon">{$err_msg.mt_cancel_text}</span></div>
+            {/if}
             <p id="cancel_add" class="control add-btn">
                 <a class="button is-primary">
                 <span class="icon">
@@ -341,80 +604,137 @@
                 <span>行を追加</span>
                 </a>
             </p>
-
         </div>
     </section>
 
     <hr>
 
-    <div class="control">
-        <label class="label">旅行業に基づく旅行商品の取り扱い</label>
-        <span class="help is-danger">※旅行商品を取り扱う場合は、株式会社観光販売システムズとの契約が別途必要となります。</span>
+    <section class="payment">
+        <h2 class="conts-ttl subtitle">
+            決済関連設定
+        </h2>
+
+        <label class="label">取扱決済<span class="must">必須</span></label>
         <p class="control">
             <label class="checkbox">
-              <input type="checkbox" name="agency" value="1" {if $data.agency==1}checked='checked'{/if}>
-              取り扱う
+                <input type="checkbox" class="settlement" name="settlement[]" value="1" {if in_array('1', $data.settlement)}checked="checked"{/if} /> クレジットカード
             </label>
+            <label class="checkbox">
+                <input type="checkbox" class="settlement" name="settlement[]" value="2" {if in_array('2', $data.settlement)}checked="checked"{/if} /> コンビニ
+            </label>
+            {if isset($err_msg.settlement) && $err_msg.settlement != ''}
+            <span class="error has-icon" style="margin-left: 10px;">{$err_msg.settlement}</span>
+            {/if}
         </p>
-    </div>
 
-    <div class="travel-agency-input">
-        <div class="control">
-            <label class="label">旅行条件書</label>
-            <p class="control">
-                <label class="radio">
-                    <input type="radio" name="file_select" value="1" {if $data.file_select==1}checked="checked"{/if}> PDFファイルをアップロードする
-                </label>
-                <label class="radio">
-                    <input type="radio" name="file_select" value="2" {if $data.file_select==2}checked="checked"{/if}> URLリンクを入力する
-                </label>
-            </p>
-
-            <div class="control condition-pdf">
-                <label class="label">旅行条件書 PDF</label>
+        <section class="receipt">
+            <h3 class="conts-ttl subtitle is-6">
+                コンビニレシートに記載の問い合わせ先
+            </h3>
+            <div class="control has-icon">
+                <label class="label">問い合わせ先<span class="must">必須</span></label>
                 <p class="control">
-                    <label class="button is-outlined" for="pdf_file">ファイルを選択してください</label>
-                    <input type="file" name="pdf_file" id="pdf_file" style="display:none;">
+                    <input name="info" class="input {if $data.info == ''}is-danger{/if}" type="text" placeholder="例：株式会社観光販売システムズ" value="{$data.info|default:''}"/>
+                    <span class="icon is-small">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    {if isset($err_msg.info) && $err_msg.info != ''}
+                    <span class="error has-icon">{$err_msg.info}</span>
+                    {/if}
                 </p>
-                {if $data.file != ''}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/settings_pdf_file.tpl' url=$data.file}
+            </div>
+
+            <div class="control has-icon">
+                <label class="label">電話番号<span class="must">必須</span><p class="help is-danger">最大半角12文字</p></label>
+                <p class="control">
+                    <input name="tel_2" class="input {if $data.tel_2 == ''}is-danger{/if}" type="text" maxlength="12" placeholder="例：05037754727"  value="{$data.tel_2|default:''}"/>
+                    <span class="icon is-small">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    {if isset($err_msg.tel_2) && $err_msg.tel_2 != ''}
+                    <span class="error has-icon">{$err_msg.tel_2}</span>
+                    {/if}
+                </p>
+            </div>
+
+            <div class="control has-icon">
+                <label class="label">受付時間<span class="must">必須</span><p class="help is-danger">最大半角11文字</p></label>
+                <p class="control">
+                    <input name="informationTime" class="input {if $data.informationTime == ''}is-danger{/if}" type="text" maxlength="11" placeholder="例：10:00-18:30" value="{$data.informationTime|default:''}"/>
+                    <span class="icon is-small">
+                        <i class="fa fa-user"></i>
+                    </span>
+                    {if isset($err_msg.informationTime) && $err_msg.informationTime != ''}
+                    <span class="error has-icon">{$err_msg.informationTime}</span>
+                    {/if}
+                </p>
+            </div>
+        </section>
+    </section>
+
+    <hr {if !$is_admin}style="display: none;"{/if}>
+
+    <section class="payment-gmo" {if !$is_admin}style="display: none;"{/if}>
+        <h2 class="conts-ttl subtitle">
+            GMOペイメントゲートウェイ接続設定
+        </h2>
+
+        <div class="control has-icon">
+            <label class="label">サイトID<span class="must">必須</span></label>
+            <p class="control">
+                <input name="siteID" class="input {if $data.siteID == ''}is-danger{/if}" type="text" placeholder="例：mst2000008479" value="{$data.siteID|default:''}"/>
+                <span class="icon is-small">
+                    <i class="fa fa-user"></i>
+                </span>
+                {if isset($err_msg.siteID) && $err_msg.siteID != ''}
+                <span class="error has-icon">{$err_msg.siteID}</span>
                 {/if}
-            </div>
-
-            <div class="control condition-url">
-                <label class="label">旅行条件書 URL</label>
-                <p class="control">
-                  <input class="input" name="condition_url" type="text" placeholder="例：http://example.com" value="{$data.condition_url|default:''}">
-                </p>
-            </div>
-
-            <label class="label">企画旅行業者の氏名又は名称</label>
-            <p class="control">
-                <input class="input" name="marketer_type" type="text" placeholder="例：観光販売システムズ" value="{$data.marketer_type|default:''}">
-            </p>
-
-            <label class="label">企画旅行業者の住所</label>
-            <p class="control">
-                <input class="input" name="projectAddress" type="text" placeholder="例：愛知県名古屋市中村区名駅3丁目21番7号　名古屋三交ビル9階" value="{$data.projectAddress|default:''}">
-            </p>
-
-            <label class="label">企画旅行業者の登録番号</label>
-            <p class="control has-addons">
-                <span class="button is-disabled">観光庁長官登録旅行業第</span>
-                <input class="input" name="projectNumber" type="number" placeholder="例：1600" value="{$data.projectNumber|default:''}">
-                <span class="button is-disabled">号</span>
-            </p>
-
-            <label class="label">加入旅行業協会名（加入会社のみ）</label>
-            <p class="control">
-                <input class="input" name="projectName" type="text" placeholder="例：一般社団法人日本旅行業協会（JATA）正会員" value="{$data.projectName|default:''}">
             </p>
         </div>
-    </div>
 
-    <hr>
+        <div class="control has-icon">
+            <label class="label">ショップID<span class="must">必須</span></label>
+            <p class="control">
+                <input name="shopID" class="input {if $data.shopID == ''}is-danger{/if}" type="text" placeholder="例：9101003936690" value="{$data.shopID|default:''}"/>
+                <span class="icon is-small">
+                    <i class="fa fa-user"></i>
+                </span>
+                {if isset($err_msg.shopID) && $err_msg.shopID != ''}
+                <span class="error has-icon">{$err_msg.shopID}</span>
+                {/if}
+            </p>
+        </div>
 
-    <section class="password">
+        <div class="control has-icon">
+            <label class="label">パスワード<span class="must">必須</span></label>
+            <p class="control">
+                <input name="pass2" class="input {if $data.pass2 == ''}is-danger{/if}" type="text" placeholder="例：2kkm86ac" value="{$data.pass2|default:''}"/>
+                <span class="icon is-small">
+                    <i class="fa fa-lock"></i>
+                </span>
+                {if isset($err_msg.pass2) && $err_msg.pass2 != ''}
+                <span class="error has-icon">{$err_msg.pass2}</span>
+                {/if}
+            </p>
+        </div>
+
+        <div class="control has-icon">
+            <label class="label">決済選択呼出しAPI 接続先URL<span class="must">必須</span></label>
+            <p class="control">
+                <input name="APIurl" class="input {if $data.APIurl == ''}is-danger{/if}" type="text" placeholder="例：https://p01.mul-pay.jp/link/9101003936690/Multi/Entry" value="{$data.APIurl|default:''}"/>
+                <span class="icon is-small">
+                    <i class="fa fa-globe"></i>
+                </span>
+                {if isset($err_msg.APIurl) && $err_msg.APIurl != ''}
+                <span class="error has-icon">{$err_msg.APIurl}</span>
+                {/if}
+            </p>
+        </div>
+    </section>
+
+    <hr {if !$is_admin}style="display: none;"{/if}>
+
+    <section class="password" {if !$is_admin}style="display: none;"{/if}>
         <h2 class="conts-ttl subtitle">
             パスワード再設定
         </h2>
@@ -422,7 +742,7 @@
         <div class="control has-icon">
             <label class="label">新しいパスワード</label>
             <p class="control">
-                <input class="input" name="pass" type="password" placeholder="●●●●●●●●">
+                <input class="input" name="pass" type="password" placeholder="●●●●●●●●" />
                 <span class="icon is-small">
                     <i class="fa fa-lock"></i>
                 </span>
@@ -435,7 +755,7 @@
         <div class="control has-icon">
             <label class="label">パスワードの確認</label>
             <p class="control">
-                <input class="input" name="pass_confirm" type="password" placeholder="●●●●●●●●">
+                <input class="input" name="pass_confirm" type="password" placeholder="●●●●●●●●" />
                 <span class="icon is-small">
                     <i class="fa fa-lock"></i>
                 </span>
@@ -528,30 +848,103 @@
 
 <script src="//cdn.ckeditor.com/4.5.8/basic/ckeditor.js"></script>
 <script>
+/*
   CKEDITOR.replace('ckeditor01', {
     language: 'ja',
     uiColor: '#ffffff',
   });
+*/
 </script>
 
-<script type="text/javascript">
-$(function() {
-    $('[name=agency]').change(function() {
-        if ($(this).is(':checked')) {
+<script>
+
+    $(function() {
+        // 旅行業に基づく旅行商品の取り扱い
+        if ($('[name=agency]:eq(0)').prop('checked')) {
             $('.travel-agency-input').fadeIn();
         } else {
             $('.travel-agency-input').fadeOut();
         }
-    }).trigger('change');
+        $('[name=agency]').click(function() {
+            if ($('[name=agency]:eq(0)').prop('checked')) {
+                $('.travel-agency-input').fadeIn();
+            } else {
+                $('.travel-agency-input').fadeOut();
+            }
+        });
 
-    $('[name=file_select]').change(function() {
-        if ($("input:radio[name='file_select']:checked").val() == "1") {
-            $('.condition-url').fadeOut('normal', function(){ $('.condition-pdf').fadeIn(); });
-        } else if ($("input:radio[name='file_select']:checked").val() == "2") {
-            $('.condition-pdf').fadeOut('normal', function(){ $('.condition-url').fadeIn(); });
+        // 取扱決済
+        if ($('.settlement:eq(1)').prop('checked')) {
+            $('.receipt').fadeIn();
+        } else {
+            $('.receipt').fadeOut();
         }
-    }).trigger('change');
-});
+        $('.settlement').click(function() {
+            if ($('.settlement:eq(1)').prop('checked')) {
+                $('.receipt').fadeIn();
+            } else {
+                $('.receipt').fadeOut();
+            }
+        });
+
+        // $('[name=travel-agency-available]').change(function() {
+        //     if ($(this).is(':checked')) {
+        //         $('.travel-agency-input').fadeIn();
+        //     } else {
+        //         $('.travel-agency-input').fadeOut();
+        //     }
+        // }).trigger('change');
+
+        // 約款
+        $('[name=Clause]').change(function() {
+            if ($("input:radio[name='Clause']:checked").val() == "1") {
+                $('.agreement-default').show();
+                $('.agreement-pdf').hide();
+                $('.agreement-url').hide();
+            } else if ($("input:radio[name='Clause']:checked").val() == "2") {
+                $('.agreement-pdf').show();
+                $('.agreement-default').hide();
+                $('.agreement-url').hide();
+            } else if ($("input:radio[name='Clause']:checked").val() == "3") {
+                $('.agreement-url').show();
+                $('.agreement-default').hide();
+                $('.agreement-pdf').hide();
+            }
+        }).trigger('change');
+
+        // 旅行条件書
+        $('[name=file_select]').change(function() {
+            if ($("input:radio[name='file_select']:checked").val() == "1") {
+                $('.condition-pdf').show();
+                $('.condition-url').hide();
+            } else if ($("input:radio[name='file_select']:checked").val() == "2") {
+                $('.condition-url').show();
+                $('.condition-pdf').hide();
+            }
+        }).trigger('change');
+
+        // プライバシーポリシー
+        $('[name=privacypolicy]').change(function() {
+            if ($("input:radio[name='privacypolicy']:checked").val() == "1") {
+                $('.policy-pdf').show();
+                $('.policy-url').hide();
+            } else if ($("input:radio[name='privacypolicy']:checked").val() == "2") {
+                $('.policy-url').show();
+                $('.policy-pdf').hide();
+            }
+        }).trigger('change');
+
+        // 旅行業務取扱料金表
+        $('[name=TravelPriceList]').change(function() {
+            if ($("input:radio[name='TravelPriceList']:checked").val() == "1") {
+                $('.charges-pdf').show();
+                $('.charges-url').hide();
+            } else if ($("input:radio[name='TravelPriceList']:checked").val() == "2") {
+                $('.charges-url').show();
+                $('.charges-pdf').hide();
+            }
+        }).trigger('change');
+    });
 </script>
 <script>
     $(function() {
@@ -609,6 +1002,46 @@ $(function() {
                 }
             }
         );
+
+        var fileapi4 = new FileApi();
+        fileapi4.setUpload(
+            '#pdf_file2',
+            'pdf_file2',
+            {
+                afterupload : function(response) {
+                    $('#pdf_file2').val('');
+                    $('#pdf_file2').parent().next().remove();
+                    $('#pdf_file2').parent().after(response);
+                }
+            }
+        );
+
+        var fileapi5 = new FileApi();
+        fileapi5.setUpload(
+            '#pdf_file3',
+            'pdf_file3',
+            {
+                afterupload : function(response) {
+                    $('#pdf_file3').val('');
+                    $('#pdf_file3').parent().next().remove();
+                    $('#pdf_file3').parent().after(response);
+                }
+            }
+        );
+
+        var fileapi6 = new FileApi();
+        fileapi6.setUpload(
+            '#pdf_file4',
+            'pdf_file4',
+            {
+                afterupload : function(response) {
+                    $('#pdf_file4').val('');
+                    $('#pdf_file4').parent().next().remove();
+                    $('#pdf_file4').parent().after(response);
+                }
+            }
+        );
+
         /***************************
         追加ボタン処理
         partsapi.js

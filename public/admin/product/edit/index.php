@@ -11,7 +11,7 @@
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
 require_once(CLS_DIR . 'FileUploader.php');
-require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductMy.php');
 require_once(CLS_DIR . 'Contact.php');
 
 $login = new Login();
@@ -71,42 +71,22 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'main
 
 //料金追加
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'price' ) {
-    if(intval($_POST['count']) >= 10) {
-        exit;
-    }
-    $smarty->assign('plan_title', 1);
-    $smarty->assign('plan_Fee', '');
-    $smarty->assign('plan_Kind', 1);
+    $smarty->assign('price_type', 0);
+    $smarty->assign('price_value', '');
+    $smarty->assign('price_condition', array(''));
+    $smarty->assign('number', intval($_POST['count']) + 1);
     $smarty->display(ADMIN_DIR . 'addparts/product_price.tpl');
     exit;
 }
-
-//=============
-// コースの内容
-//=============
-
-//コース追加
-if( isset($_POST['addtype']) && $_POST['addtype'] == 'product_course' ) {
-    if(intval($_POST['count']) >= 10) {
+//料金条件
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'price_condition' ) {
+    if(intval($_POST['count']) >= 5) {
         exit;
     }
-    $smarty->assign('number', intval($_POST['count']) + 1);
-    $smarty->assign('title', '');
-    $smarty->assign('photo', '');
-    $smarty->assign('CourseTitle', '');
-    $smarty->assign('CourseDetail', '');
-    $smarty->assign('CourseRink', '');
-    $smarty->display(ADMIN_DIR . 'addparts/product_course.tpl');
-    exit;
-}
-
-//コース内容画像追加
-if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'course_image' && isset($_FILES['files']) ) {
-
-    $ary_result = $uploader->upload();
-
-    header('Content-Type: application/json');
-    echo json_encode($ary_result);
+    $smarty->assign('placeholder', '例：6歳以上');
+    $smarty->assign('input_name', 'price_condition' . intval($_POST['container_option']) . '[]');
+    $smarty->assign('value', '');
+    $smarty->display(ADMIN_DIR . 'addparts/sortable_single.tpl');
     exit;
 }
 
@@ -115,14 +95,28 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'cour
 //=============
 
 //ご旅行・プラン代金に含まれるもの追加
-if( isset($_POST['addtype']) && $_POST['addtype'] == 'plan_info' ) {
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'plan_info_included' ) {
     if(intval($_POST['count']) >= 10) {
         exit;
     }
     $smarty->assign('placeholder', '例：タクシー乗車代');
-    $smarty->assign('input_name', 'plan_included[]');
+    $smarty->assign('input_name', 'price_include[]');
     $smarty->assign('value', '');
     $smarty->display(ADMIN_DIR . 'addparts/sortable_single.tpl');
+    exit;
+}
+
+//=============
+// 集合場所
+//=============
+
+//集合場所
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'location' ) {
+    $smarty->assign('placeholder', '例：JR富山駅 新幹線改札前　9:20集合');
+    $smarty->assign('meeting_place', '');
+    $smarty->assign('meeting_place_address', '');
+    $smarty->assign('coordinate', ADMIN_INIT_LAT . ',' . ADMIN_INIT_LNG);
+    $smarty->display(ADMIN_DIR . 'addparts/product_map.tpl');
     exit;
 }
 
@@ -134,7 +128,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'caution' ) {
         exit;
     }
     $smarty->assign('placeholder', '例：おとな1名 こども1名でお申込みの場合は、おとな2名での価格として取り扱いさせていただきます。');
-    $smarty->assign('input_name', 'importantPoints[]');
+    $smarty->assign('input_name', 'notes[]');
     $smarty->assign('value', '');
     $smarty->display(ADMIN_DIR . 'addparts/sortable_multi.tpl');
     exit;
@@ -144,21 +138,89 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'other' ) {
         exit;
     }
     $smarty->assign('placeholder', '例：ます寿し1/8カットサイズの試食ができます。店舗は当日のお任せになります。');
-    $smarty->assign('input_name', 'Other[]');
+    $smarty->assign('input_name', 'others[]');
     $smarty->assign('value', '');
     $smarty->display(ADMIN_DIR . 'addparts/sortable_multi.tpl');
+    exit;
+}
+
+//=============
+// 取消料
+//=============
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'cancel_rate' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('cancel_charge_text', '');
+    $smarty->assign('cancel_charge_rate', 1);
+    $smarty->display(ADMIN_DIR . 'addparts/product_cancel.tpl');
+    exit;
+}
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'cancel_note' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('placeholder', '例：オプショナルプランも上記取消料率による取消料が利用日を基準として別途適用されます。ただし、旅行開始後の取消料は100％となります。');
+    $smarty->assign('input_name', 'cancel_notes[]');
+    $smarty->assign('value', '');
+    $smarty->assign('style', 'style="min-height: 60px; min-width: auto;"');
+    $smarty->display(ADMIN_DIR . 'addparts/sortable_multi.tpl');
+    exit;
+}
+
+//=============
+// お申し込み
+//=============
+//コース
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'product_course' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('course_id', '');
+    $smarty->assign('course_name', '');
+    $smarty->assign('number', 1);
+    $smarty->display(ADMIN_DIR . 'addparts/product_course.tpl');
+    exit;
+}
+
+//=============
+// プラン内容
+//=============
+
+//プラン内容追加
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'product_plan' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('number', intval($_POST['container_option']) + 1);
+    $smarty->assign('title', '');
+    $smarty->assign('photo', '');
+    $smarty->assign('detail', '');
+    $smarty->assign('link', '');
+    $smarty->display(ADMIN_DIR . 'addparts/product_plan.tpl');
+    exit;
+}
+
+//プラン内容画像追加
+if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'course_image' && isset($_FILES['files']) ) {
+
+    $ary_result = $uploader->upload();
+
+    header('Content-Type: application/json');
+    echo json_encode($ary_result);
     exit;
 }
 
 /**********************************************
 ◆ メイン処理
 ***********************************************/
-$product = new Product();
+$product = new ProductMy($login);
 
 //サイドバーメニューに商品編集リストを表示
 $smarty->assign('menu_product', true);
 
 $err_flg = false;
+$err_msg = array();
 
 //=============
 // データ設定
@@ -176,6 +238,27 @@ if(!is_array($data)) {
 }
 
 //=============
+// 削除処理
+//=============
+if( !$err_flg ) {
+    if( isset($_POST['proc']) ) {
+        $proc = htmlspecialchars($_POST['proc']);
+        $product_id = htmlspecialchars($data['product_id']);
+        if($proc == 'delete') {
+            $err_msg = $product->delete($product_id);
+        }
+        if( !empty($err_msg) ) {
+            $smarty->assign('global_message', $err_msg);
+            $err_flg = true;
+        } else {
+            header('Location: ' . URL_ROOT_PATH_ADMIN . 'product/');
+            exit;
+        }
+    }
+}
+
+
+//=============
 // データ登録
 //=============
 
@@ -186,7 +269,6 @@ if( !$err_flg ) {
     if(isset($_POST['nextsection']) && $_POST['nextsection'] != '') {
         $err_msg = $product->checkInput($data, $nextsection);
         if( !empty(implode('', $err_msg)) ) {
-            $smarty->assign('err_msg', $err_msg);
             if (isset($err_msg['nextsection'])) {
                 $nextsection = $err_msg['nextsection'];
             }
@@ -198,7 +280,7 @@ if( !$err_flg ) {
 
 //公開リクエスト送信
 if( !$err_flg ) {
-    if(isset($_POST['request']) && $_POST['request'] != '' && $data['mt_disp'] == 3) {
+    if(isset($_POST['request']) && $_POST['request'] != '' && $data['publish_status'] == 3) {
         $contact = new Contact();
         $msg = $contact->publishRequest($data['title']);
         if(!empty($msg)) {
@@ -223,13 +305,14 @@ if(!is_array($data)) {
 
 $data['nextsection'] = $nextsection;
 
-if($data['ProductID'] == '') {
+if($data['product_id'] == '') {
     $edit_type = 'new';
 } else {
     $edit_type = 'edit';
 }
 
 $smarty->assign('data', $data);
+$smarty->assign('err_msg', $err_msg);
 $smarty->assign('edit_type', $edit_type);
 $smarty->assign('protocol', empty($_SERVER["HTTPS"]) ? "http://" : "https://");
 $smarty->display(ADMIN_DIR . 'product/edit/index.tpl');

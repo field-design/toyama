@@ -12,6 +12,7 @@ class Entity {
 
     protected $columns;
     protected $columnsDef;
+    protected $tableName;
 
     /*******************
     POSTデータ取得

@@ -81,7 +81,7 @@
                   </tr>
                   <tr>
                       <th class="text-center">プラン名</th>
-                      <td class="text-left">{$product_data.title}</td>
+                      <td class="text-left">{$course_data.course_name[0]}</td>
                   </tr>
                   <tr>
                       <th class="text-center">出発日</th>
@@ -89,7 +89,11 @@
                   </tr>
                   <tr>
                       <th class="text-center">集合場所</th>
-                      <td class="text-left">{$product_data.locationname}</td>
+                      <td class="text-left">
+                        {foreach from=$product_data.meeting_place item=value}
+                        {$value}<br>
+                        {/foreach}
+                      </td>
                   </tr>
               </tbody>
           </table>
@@ -110,17 +114,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {section name=i start=0 loop=count($product_data.plan_title)}
+                    {section name=i start=0 loop=count($price_data.price_type)}
                         {assign var='index' value=$smarty.section.i.index}
-                        {assign var='volume' value='volume'|cat:($index + 1)}
-                        {if $product_data.plan_title[$index] != '' || $product_data.plan_Fee[$index] != '' || $product_data.plan_Kind[$index] != ''}
                         <tr>
-                            <td class="text-left">{$product_data.plan_title_text[$index]}{if $product_data.plan_Kind_text[$index] != ''}({$product_data.plan_Kind_text[$index]}){/if}</td>
-                            <td class="text-right"><span>{$product_data.plan_Fee[$index]|default:0|number_format}</span>円</td>
-                            <td class="text-center"><span class="amount">{$order_data.$volume|default:0|number_format}</span></td>
+                            <td class="text-left">{$price_data.price_type_text[$index]}</td>
+                            <td class="text-right"><span>{$price_data.price_value[$index]|default:0|number_format}</span>円</td>
+                            <td class="text-center"><span class="amount">{$order_data.amount[$index]|default:0|number_format}</span></td>
                             <td class="text-right"><span class="sum"></span>円</td>
                         </tr>
-                        {/if}
                     {/section}
                 </tbody>
                 <tfoot>
@@ -202,7 +203,7 @@
             <div class="back">
                 <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">戻る</button>
             </div>
-            {if $product_data.plan_type == 2}
+            {if $request_flg}
             <div class="next mod_form_btn">
                 <button type="button" id="submit">リクエスト依頼</button>
             </div>

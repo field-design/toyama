@@ -9,3 +9,5 @@ require_once(CLS_DIR . 'Util.php');
 require_once(CLS_DIR . 'SpiralApi.php');
 require_once(CLS_DIR . 'Entity.php');
 require_once(CLS_DIR . 'Constant.php');
+require_once(CLS_DIR . 'ConstantMy.php');
+require_once(CLS_DIR . 'DB.php');

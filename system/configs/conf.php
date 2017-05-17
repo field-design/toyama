@@ -15,9 +15,15 @@ define('OWNER_MAIL', 'support@nanala-it.com');
 define('SYS_MAIL_FROM', 'khs.nagano@kanko-pro.co.jp');
 
 // Spiral用
-define('SPIRAL_API_TOKEN', '00011Kj13Ve97942151ad95fbdd9b5149de462e3f6e55d13fa92');
-define('SPIRAL_API_SECRET', '448d8abaab325d53025555cd2275aa6c820d4c78');
+define('SPIRAL_API_TOKEN', '00011KE6YZ1G4779f129548fef07f6c5e51399a31df6d90682cd');
+define('SPIRAL_API_SECRET', '64d88290db482fe0ed7b1f0db7965ff449a91e54');
 define('SPIRAL_API_URL', 'https://reg18.smp.ne.jp/api/service');
+
+// MySQL
+define('DB_NAME', 'just_toyama_db');
+define('DB_HOST', 'localhost');
+define('DB_USER', 'just_toyama_db_a');
+define('DB_PASS', 'db_admin');
 
 // 残りわずかしきい値
 define('FEW_THRESHOLD', 5);
@@ -69,5 +75,7 @@ define('URL_ROOT_PATH_ADMIN', URL_ROOT_PATH . ADMIN_DIR);
 // 商品メイン画像１枚目はファイル名を固定
 define('PRODUCT_MAIN_PHOTO1_NAME', 'product_main_photo.jpg');
 
+// 標準約款
+define('DEFAULT_CLAUSE', 'https://www.kanko-pro.co.jp/agreement/agreement4.php');
 
 

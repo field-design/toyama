@@ -11,8 +11,8 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>いまからえらべるTRAVELin富山</title>
-<meta name="description" content="">
+<title>{$page_data.title_tag|default:''}</title>
+<meta name="description" content="{$page_data.description_tag|default:''}">
 <meta name="keywords" content="">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
@@ -26,12 +26,12 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="サイト名">
+<meta property="og:site_name" content="{$page_data.title_tag|default:''}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ページタイトル">
-<meta property="og:description" content="ディスクリプション">
-<meta property="og:url" content="">
-<meta property="og:image" content="">
+<meta property="og:title" content="{$page_data.title_tag|default:''}">
+<meta property="og:description" content="{$page_data.description_tag|default:''}">
+<meta property="og:url" content="{$smarty.const.URL_ROOT_PATH_FULL}">
+<meta property="og:image" content="{$smarty.const.URL_ROOT_PATH_HOST}{$page_data.slide_photo[0]|default:''}">
 <meta property="fb:app_id" content="">
 <!-- Twitter Card -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/twitter_card.tpl'}
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' title="富山県" logo_pref='global_'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 
@@ -57,9 +57,9 @@
 
 <div class="mainvisual">
     <div class="bxslider">
-        <div class="slide" style="background-image: url({$smarty.const.URL_ROOT_PATH}assets/img/index/slide01.jpg);"></div>
-        <div class="slide" style="background-image: url({$smarty.const.URL_ROOT_PATH}assets/img/index/slide01.jpg);"></div>
-        <div class="slide" style="background-image: url({$smarty.const.URL_ROOT_PATH}assets/img/index/slide01.jpg);"></div>
+        {foreach from=$page_data.slide_photo item=photo}
+        <div class="slide" style="background-image: url({$photo});"></div>
+        {/foreach}
     </div>
     <p>いますぐ えらべる<br>いますぐ とらべる</p>
 </div>
@@ -120,28 +120,24 @@
             {else}
                 {foreach from=$productlist item=product}
                 <div class="tours">
-                    <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.ProductID|default:''}">
+                    <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.product_id|default:''}">
                         <div class="image" style="background-image: url({$product.main_photo1|default:''});"></div>
                         <div class="overview">
                             <div class="inner">
-                                <p>{$product.SubTitle|default:''}</p>
+                                <p>{$product.sub_title|default:''}</p>
                                 <h3>{$product.title|default:''}</h3>
                                 <ul class="cost">
-                                    {section name=i start=0 loop=5}
-                                        {assign var='index' value=$smarty.section.i.index}
-                                        {assign var='plan_title' value='plan_title'|cat:($index + 1)}
-                                        {assign var='plan_Fee' value='plan_Fee'|cat:($index + 1)}
-                                        {assign var='plan_Kind' value='plan_Kind'|cat:($index + 1)}
-                                        {if isset($product.$plan_title) }
-                                        <li>{$product.$plan_title}{if $product.$plan_Kind != ''}({$product.$plan_Kind}){/if} {$product.$plan_Fee}円</li>
-                                        {/if}
-                                    {/section}
+                                    {if $product.price_value_min == $product.price_value_max}
+                                    <li>{$product.price_title} <span class="num3">{$product.price_value_max}</span>円</li>
+                                    {else}
+                                    <li>{$product.price_title} <span class="num3">{$product.price_value_min}</span>〜<span class="num3">{$product.price_value_max}</span>円</li>
+                                    {/if}
                                 </ul>
                                 <ul class="keyword">
-                                    {foreach from=$product.area item=value}
+                                    {foreach from=$product.area_text item=value}
                                     <li class="area">{$value|default:''}</li>
                                     {/foreach}
-                                    {foreach from=$product.Category item=value}
+                                    {foreach from=$product.category_text item=value}
                                     <li class="genre">{$value|default:''}</li>
                                     {/foreach}
                                 </ul>

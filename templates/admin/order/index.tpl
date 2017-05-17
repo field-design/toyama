@@ -53,7 +53,6 @@
         <div class="notification">
             <ul class="is-clearfix">
               <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order"><span>受注管理</span></a></li>
               <li><span>受注一覧</span></li>
             </ul>
         </div>
@@ -71,143 +70,152 @@
 
     <h2 class="title is-3">受注一覧</h2>
 
-    <!-- <div class="filter section">
-        <table class="table is-narrow">
-            <tr>
-                <th>注文番号</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>対応状況</th>
-                <td>
-                    <p class="control">
-                      <span class="select">
-                        <select>
-                          <option>承認待ち</option>
-                          <option>入金待ち</option>
-                          <option>キャンセル</option>
-                          <option>入金済み</option>
-                          <option>決済処理中</option>
-                        </select>
-                      </span>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>お名前</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>フリガナ</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>メールアドレス</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>電話番号</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>携帯番号</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>受注日</th>
-                <td>
-                    <div class="columns">
-                        <div class="column is-5">
-                            <p class="control has-icon has-icon-right">
-                                <input class="input js-datepicker" type="text" placeholder="日付範囲">
-                                <span class="icon is-small">
-                                  <i class="fa fa-calendar"></i>
-                                </span>
-                            </p>
+    <div class="filter section">
+        <form method="POST">
+            <table class="table is-narrow">
+                <tr>
+                    <th>申込番号</th>
+                    <td>
+                        <p class="control">
+                        <input name="order_id" class="input" type="text" placeholder="" value="{$search_params.order_id|default:''}">
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>対応状況</th>
+                    <td>
+                        <p class="control">
+                        <span class="select">
+                            <select name="order_status">
+                            <option value="">指定しない</option>
+                            {foreach from=ConstantMy::$aryCorrespondence item=value key=key}
+                            <option value="{$key}" {if ($search_params.order_status|default:'') == $key}selected{/if}>{$value}</option>
+                            {/foreach}
+                            </select>
+                        </span>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>お名前</th>
+                    <td>
+                        <div class="columns">
+                            <div class="column is-5">
+                                <p class="control">
+                                <input name="simei_sei" class="input" type="text" placeholder="姓" value="{$search_params.simei_sei|default:''}">
+                                </p>
+                            </div>
+                            <div class="column is-5">
+                                <p class="control">
+                                <input name="simei_mei" class="input" type="text" placeholder="名" value="{$search_params.simei_mei|default:''}">
+                                </p>
+                            </div>
                         </div>
-                        <div class="column is-1">
-                            <p>〜</p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>フリガナ</th>
+                    <td>
+                        <div class="columns">
+                            <div class="column is-5">
+                                <p class="control">
+                                <input name="simei_kana_sei" class="input" type="text" placeholder="セイ" value="{$search_params.simei_kana_sei|default:''}">
+                                </p>
+                            </div>
+                            <div class="column is-5">
+                                <p class="control">
+                                <input name="simei_kana_mei" class="input" type="text" placeholder="メイ" value="{$search_params.simei_kana_mei|default:''}">
+                                </p>
+                            </div>
                         </div>
-                        <div class="column is-5">
-                            <p class="control has-icon has-icon-right">
-                                <input class="input js-datepicker" type="text" placeholder="日付範囲">
-                                <span class="icon is-small">
-                                  <i class="fa fa-calendar"></i>
-                                </span>
-                            </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>メールアドレス</th>
+                    <td>
+                        <p class="control">
+                        <input name="mail" class="input" type="text" placeholder="" value="{$search_params.mail|default:''}">
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>電話番号</th>
+                    <td>
+                        <p class="control">
+                        <input name="tel" class="input" type="text" placeholder="" value="{$search_params.tel|default:''}">
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>携帯番号</th>
+                    <td>
+                        <p class="control">
+                        <input name="mobile" class="input" type="text" placeholder="" value="{$search_params.mobile|default:''}">
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>予約日</th>
+                    <td>
+                        <div class="columns">
+                            <div class="column is-5">
+                                <p class="control has-icon has-icon-right">
+                                    <input name="order_date_from" class="input js-datepicker" type="text" placeholder="日付範囲" value="{$search_params.order_date_from|default:''}">
+                                    <span class="icon is-small">
+                                    <i class="fa fa-calendar"></i>
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="column is-1">
+                                <p>〜</p>
+                            </div>
+                            <div class="column is-5">
+                                <p class="control has-icon has-icon-right">
+                                    <input name="order_date_to" class="input js-datepicker" type="text" placeholder="日付範囲" value="{$search_params.order_date_to|default:''}">
+                                    <span class="icon is-small">
+                                    <i class="fa fa-calendar"></i>
+                                    </span>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th>支払方法</th>
-                <td>
-                    <p class="control">
-                      <label class="checkbox">
-                        <input type="checkbox" checked="">
-                        クレジットカード決済
-                      </label>
-                      <label class="checkbox">
-                        <input type="checkbox" checked="">
-                        コンビニ決済
-                      </label>
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>購入金額</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-            <tr>
-                <th>購入商品名</th>
-                <td>
-                    <p class="control">
-                      <input class="input" type="text" placeholder="">
-                    </p>
-                </td>
-            </tr>
-        </table>
-        <div class="panel-block">
-          <button class="button is-primary is-outlined is-fullwidth">
-            この条件で絞り込む
-          </button>
-        </div>
-    </div> -->
+                    </td>
+                </tr>
+                <tr>
+                    <th>支払方法</th>
+                    <td>
+                        <p class="control">
+                        {foreach from=ConstantMy::$arySettlementType item=value key=key}
+                        <label class="checkbox">
+                            <input name="settlement_type[]" type="checkbox" value="{$key}" {if isset($search_params.settlement_type) && in_array($key, $search_params.settlement_type)}checked="checked"{/if}>
+                            {$value}
+                        </label>
+                        {/foreach}
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <th>商品名</th>
+                    <td>
+                        <p class="control">
+                        <input name="title" class="input" type="text" placeholder="" value="{$search_params.title|default:''}">
+                        </p>
+                    </td>
+                </tr>
+            </table>
+            <div class="panel-block">
+            <button id="search_button" class="button is-primary is-outlined is-fullwidth">
+                この条件で絞り込む
+            </button>
+            </div>
+        </form>
+    </div>
 
     <table class="order-list table">
       <thead>
         <tr>
           <th class="order-image"></th>
           <th class="order-date">受注日</th>
-          <th class="order-number">注文番号</th>
+          <th class="order-number">申込番号</th>
           <th class="order-name">お名前</th>
           <th class="order-payment">決済種別</th>
           <th class="order-amount">合計金額</th>
@@ -224,11 +232,11 @@
                 </p>
             </td>
             <td class="order-date">{$order.registDate|replace:' ':'<br />'}</td>
-            <td class="order-number">{$order.OrderNumber|string_format:'%06d'}</td>
+            <td class="order-number">{$order.OderID}</td>
             <td class="order-name">{$order.nameSei} {$order.nameMei}</td>
-            <td class="order-payment">{$order.settlementType}</td>
-            <td class="order-amount">{($order.plan_Fee1 * $order.volume1 + $order.plan_Fee2 * $order.volume2 + $order.plan_Fee3 * $order.volume3 + $order.plan_Fee4 * $order.volume4 + $order.plan_Fee5 * $order.volume5)|number_format}</td>
-            <td class="order-status">{$order.Correspondence}</td>
+            <td class="order-payment">{$order.settlement_type_text}</td>
+            <td class="order-amount">{$order.total|number_format}</td>
+            <td class="order-status">{$order.order_status_text}</td>
             <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$order.OderID}">詳細</a></td>
         </tr>
         {/foreach}
@@ -326,6 +334,16 @@
             'timeFormat': 'H:i',
             'scrollDefault': 'now',
             'step': 15
+        });
+    });
+</script>
+<script>
+    $(function() {
+        /***************************
+        submitボタン設定
+        ****************************/
+        $('#search_button').click(function(){
+            $('form').submit();
         });
     });
 </script>

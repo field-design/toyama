@@ -52,7 +52,6 @@
         <div class="notification">
             <ul class="is-clearfix">
               <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}product"><span>商品管理</span></a></li>
               <li><span>商品一覧</span></li>
             </ul>
         </div>
@@ -80,8 +79,8 @@
             </a>
         </div>
     </div>
-
-    <!-- <div class="filter section">
+    <!--
+    <div class="filter section">
         <nav class="panel">
           <p class="panel-heading">
             絞り込み検索
@@ -128,37 +127,39 @@
               </p>
           </div>
         </nav>
-    </div> -->
-
+    </div>
+    -->
     <div class="products columns is-multiline is-desktop sortable">
         {foreach from=$data_list item=data}
-        <div class="column is-one-third">
+        <div id="container_{$data.product_id}" class="column is-one-third">
             <div class="card">
               <div class="card-image">
                 <figure class="image is-4by3">
-                  <a href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/edit?ProductID={$data.ProductID}"><img src="{$data.main_photo1}" alt="Image"></a>
+                  <a href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/edit?ProductID={$data.product_id}"><img src="{$data.main_photo1}" alt="Image"></a>
                 </figure>
               </div>
               <div class="card-content">
                 <div class="content">
-                  {$data.SubTitle}<br />
+                  <span class="product_title">
+                  {$data.sub_title}<br />
                   {$data.title}
+                  </span>
                   <div class="category">
                       <ul class="is-clearfix">
-                          {foreach from=$data.area item=area}
+                          {foreach from=$data.area_text item=area}
                           <li><small>{$area}</small></li>
                           {/foreach}
-                          {foreach from=$data.Category item=cat}
+                          {foreach from=$data.category_text item=cat}
                           <li><small>{$cat}</small></li>
                           {/foreach}
                       </ul>
                   </div>
-                  <small>{$data.registDate}</small>
+                  <small>{$data.regist_date}</small>
                 </div>
               </div>
               <footer class="card-footer">
-                {if $data.mt_disp == 1}
-                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}" target="_blank">
+                {if $data.publish_status == 1}
+                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
                     <span class="icon is-small"><i class="fa fa-external-link"></i></span>
                     表示
                 </a>
@@ -167,9 +168,19 @@
                     非公開
                 </span>
                 {/if}
-                <a class="card-footer-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/edit?ProductID={$data.ProductID}">
+                <a class="card-footer-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/edit?ProductID={$data.product_id}">
                     <span class="icon is-small"><i class="fa fa-edit"></i></span>
                     編集
+                </a>
+              </footer>
+              <footer class="card-footer">
+                <a class="card-footer-item is-danger button-delete" href="javascript:void(0);" data-id="{$data.product_id}">
+                    <span class="icon is-small"><i class="fa fa-trash"></i></span>
+                    削除
+                </a>
+                <a class="card-footer-item is-light button-copy" href="javascript:void(0);" data-id="{$data.product_id}">
+                    <span class="icon is-small"><i class="fa fa-copy"></i></span>
+                    複製
                 </a>
               </footer>
             </div>
@@ -182,7 +193,9 @@
         </div>
     </div>
 </div>
-
+<div id="dialog" title="確認"></div>
+<form method="POST">
+</form>
 <!-- START global-footer -->
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->
@@ -203,39 +216,81 @@
 
 
 <!-- Page Script -->
+<style>
+.ui-dialog {
+    z-index: 101;
+}
+.ui-widget-overlay {
+    background: #666666;
+    opacity: .5;
+    filter: Alpha(Opacity=50);
+}
+
+.ui-widget-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ui-widget-content {
+    background: #fff;
+    color: #333333;
+}
+
+.ui-draggable .ui-dialog-titlebar {
+    cursor: move;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding: .4em 1em;
+    position: relative;
+    border-bottom: 1px solid #aaa;
+}
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    display: none;
+}
+
+/*
+.ui-widget-header {
+    background: #363636;
+    color: #ffffff;
+    font-weight: bold;
+}
+*/
+.ui-helper-clearfix {
+    min-height: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+    position: relative;
+    border: 0;
+    padding: .5em 1em;
+    background: none;
+    overflow: auto;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: left;
+    border-width: 1px 0 0 0;
+    background-image: none;
+    margin-top: .5em;
+    padding: .3em 1em .5em .4em;
+    overflow: hidden;
+   
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: right;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    margin: .5em .6em .5em 0;
+    cursor: pointer;
+}
+
+</style>
 {literal}
-<script>
-  function initMap() {
-
-    // マップの初期化
-    var map = new google.maps.Map(document.getElementById('location-map'), {
-      zoom: 13,
-      center: {lat: 36.38992, lng: 139.06065}
-    });
-
-    // クリックイベントを追加
-    map.addListener('click', function(e) {
-      getClickLatLng(e.latLng, map);
-    });
-  }
-
-  function getClickLatLng(lat_lng, map) {
-
-    // 座標を表示
-    document.getElementById('lat').textContent = lat_lng.lat();
-    document.getElementById('lng').textContent = lat_lng.lng();
-
-    // マーカーを設置
-    var marker = new google.maps.Marker({
-      position: lat_lng,
-      map: map
-    });
-
-    // 座標の中心をずらす
-    // http://syncer.jp/google-maps-javascript-api-matome/map/method/panTo/
-    map.panTo(lat_lng);
-  }
-</script>
 <script>
     // 並び替え機能
     $( function() {
@@ -269,6 +324,63 @@
             'timeFormat': 'H:i',
             'scrollDefault': 'now',
             'step': 15
+        });
+    });
+</script>
+<script>
+    /***************************
+    ダイアログ設定
+    ****************************/
+    function getDialogParams(okcallback) {
+        var params = {   
+              modal: true,
+              open: function() {
+                  //ボタンスタイル用
+                  $('.ui-dialog .ui-dialog-buttonpane button').addClass('button');
+                  $( this ).siblings('.ui-dialog-buttonpane').find('button:eq(1)').focus();
+              },
+              buttons:[
+                  {
+                      text: "OK",
+                      click: okcallback
+                  },
+                  {
+                      text: "Cancel",
+                      click: function(){
+                          $( this ).dialog( "close" );
+                      }
+                  }
+              ]
+          };
+
+        return params;
+    }
+</script>
+<script>
+    $(function() {
+        /***************************
+        submitボタン設定
+        ****************************/
+        $('a.button-delete').click(function(){
+            var product_id = $(this).attr('data-id');
+            var params = getDialogParams(function(){
+              $('form').append($('<input/>', {type: 'hidden', name: 'proc', value: 'delete'}));
+              $('form').append($('<input/>', {type: 'hidden', name: 'product_id', value: product_id}));
+              $('form').submit();
+            });
+            $("#dialog").html('次の商品を削除しますか？<br>' + $('#container_' + product_id).find('.product_title').html());
+            $("#dialog").dialog(params);
+        });
+        $('a.button-copy').click(function(){
+            var product_id = $(this).attr('data-id');
+            var params = getDialogParams(function(){
+              $('form').append($('<input/>', {type: 'hidden', name: 'proc', value: 'copy'}));
+              $('form').append($('<input/>', {type: 'hidden', name: 'product_id', value: product_id}));
+              $('form').append($('<input/>', {type: 'hidden', name: 'publish_status_pre', value: '3'}));
+              $('form').submit();
+            });
+            $("#dialog").html('次の商品を複製しますか？<br>' + $('#container_' + product_id).find('.product_title').html());
+            $("#dialog").dialog(params);
         });
     });
 </script>

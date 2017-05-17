@@ -64,7 +64,7 @@ class SpiralApi {
                $column == 'job_' ||
                $column == 'main_photo1' || $column == 'main_photo2' || $column == 'main_photo3' || $column == 'main_photo4' || $column == 'main_photo5' ||
                $column == 'ClosingOut_date' || $column == 'ClosingOut_time' ||
-               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
+               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'tel_2' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
                strpos($column, '_url') !== false || strpos($column, 'mt_') !== false) {
                 $this->parameters["data"][] = array('name' => $column, 'value' => $data[$column]);
             } else {
@@ -85,7 +85,7 @@ class SpiralApi {
                $column == 'job_' ||
                $column == 'main_photo1' || $column == 'main_photo2' || $column == 'main_photo3' || $column == 'main_photo4' || $column == 'main_photo5' ||
                $column == 'ClosingOut_date' || $column == 'ClosingOut_time' ||
-               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
+               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'tel_2' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
                strpos($column, '_url') !== false || strpos($column, 'mt_') !== false) {
                 $this->parameters["data"][] = array('name' => $column, 'value' => $data[$column]);
             } elseif($column == 'registDate') {
@@ -109,7 +109,7 @@ class SpiralApi {
                $column == 'job_' ||
                $column == 'main_photo1' || $column == 'main_photo2' || $column == 'main_photo3' || $column == 'main_photo4' || $column == 'main_photo5' ||
                $column == 'ClosingOut_date' || $column == 'ClosingOut_time' ||
-               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
+               $column == 'display_name' || $column == 'company_name' || $column == 'tel_' || $column == 'tel_2' || $column == 'fax_' || $column == 'service_time' || $column == 'cancel_version' || $column == 'marketer_type' ||
                strpos($column, '_url') !== false || strpos($column, 'mt_') !== false) {
                 $this->parameters["select_columns"][] = $column;
             } else {
@@ -148,18 +148,23 @@ class SpiralApi {
 
         // POSTデータを生成します
         if( !is_null($file) ) {
-            $file_name = end(explode('/', $file));
+
             $postdata = "--" . MULTIPART_BOUNDARY . "\r\n";
             $postdata .= "Content-Type: application/json; charset=\"UTF-8\";\r\n";
             $postdata .= "Content-Disposition: form-data; name=\"json\"\r\n\r\n";
             $postdata .= json_encode($this->parameters);
             $postdata .= "\r\n\r\n";
-            $postdata .= "--" . MULTIPART_BOUNDARY . "\r\n";
-            $postdata .= "Content-Type: application/octet-stream;\r\n";
-            $postdata .= "Content-Disposition: form-data; name=\"file\"; filename=\"" . $file_name . "\"\r\n\r\n";
-            $postdata .= file_get_contents($file);
-            $postdata .= "\r\n\r\n";
+
+            foreach($file as $key => $val) {
+                $file_name = end(explode('/', $val));
+                $postdata .= "--" . MULTIPART_BOUNDARY . "\r\n";
+                $postdata .= "Content-Type: application/octet-stream;\r\n";
+                $postdata .= "Content-Disposition: form-data; name=\"" . $key . "\"; filename=\"" . $file_name . "\"\r\n\r\n";
+                $postdata .= file_get_contents($val);
+                $postdata .= "\r\n\r\n";
+            }
             $postdata .= "--" . MULTIPART_BOUNDARY . "--\r\n";
+            
         } else {
             // 送信用のJSONデータを作成
             $postdata = json_encode($this->parameters);

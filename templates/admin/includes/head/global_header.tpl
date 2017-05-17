@@ -2,8 +2,16 @@
     <nav class="nav has-shadow" id="top">
       <div class="container">
         <div class="nav-left">
-          <a class="nav-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}">
+          <span class="nav-item" href="{$smarty.const.URL_ROOT_PATH_ADMIN}">
             <h1 class="title is-5">{$smarty.const.SITE_TITLE_ADMIN}</h1>
+          </span>
+          <a class="nav-item is-tab is-hidden-mobile" href="{$smarty.const.URL_ROOT_PATH}" target="_blank">
+              <i class="fa fa-fw fa-external-link"></i>
+              サイトを表示
+          </a>
+          <a class="nav-item is-tab is-hidden-mobile" href="{$smarty.const.URL_ROOT_PATH_ADMIN}">
+              <i class="fa fa-fw fa-home"></i>
+              HOME
           </a>
         </div>
         <span class="nav-toggle">

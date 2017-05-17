@@ -53,7 +53,6 @@
         <div class="notification">
             <ul class="is-clearfix">
               <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}product"><span>商品管理</span></a></li>
               <li>
                 {if $edit_type == 'new'}
                 <span>商品追加</span>
@@ -81,7 +80,7 @@
     {/if}
 <form method="post" style="opacity: 0;">
 <div class="js-accordion">
-    <section class="input-area message">
+    <section class="input-area message plan-outline">
         <h2 class="conts-ttl subtitle message-header">
             基本情報
             <span class="icon">
@@ -89,345 +88,230 @@
             </span>
         </h2>
         <div class="conts-body message-body">
-            <label class="label">タイトル</label>
-            <p class="control">
-                <input name ="title" class="input {if $data.title == ''}is-danger{/if}" type="text" placeholder="例：しんきろうロードサイクリングプラン" value="{$data.title|default:''}">
-                {if isset($err_msg.title) && $err_msg.title != ''}
-                <span class="error has-icon">{$err_msg.title}</span>
-                {/if}
-            </p>
-
-            <label class="label">サブタイトル</label>
-            <p class="control">
-                <input name="SubTitle" class="input" type="text" placeholder="例：蜃気楼ガイドと行く！" value="{$data.SubTitle|default:''}">
-            </p>
-
-            <label class="label">説明文</label>
-            <p class="control">
-                <textarea name="ExplanatoryText" class="textarea {if $data.ExplanatoryText == ''}is-danger{/if}" placeholder="例：蜃気楼が見える街として有名な「魚津市」でのレンタサイクルプラン">{$data.ExplanatoryText|default:''}</textarea>
-                {if isset($err_msg.ExplanatoryText) && $err_msg.ExplanatoryText != ''}
-                <span class="error has-icon">{$err_msg.ExplanatoryText}</span>
-                {/if}
-            </p>
-
-            <label class="label">
-                メイン画像
-                <span class="help">横幅1,000px以上の画像を登録してください。横長画像を推奨。最大5枚。</span>
-            </label>
-            {foreach from=$data.main_photo item=url}
-                {if $url != ''}
-                {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_main_image.tpl' main_photo_url=$url}
-                {/if}
-            {/foreach}
-            <p class="control">
-                <label class="button {if $data.main_photo|implode:'' == ''}is-danger{/if}" for="main_img">画像を追加</label>
-                <input type="file" name="main_img" id="main_img" style="display:none;">
-                {if isset($err_msg.main_photo) && $err_msg.main_photo != ''}
-                <span class="error has-icon">{$err_msg.main_photo}</span>
-                {/if}
-            </p>
-
-            <div class="control save-point">
-                <p class="control has-addons has-addons-centered">
-                    <a class="button is-success">
-                        <span class="icon">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        <span>変更を保存</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="price" class="input-area price message">
-        <h2 class="conts-ttl subtitle message-header">
-            料金
-            <span class="icon">
-              <i class="fa fa-plus-circle"></i>
-            </span>
-        </h2>
-        <div class="conts-body message-body">
-            <label class="label">料金
-                <span class="help">最大5件まで追加可能</span>
-            </label>
-            <div id="price_container">
-                {section name=i start=0 loop=count($data.plan_title)}
-                    {assign var='index' value=$smarty.section.i.index}
-                    {if $index == 0 || $data.plan_title[$index] != '' || $data.plan_Fee[$index] != '' || $data.plan_Kind[$index]}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_price.tpl' plan_title=$data.plan_title[$index] plan_Fee=$data.plan_Fee[$index] plan_Kind=$data.plan_Kind[$index] }
-                    {/if}
-                {/section}
-            </div>
-            {if isset($err_msg.plan_Fee) && $err_msg.plan_Fee != ''}
-            <span class="error has-icon">{$err_msg.plan_Fee}</span>
-            {/if}
-            <p class="control add-btn">
-              <a class="button is-primary">
-                <span class="icon">
-                  <i class="fa fa-plus-circle"></i>
-                </span>
-                <span>料金を追加</span>
-              </a>
-            </p>
-            <div class="control save-point">
-                <p class="has-text-centered">
-                    <a class="button is-success">
-                        <span class="icon">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        <span>変更を保存</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section class="input-area calendar message">
-        <h2 class="conts-ttl subtitle message-header">
-            カレンダー
-            <span class="icon">
-              <i class="fa fa-plus-circle"></i>
-            </span>
-        </h2>
-        <div class="conts-body message-body">
 
             <div class="control">
-                <label class="label">プランの種類</label>
-                <p class="control">
-                    <label class="radio">
-                        <input type="radio" name="plan_type" value="1" {if $data.plan_type==1}checked="checked"{/if}> 通常プラン
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="plan_type" value="2" {if $data.plan_type==2}checked="checked"{/if}> リクエストプラン
-                    </label>
-                </p>
-            </div>
-
-            <hr>
-
-            <div class="calendar-wrap">
-                <label class="label">
-                    在庫設定
-                    <span class="help">各日程に在庫を入力してください。</span>
-                </label>
-
-                <div class="input-table">
-                    <div class="control is-grouped">
-                        <p class="control has-addons">
-                            <a id="stock_calendar_current" class="button">
-                              <span>今月</span>
-                            </a>
-                        </p>
-                        <p class="control has-addons">
-                            <a id="stock_calendar_prev" class="button">
-                              <span class="icon">
-                                <i class="fa fa-angle-left"></i>
-                              </span>
-                            </a>
-                            <a id="stock_calendar_picker" class="button">
-                              <span>2017年3月</span>
-                            </a>
-                            <a id="stock_calendar_next" class="button">
-                              <span class="icon">
-                                <i class="fa fa-angle-right"></i>
-                              </span>
-                            </a>
-                        </p>
-                    </div>
-                    <div id="stock_calendars">
-                    </div>
-                    <p id="calen_input_all" class="control has-addons">
-                      <input class="input has-text-centered" type="number" placeholder="" min="0">
-                      <a class="button">
-                        一括入力
-                      </a>
-                    </p>
+                <label class="label">サブタイトル</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name="sub_title" class="input limited" type="text" placeholder="例：蜃気楼ガイドと行く！" maxlength="64" value="{$data.sub_title|default:''}">
                 </div>
-                
             </div>
 
-            <hr>
-
             <div class="control">
-                <label class="label">
-                    手仕舞い日（申込締切日）
-                    <span class="help">当日の場合は0日前と入力してください。</span>
-                </label>
-                <div class="">
-                    <p class="control has-addons">
-                      <input class="input {if $data.ClosingOut_date == ''}is-danger{/if}" name="ClosingOut_date" type="number" min="0" placeholder="例：3" value="{$data.ClosingOut_date|default:''}">
-                      <span class="button is-disabled">日前</span>
-                      <input class="input js-timepicker" name="ClosingOut_time" type="text" placeholder="時間" value="{$data.ClosingOut_time|default:''}">
-                      <span class="button is-disabled">時まで</span>
-                    </p>
-                    {if isset($err_msg.ClosingOut_date) && $err_msg.ClosingOut_date != ''}
-                    <span class="error has-icon">{$err_msg.ClosingOut_date}</span>
+                <label class="label">タイトル<span class="must">必須</span></label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name ="title" class="input {if $data.title == ''}is-danger{/if} is-bold limited" type="text" placeholder="例：しんきろうロードサイクリングプラン" maxlength="32" value="{$data.title|default:''}">
+                    {if isset($err_msg.title) && $err_msg.title != ''}
+                    <span class="error has-icon">{$err_msg.title}</span>
                     {/if}
                 </div>
             </div>
 
-            <div class="control save-point">
-                <p class="has-text-centered">
-                    <a class="button is-success">
-                        <span class="icon">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        <span>変更を保存</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="product_course" class="input-area message plan-detail">
-        <h2 class="conts-ttl subtitle message-header">
-            コースの内容
-            <span class="icon">
-              <i class="fa fa-plus-circle"></i>
-            </span>
-        </h2>
-        <div class="conts-body message-body">
-            <div id="course_container" class="control sortable">
-                {section name=i start=0 loop=count($data.CourseTitle)}
-                    {assign var='index' value=$smarty.section.i.index}
-                    {assign var='err_msg_CourseTitle' value='CourseTitle'|cat:$index}
-                    {if !isset($err_msg.$err_msg_CourseTitle)}
-                        {$err_msg.$err_msg_CourseTitle = ''}
+            <div class="control">
+                <label class="label">説明文<span class="must">必須</span></label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <textarea name="description" class="textarea {if $data.description == ''}is-danger{/if} limited" placeholder="例：蜃気楼が見える街として有名な「魚津市」でのレンタサイクルプラン" maxlength="64">{$data.description|default:''}</textarea>
+                    {if isset($err_msg.description) && $err_msg.description != ''}
+                    <span class="error has-icon">{$err_msg.description}</span>
                     {/if}
-                    {if $index == 0 || $data.photo[$index] != '' || $data.CourseTitle[$index] != '' || $data.CourseDetail[$index] != '' || $data.CourseRink[$index] != ''}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_course.tpl' number=$index+1 photo=$data.photo[$index] title=$data.CourseTitle[$index] detail=$data.CourseDetail[$index] link=$data.CourseRink[$index] err_msg=$err_msg.$err_msg_CourseTitle}
-                    {/if}
-                {/section}
-            </div>
-            <p class="control add-btn">
-              <a class="button is-primary">
-                <span class="icon">
-                  <i class="fa fa-plus-circle"></i>
-                </span>
-                <span>詳細を追加</span>
-              </a>
-              <span class="help">最大10件まで追加可能</span>
-            </p>
-
-            <div class="control save-point">
-                <p class="control has-addons has-addons-centered">
-                    <a class="button is-success">
-                        <span class="icon">
-                            <i class="fa fa-save"></i>
-                        </span>
-                        <span>変更を保存</span>
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
-
-    <section id="plan_info" class="input-area message">
-        <h2 class="conts-ttl subtitle message-header">
-            プラン情報
-            <span class="icon">
-              <i class="fa fa-plus-circle"></i>
-            </span>
-        </h2>
-        <div class="conts-body message-body">
-            <label class="label">期間</label>
-            <div class="control is-grouped">
-                <p class="control has-icon has-icon-right is-expanded">
-                    <input name="StartDate" class="input {if $data.StartDate == ''}is-danger{/if} js-datepicker" type="text" placeholder="開始日" value="{$data.StartDate|default:''}">
-                    <span class="icon is-small">
-                      <i class="fa fa-calendar"></i>
-                    </span>
-                    {if isset($err_msg.StartDate) && $err_msg.StartDate != ''}
-                    <span class="error has-icon">{$err_msg.StartDate}</span>
-                    {/if}
-                </p>
-                <p class="control has-icon has-icon-right is-expanded">
-                    <input name="EndDate" class="input {if $data.EndDate == ''}is-danger{/if} js-datepicker" type="text" placeholder="終了日" value="{$data.EndDate|default:''}">
-                    <span class="icon is-small">
-                      <i class="fa fa-calendar"></i>
-                    </span>
-                    {if isset($err_msg.EndDate) && $err_msg.EndDate != ''}
-                    <span class="error has-icon">{$err_msg.EndDate}</span>
-                    {/if}
-                </p>
+                </div>
             </div>
 
-            <label class="label">除外日</label>
-            <p class="control">
-                <textarea name="WhetExclusion" class="textarea" placeholder="例：2016年12月28日～2017年1月5日">{$data.WhetExclusion|default:''}</textarea>
-            </p>
-
-            <label class="label">ご旅行・プラン代金に含まれるもの
-                <span class="help">最大10件まで追加可能</span>
-            </label>
-            <div id="plan_included_container" class="control sortable">
-                {foreach from=$data.plan_included item=value name=count}
-                    {if $smarty.foreach.count.index == 0 || $value != ''}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_single.tpl' placeholder='例：タクシー乗車代' input_name='plan_included[]' value=$value}
+            <div class="control numbering">
+                <label class="label">
+                    メイン画像<span class="must">必須</span>
+                    <span class="help">横幅1,000px以上の画像を1枚以上登録してください。横長画像を推奨。最大5枚。</span>
+                </label>
+                {foreach from=$data.main_photo item=url}
+                    {if $url != ''}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_main_image.tpl' main_photo_url=$url}
                     {/if}
                 {/foreach}
-            </div>
-            <p class="control add-btn">
-              <a class="button is-primary">
-                <span class="icon">
-                  <i class="fa fa-plus-circle"></i>
-                </span>
-                <span>行を追加</span>
-              </a>
-            </p>
-
-            <div class="columns">
-                <div class="column">
-                    <label class="label">最少受付人員</label>
-                    <p class="control has-icon has-icon-right">
-                        <input name="minimumMember" class="input {if $data.minimumMember == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.minimumMember|default:''}">
-                        <span class="icon is-small">
-                          名
-                        </span>
-                        {if isset($err_msg.minimumMember) && $err_msg.minimumMember != ''}
-                        <span class="error has-icon">{$err_msg.minimumMember}</span>
-                        {/if}
-                    </p>
-                </div>
-                <div class="column">
-                    <label class="label">最少催行人員</label>
-                    <p class="control has-icon has-icon-right">
-                        <input name="minimumDeparts" class="input {if $data.minimumDeparts == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.minimumDeparts|default:''}">
-                        <span class="icon is-small">
-                          名
-                        </span>
-                        {if isset($err_msg.minimumDeparts) && $err_msg.minimumDeparts != ''}
-                        <span class="error has-icon">{$err_msg.minimumDeparts}</span>
-                        {/if}
-                    </p>
-                </div>
-                <div class="column">
-                    <label class="label">最大申込人員</label>
-                    <p class="control has-icon has-icon-right">
-                        <input name="largestMember" class="input {if $data.largestMember == ''}is-danger{/if}" type="text" placeholder="例：9" value="{$data.largestMember|default:''}">
-                        <span class="icon is-small">
-                          名
-                        </span>
-                        {if isset($err_msg.largestMember) && $err_msg.largestMember != ''}
-                        <span class="error has-icon">{$err_msg.largestMember}</span>
-                        {/if}
-                    </p>
+                <div class="control">
+                    <label class="button {if $data.main_photo|implode:'' == ''}is-danger{/if}" for="main_img">画像を追加</label>
+                    <input type="file" name="main_img" id="main_img" style="display:none;">
+                    {if isset($err_msg.main_photo) && $err_msg.main_photo != ''}
+                    <span class="error has-icon">{$err_msg.main_photo}</span>
+                    {/if}
                 </div>
             </div>
 
-            <label class="label">運行会社</label>
-            <p class="control">
-                <input name="Operation" class="input" type="text" placeholder="例：〇〇交通" value="{$data.Operation|default:''}">
-            </p>
+            <div class="control save-point">
+                <p class="control has-addons has-addons-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
 
-            <label class="label">予約締切</label>
-            <p class="control">
-                <input name="contractDead" class="input {if $data.contractDead == ''}is-danger{/if}" type="text" placeholder="例：ご旅行出発日前日の０時間前" value="{$data.contractDead|default:''}">
-                {if isset($err_msg.contractDead) && $err_msg.contractDead != ''}
-                <span class="error has-icon">{$err_msg.contractDead}</span>
-                {/if}
-            </p>
+    <section id="plan_info" class="input-area message plan-detail">
+        <h2 class="conts-ttl subtitle message-header">
+            プラン詳細
+            <span class="icon">
+              <i class="fa fa-plus-circle"></i>
+            </span>
+        </h2>
+        <div class="conts-body message-body">
+
+            <div class="columns control">
+                <div class="column is-4">
+                    <label class="label">開始日<span class="must">必須</span></label>
+                    <p class="control has-icon has-icon-right">
+                        <input name="period_from" class="input {if $data.period_from == ''}is-danger{/if} js-datepicker" type="text" placeholder="開始日" value="{$data.period_from|default:''}">
+                        <span class="icon is-small">
+                        <i class="fa fa-calendar"></i>
+                        </span>
+                        {if isset($err_msg.period_from) && $err_msg.period_from != ''}
+                        <span class="error has-icon">{$err_msg.period_from}</span>
+                        {/if}
+                    </p>
+                </div>
+                <div class="column is-4">
+                    <label class="label">終了日<span class="must">必須</span></label>
+                    <p class="control has-icon has-icon-right">
+                        <input name="period_to" class="input {if $data.period_to == ''}is-danger{/if} js-datepicker" type="text" placeholder="終了日" value="{$data.period_to|default:''}">
+                        <span class="icon is-small">
+                        <i class="fa fa-calendar"></i>
+                        </span>
+                        {if isset($err_msg.period_to) && $err_msg.period_to != ''}
+                        <span class="error has-icon">{$err_msg.period_to}</span>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+
+            <div class="control">
+                <span class="must">必須</span>
+                <div class="control">
+                    <div class="help counter">残り<span class="count">128</span>文字</strong></div>
+                    <textarea name="period_note" class="textarea limited {if $data.period_note == ''}is-danger{/if}" placeholder="例：上記期間の火曜、木曜" maxlength="128">{$data.period_note|default:''}</textarea>
+                    {if isset($err_msg.period_note) && $err_msg.period_note != ''}
+                    <span class="error has-icon">{$err_msg.period_note}</span>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">除外日</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count">128</span>文字</strong></div>
+                    <textarea name="period_exclusion" class="textarea limited" placeholder="例：2016年12月28日～2017年1月5日" maxlength="128">{$data.period_exclusion|default:''}</textarea>
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">ご旅行・プラン代金に含まれるもの
+                    <span class="help">最大10件まで追加可能</span>
+                </label>
+                <div id="plan_included_container" class="control sortable">
+                    {foreach from=$data.price_include item=val}
+                        {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_single.tpl' placeholder='例：タクシー乗車代' input_name='price_include[]' value=$val}
+                    {/foreach}
+                </div>
+                <div class="control add-btn plan-included">
+                <a class="button is-primary">
+                    <span class="icon">
+                    <i class="fa fa-plus-circle"></i>
+                    </span>
+                    <span>行を追加</span>
+                </a>
+                </div>
+            </div>
+
+            <div class="columns control">
+                <div class="column">
+                    <label class="label">最少受付人員<span class="must">必須</span></label>
+                    <p class="control has-icon has-icon-right">
+                        <input name="min_member" class="input {if $data.min_member == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_member|default:''}">
+                        <span class="icon is-small">
+                        名
+                        </span>
+                        {if isset($err_msg.min_member) && $err_msg.min_member != ''}
+                        <span class="error has-icon">{$err_msg.min_member}</span>
+                        {/if}
+                    </p>
+                </div>
+                <div class="column">
+                    <label class="label">最少催行人員<span class="must">必須</span></label>
+                    <p class="control has-icon has-icon-right">
+                        <input name="min_depart" class="input {if $data.min_depart == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_depart|default:''}">
+                        <span class="icon is-small">
+                        名
+                        </span>
+                        {if isset($err_msg.min_depart) && $err_msg.min_depart != ''}
+                        <span class="error has-icon">{$err_msg.min_depart}</span>
+                        {/if}
+                    </p>
+                </div>
+                <div class="column">
+                    <label class="label">最大申込人員<span class="must">必須</span></label>
+                    <p class="control has-icon has-icon-right">
+                        <input name="max_order" class="input {if $data.max_order == ''}is-danger{/if}" type="text" placeholder="例：9" value="{$data.max_order|default:''}">
+                        <span class="icon is-small">
+                        名
+                        </span>
+                        {if isset($err_msg.max_order) && $err_msg.max_order != ''}
+                        <span class="error has-icon">{$err_msg.max_order}</span>
+                        {/if}
+                    </p>
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">運行会社</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name="operator" class="input limited" type="text" placeholder="例：〇〇交通" maxlength="64" value="{$data.operator|default:''}">
+                </div>
+            </div>
+
+            <div class="control">
+                <div class="control">
+                    <label class="label">添乗員</label>
+                    <div class="control">
+                        <label class="radio">
+                            <input type="radio" name="conductor_flg" value="1" {if $data.conductor_flg == 0}checked="checked"{/if}> 有り
+                        </label>
+                        <label class="radio">
+                            <input type="radio" name="conductor_flg" value="0" {if $data.conductor_flg == 0}checked="checked"{/if}> 無し
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">スタート時間</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name="start_time" class="input limited" type="text" placeholder="例：10：00スタート" maxlength="64" value="{$data.start_time|default:''}">
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">所要時間</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name="tour_time" class="input limited" type="text" placeholder="例：約3時間" maxlength="64" value="{$data.tour_time|default:''}">
+                </div>
+            </div>
+
+            <div class="control">
+                <label class="label">予約締切<span class="must">必須</span></label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count"></span>文字</strong></div>
+                    <input name="order_deadline" class="input {if $data.order_deadline == ''}is-danger{/if} limited" type="text" placeholder="例：ご旅行出発日前日の０時間前" maxlength="64" value="{$data.order_deadline|default:''}">
+                    {if isset($err_msg.order_deadline) && $err_msg.order_deadline != ''}
+                    <span class="error has-icon">{$err_msg.order_deadline}</span>
+                    {/if}
+                </div>
+            </div>
 
             <div class="control save-point">
                 <p class="has-text-centered">
@@ -442,28 +326,39 @@
         </div>
     </section>
 
-    <section class="input-area message">
+    <section id="location" class="input-area message meeting-place">
         <h2 class="conts-ttl subtitle message-header">
             集合場所
             <span class="icon">
-              <i class="fa fa-plus-circle"></i>
+            <i class="fa fa-plus-circle"></i>
             </span>
         </h2>
         <div class="conts-body message-body">
-            <label class="label">集合場所</label>
-            <p class="control">
-                <input name="locationname" class="input {if $data.locationname == ''}is-danger{/if}" type="text" placeholder="例：JR富山駅 新幹線改札前　9:20集合" value="{$data.locationname|default:''}">
-                {if isset($err_msg.locationname) && $err_msg.locationname != ''}
-                <span class="error has-icon">{$err_msg.locationname}</span>
-                {/if}
-            </p>
 
-            <label class="label">座標</label>
-            <span class="help">地図のピンを動かして位置を調整してください。</span>
-            <div id="location-map"></div>
-            <p class="control">
-                <input id="coordinate" name="Coordinate" class="input" type="text" value="{$data.Coordinate|default:''}">
-            </p>
+            <div id="location_container" class="control sortable numbering">
+                {section name=i start=0 loop=count($data.meeting_place)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {assign var='err_msg_meeting_place' value='meeting_place'|cat:$index}
+                    {if !isset($err_msg.$err_msg_meeting_place)}
+                        {$err_msg.$err_msg_meeting_place = ''}
+                    {/if}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_map.tpl'
+                             meeting_place=$data.meeting_place[$index]
+                             meeting_place_address=$data.meeting_place_address[$index]
+                             coordinate=$data.coordinate[$index]
+                             err_msg_meeting_place=$err_msg.$err_msg_meeting_place}
+                {/section}
+            </div>
+
+            <div class="control add-btn">
+            <a class="button is-primary">
+                <span class="icon">
+                <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>集合場所を追加</span>
+            </a>
+            <span class="help">最大3件まで追加可能</span>
+            </div>
 
             <div class="control save-point">
                 <p class="has-text-centered">
@@ -491,10 +386,8 @@
                 <span class="help">最大5件まで追加可能</span>
             </label>
             <div id="caution_container" class="control sortable">
-                {foreach from=$data.importantPoints item=value name=count}
-                    {if $smarty.foreach.count.index == 0 || $value != ''}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：おとな1名 こども1名でお申込みの場合は、おとな2名での価格として取り扱いさせていただきます。' input_name='importantPoints[]' value=$value}
-                    {/if}
+                {foreach from=$data.notes item=val}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：おとな1名 こども1名でお申込みの場合は、おとな2名での価格として取り扱いさせていただきます。' input_name='notes[]' value=$val}
                 {/foreach}
             </div>
             <p id="caution_add" class="control add-btn">
@@ -511,10 +404,8 @@
                 <span class="help">最大5件まで追加可能</span>
             </label>
             <div id="other_container" class="control sortable">
-                {foreach from=$data.Other item=value name=count}
-                    {if $smarty.foreach.count.index == 0 || $value != ''}
-                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：ます寿し1/8カットサイズの試食ができます。店舗は当日のお任せになります。' input_name='Other[]' value=$value}
-                    {/if}
+                {foreach from=$data.others item=val}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：ます寿し1/8カットサイズの試食ができます。店舗は当日のお任せになります。' input_name='others[]' value=$val}
                 {/foreach}
             </div>
             <p id="other_add" class="control add-btn">
@@ -539,6 +430,157 @@
         </div>
     </section>
 
+    <section id="cancel" class="cancel input-area message">
+        <h2 class="conts-ttl subtitle message-header">
+            取消料
+            <span class="icon">
+            <i class="fa fa-plus-circle"></i>
+            </span>
+        </h2>
+        <div class="conts-body message-body">
+
+            <label class="label">
+                料率
+                <span class="help">最大10件まで追加可能</span>
+            </label>
+            <div id="cancel_rate_container" class="sortable">
+                {section name=i start=0 loop=count($data.cancel_charge_rate)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_cancel.tpl'
+                             cancel_charge_text=$data.cancel_charge_text[$index]
+                             cancel_charge_rate=$data.cancel_charge_rate[$index]}
+                {/section}
+            </div>
+            <p class="control add-btn cancel_rate">
+            <a class="button is-primary">
+                <span class="icon">
+                <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>料率を追加</span>
+            </a>
+            </p>
+
+            <label class="label">
+                注釈
+                <span class="help">最大10件まで追加可能</span>
+            </label>
+            <div id="cancel_note_container" class="control sortable">
+                {foreach from=$data.cancel_notes item=val}
+                {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：オプショナルプランも上記取消料率による取消料が利用日を基準として別途適用されます。ただし、旅行開始後の取消料は100％となります。' style='style="min-height: 60px; min-width: auto;"' input_name='cancel_notes[]' value=$val}
+                {/foreach}
+            </div>
+            <p class="control add-btn cancel_note">
+            <a class="button is-primary">
+                <span class="icon">
+                <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>行を追加</span>
+            </a>
+            </p>
+
+            <div class="control save-point">
+                <p class="control has-addons has-addons-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="product_course" class="input-area message plan-course">
+        <h2 class="conts-ttl subtitle message-header">
+            お申し込み
+            <span class="icon">
+            <i class="fa fa-minus-circle"></i>
+            </span>
+        </h2>
+        <div class="conts-body message-body">
+
+            <div class="control">
+                <label class="label">コース</label>
+                <div id="product_course_container" class="control sortable">
+                    {section name=i start=0 loop=count($data.course_name)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_course.tpl' course_id=$data.course_id[$index] course_name=$data.course_name[$index] product_id=$data.product_id number=$index+1}
+                    {/section}
+                </div>
+                {if isset($err_msg.course_name) && $err_msg.course_name != ''}
+                <span class="error has-icon">{$err_msg.course_name}</span>
+                {/if}
+                <div class="control add-btn product-course">
+                <a class="button is-primary">
+                    <span class="icon">
+                    <i class="fa fa-plus-circle"></i>
+                    </span>
+                    <span>コースを追加</span>
+                </a>
+                </div>
+            </div>
+
+            <div class="control save-point">
+                <p class="has-text-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="product_plan" class="input-area message plan-point">
+        <h2 class="conts-ttl subtitle message-header">
+            プラン内容
+            <span class="icon">
+              <i class="fa fa-plus-circle"></i>
+            </span>
+        </h2>
+        <div class="conts-body message-body">
+            <div id="plan_container" class="control sortable numbering" data-option={count($data.detail_title)}>
+                {section name=i start=0 loop=count($data.detail_title)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {assign var='err_msg_detail_title' value='detail_title'|cat:$index}
+                    {if !isset($err_msg.$err_msg_detail_title)}
+                        {$err_msg.$err_msg_detail_title = ''}
+                    {/if}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_plan.tpl'
+                             number=$index+1
+                             photo=$data.detail_photo[$index]
+                             title=$data.detail_title[$index]
+                             detail=$data.detail_description[$index]
+                             link=$data.detail_link[$index]
+                             err_msg_detail_title=$err_msg.$err_msg_detail_title}
+                {/section}
+            </div>
+            <p class="control add-btn">
+              <a class="button is-primary">
+                <span class="icon">
+                  <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>詳細を追加</span>
+              </a>
+              <span class="help">最大10件まで追加可能</span>
+            </p>
+
+            <div class="control save-point">
+                <p class="control has-addons has-addons-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
     <section class="input-area category message">
         <h2 class="conts-ttl subtitle message-header">
             エリア・カテゴリ
@@ -547,51 +589,35 @@
             </span>
         </h2>
         <div class="conts-body message-body">
-            <label class="label">
-                エリア
-                <span class="help">複数選択可能</span>
-            </label>
-            <p class="control">
-              <label class="checkbox">
-                <input type="checkbox" name="area[]" value="1" {if in_array('1', $data.area)}checked='checked'{/if}>
-                魚津市
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="area[]" value="2" {if in_array('2', $data.area)}checked='checked'{/if}>
-                黒部市
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="area[]" value="3" {if in_array('3', $data.area)}checked='checked'{/if}>
-                入善町
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="area[]" value="4" {if in_array('4', $data.area)}checked='checked'{/if}>
-                朝日町
-              </label>
-            </p>
+            <div class="area">
+                <label class="label">エリア<span class="help">複数選択可能</span></label>
+                <div class="control area-group">
+                    {foreach from=ConstantMy::$aryArea key=key item=val}
+                    <label class="checkbox"><input name="area[]" type="checkbox" value="{$key}" data-group="area{$key}" {if in_array($key, $data.area)}checked='checked'{/if}>{$val}</label>
+                    {/foreach}
+                </div>
+                <div class="control area-detail">
+                    {foreach from=ConstantMy::$aryAreaDetail key=key item=val}
+                    <div class="area{$key}">
+                        {foreach from=$val key=detail_key item=detail_val}
+                        {assign var='area_detail' value='area'|cat:$key}
+                        <label class="checkbox"><input name="area{$key}[]" value="{$detail_key}" type="checkbox" {if isset($data.$area_detail) && in_array($detail_key, $data.$area_detail)}checked='checked'{/if}>{$detail_val}</label>
+                        {/foreach}
+                    </div>
+                    {/foreach}
+                </div>
+            </div>
 
-            <label class="label">
-                カテゴリ
-                <span class="help">複数選択可能</span>
-            </label>
-            <p class="control">
-              <label class="checkbox">
-                <input type="checkbox" name="Category[]" value="1" {if in_array('1', $data.Category)}checked='checked'{/if}>
-                体験する
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="Category[]" value="2" {if in_array('2', $data.Category)}checked='checked'{/if}>
-                見る
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="Category[]" value="3" {if in_array('3', $data.Category)}checked='checked'{/if}>
-                食べる
-              </label>
-              <label class="checkbox">
-                <input type="checkbox" name="Category[]" value="4" {if in_array('4', $data.Category)}checked='checked'{/if}>
-                買う
-              </label>
-            </p>
+            <hr>
+
+            <div class="category">
+                <label class="label">カテゴリ<span class="help">複数選択可能</span></label>
+                <div class="control">
+                    {foreach from=ConstantMy::$aryCategory key=key item=val}
+                    <label class="checkbox"><input name="category[]" value="{$key}" type="checkbox" {if in_array($key, $data.category)}checked='checked'{/if}>{$val}</label>
+                    {/foreach}
+                </div>
+            </div>
         </div>
     </section>
 
@@ -608,7 +634,7 @@
                             <span>ステータス</span>
                         </th>
                         <td>
-                            {$data.mt_disp_text|default:''}
+                            {$data.publish_status_text|default:''}
                         </td>
                     </tr>
                     <tr>
@@ -626,11 +652,11 @@
                               <span>編集</span>
                             </a> -->
                             <p class="control has-addons">
-                                <input name="date[]" class="input js-datepicker {if $data.date[0] == ''}is-danger{/if}" type="text" placeholder="公開日" value="{$data.date[0]|default:''}">
-                                <input name="date[]" class="input js-timepicker {if $data.date[1] == ''}is-danger{/if}" type="text" placeholder="時間" value="{$data.date[1]|default:''}">
+                                <input name="publish_date[]" class="input js-datepicker {if $data.publish_date[0] == ''}is-danger{/if}" type="text" placeholder="公開日" value="{$data.publish_date[0]|default:''}">
+                                <input name="publish_date[]" class="input js-timepicker {if $data.publish_date[1] == ''}is-danger{/if}" type="text" placeholder="時間" value="{$data.publish_date[1]|default:''}">
                             </p>
-                            {if isset($err_msg.date) && $err_msg.date != ''}
-                            <span class="error has-icon">{$err_msg.date}</span>
+                            {if isset($err_msg.publish_date) && $err_msg.publish_date != ''}
+                            <span class="error has-icon">{$err_msg.publish_date}</span>
                             {/if}
                         </td>
                     </tr>
@@ -652,9 +678,9 @@
                             <span>公開URL</span>
                         </th>
                         <td>
-                            {if $data.mt_disp == 1}
-                            <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}" target="_blank">
-                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.ProductID}
+                            {if $data.publish_status == 1}
+                            <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
+                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}
                                 <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
                             </a>
                             {/if}
@@ -664,14 +690,14 @@
             </table>
             <div class="control" style="overflow: hidden;">
                 {if $is_admin}
-                    <a class="button is-danger is-outlined">
+                    <a class="button is-danger is-outlined button-delete">
                         <span>このプランを削除</span>
                         <span class="icon is-small">
                             <i class="fa fa-times"></i>
                         </span>
                     </a>
                 {/if}
-                {if $data.mt_disp == 1}
+                {if $data.publish_status == 1}
                     {if $is_admin}
                         <a id="private" class="button is-danger is-pulled-right">
                             <span class="icon is-small">
@@ -714,13 +740,13 @@
         </div>
         <input type="hidden" name="nextsection" />
         <input type="hidden" name="request" />
-        <input type="hidden" name="mt_disp" value="{$data.mt_disp|default:'3'}" />
-        <input type="hidden" name="mt_disp_pre" value="{$data.mt_disp|default:'3'}"/>
+        <input type="hidden" name="publish_status" value="{$data.publish_status|default:'3'}" />
+        <input type="hidden" name="publish_status_pre" value="{$data.publish_status|default:'3'}"/>
 
     </section>
 
-    <input type="hidden" name="ProductID" value="{$data.ProductID|default:''}" />
-    <input type="hidden" name="PersonID" value="{$data.PersonID|default:''}" />
+    <input type="hidden" name="product_id" value="{$data.product_id|default:''}" />
+    <input type="hidden" name="person_id" value="{$data.person_id|default:''}" />
 </div>
 </form>
 
@@ -748,7 +774,7 @@
         </a>
     </div> -->
 </div>
-
+<div id="dialog" title="確認"></div>
 </main>
 <!-- END main -->
         </div>
@@ -775,13 +801,96 @@
 
 <!-- Page Script -->
 {literal}
+<style>
+    #location .conts-body {
+        height: auto !important;
+    }
+    #location .location-map{
+        width: 100%;
+        height: 300px;
+    }
+</style>
+<style>
+.ui-dialog {
+    z-index: 101;
+}
+.ui-widget-overlay {
+    background: #666666;
+    opacity: .5;
+    filter: Alpha(Opacity=50);
+}
+
+.ui-widget-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ui-widget-content[role=dialog] {
+    background: #fff;
+    color: #333333;
+}
+
+.ui-draggable .ui-dialog-titlebar {
+    cursor: move;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding: .4em 1em;
+    position: relative;
+    border-bottom: 1px solid #aaa;
+}
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    display: none;
+}
+
+/*
+.ui-widget-header {
+    background: #363636;
+    color: #ffffff;
+    font-weight: bold;
+}
+*/
+.ui-helper-clearfix {
+    min-height: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+    position: relative;
+    border: 0;
+    padding: .5em 1em;
+    background: none;
+    overflow: auto;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: left;
+    border-width: 1px 0 0 0;
+    background-image: none;
+    margin-top: .5em;
+    padding: .3em 1em .5em .4em;
+    overflow: hidden;
+   
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: right;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    margin: .5em .6em .5em 0;
+    cursor: pointer;
+}
+
+</style>
 <script>
-  function initMap() {
+  function initMap(box) {
     {/literal}
     var init_lat = {$smarty.const.ADMIN_INIT_LAT};
     var init_lng = {$smarty.const.ADMIN_INIT_LNG};
     {literal}
-    var input_pos = $('#coordinate').val().split(',');
+    var input_pos = box.find('input.coordinate').val().split(',');
     if(input_pos.length > 1) {
         init_lat = input_pos[0];
         init_lng = input_pos[1];
@@ -789,7 +898,8 @@
 
     // マップの初期化
     var init_center = new google.maps.LatLng(init_lat, init_lng);
-    var map = new google.maps.Map(document.getElementById('location-map'), {
+    var location_map = box.find('.location-map').get(0);
+    var map = new google.maps.Map(location_map, {
       zoom: 13,
       center: init_center,
       mapTypeId: google.maps.MapTypeId.ROADMAP
@@ -802,7 +912,7 @@
     });
 
     google.maps.event.addListener( marker, 'dragend', function(ev){
-		$('#coordinate').val(ev.latLng.lat() + ',' + ev.latLng.lng());
+		box.find('.coordinate').val(ev.latLng.lat() + ',' + ev.latLng.lng());
 	});
 
   }
@@ -817,7 +927,9 @@
     並び替え
     ****************************/
     $( function() {
-        $( ".sortable" ).sortable();
+        $( ".sortable" ).sortable({
+            handle: ".sortable_button"
+        });
         $( ".sortable" ).disableSelection();
         // $( ".button.remove" ).click(function() {
         //     $( this ).parent().remove();
@@ -831,9 +943,9 @@
     var start_section = {$data.nextsection};
     {literal}
 
-    function menuScroll(index) {
+    function menuScroll(index, adj) {
         var target = $('.js-accordion section:nth-child(' + index + ')');
-        var position = target.offset().top + 45;
+        var position = target.offset().top + adj;
         $('body,html').animate({scrollTop:position}, 400, 'swing');
     }
     $('.menu-product li:not(last-child) a').click(function(){
@@ -860,6 +972,7 @@
             header: ".conts-ttl",
             active: start_section,
             heightStyle: "content",
+            collapsible: true,
             icons: {
                 header: "ui-icon-pin-w",
                 activeHeader: "ui-icon-circle-arrow-s"
@@ -888,14 +1001,22 @@
                 }
                 if(oldIndex !== undefined && newIndex !== undefined) {
                     if(oldIndex < newIndex) {
-                        menuScroll(oldIndex + 1);
+                        menuScroll(oldIndex + 1, 55);
                     } else {
-                        menuScroll(newIndex);
+                        menuScroll(newIndex, 55);
                     }
                 }
             },
             activate: function(event, ui) {
-                initMap();
+                $('#location_container .box').each(function(){
+                    initMap($(this));
+                });
+            },
+            create: function(event, ui) {
+                //menuScroll(parseInt(start_section) - 2);
+                $('#location_container .box').each(function(){
+                    initMap($(this));
+                });
             }
         });
         //$('.menu-product li:nth-child(' + start_section + ') a').addClass('is-active');
@@ -903,7 +1024,7 @@
     $(window).load(function(){
         $('form').animate({opacity: 1}, 300);
         if(start_section > 0) {
-            menuScroll(start_section + 1);
+            menuScroll(start_section + 1, -5);
         }
         $('.menu-product li:nth-child(' + (start_section + 1) + ') a').addClass('is-active');
     });
@@ -917,6 +1038,69 @@
             'step': 15
         });
     });
+</script>
+<script>
+/***************************
+エリア選択
+****************************/
+var area = [];
+var area_select = [];
+{/literal}
+{foreach from=ConstantMy::$aryArea key=key item=val}
+
+area.push('{$key}');
+
+{if in_array($key, $data.area)}
+area_select.push('{$key}');
+{/if}
+
+{/foreach}
+{literal}
+
+for($i=0; $i<area.length; $i++) {
+    if($.inArray(area[$i], area_select) == -1) {
+        $('.area' + area[$i]).hide();
+    }
+}
+
+$('.area-group').click(function() {
+    for($i=0; $i<area.length; $i++) {
+        if ($('[data-group=area' + area[$i] + ']').prop('checked')) {
+            $('.area' + area[$i]).fadeIn();
+        } else {
+            $('.area' + area[$i]).fadeOut();
+        }
+    }
+});
+</script>
+<script>
+    /***************************
+    ダイアログ設定
+    ****************************/
+    function getDialogParams(okcallback) {
+        var params = {   
+              modal: true,
+              open: function() {
+                  //ボタンスタイル用
+                  $('.ui-dialog .ui-dialog-buttonpane button').addClass('button');
+                  $( this ).siblings('.ui-dialog-buttonpane').find('button:eq(1)').focus();
+              },
+              buttons:[
+                  {
+                      text: "OK",
+                      click: okcallback
+                  },
+                  {
+                      text: "Cancel",
+                      click: function(){
+                          $( this ).dialog( "close" );
+                      }
+                  }
+              ]
+          };
+
+        return params;
+    }
 </script>
 <script>
     $(function() {
@@ -935,7 +1119,7 @@
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');
-            $('input[name=mt_disp_pre]').val('3');
+            $('input[name=publish_status_pre]').val('3');
             $('form').submit();
         });
         $('#request').click(function(){
@@ -949,14 +1133,14 @@
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');
-            $('input[name=mt_disp_pre]').val('1');
+            $('input[name=publish_status_pre]').val('1');
             $('form').submit();
         });
         $('#private').click(function(){
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');
-            $('input[name=mt_disp_pre]').val('3');
+            $('input[name=publish_status_pre]').val('3');
             $('form').submit();
         });
         $('#post_preview').click(function(){
@@ -964,7 +1148,14 @@
             $('form').attr('target', '_blank');
             $('form').submit();
         });
-
+        $('a.button-delete').click(function(){
+            var params = getDialogParams(function(){
+              $('form').append($('<input/>', {type: 'hidden', name: 'proc', value: 'delete'}));
+              $('form').submit();
+            });
+            $("#dialog").html('商品を削除しますか？');
+            $("#dialog").dialog(params);
+        });
         /***************************
         ファイルのアップロードイベント設定
         fileapi.js
@@ -1009,14 +1200,31 @@
         partsapi.js
         ****************************/
         var partsapi = new PartsApi();
-        $('#price .add-btn a').click(function(){
-            partsapi.addParts('price', '#price_container');
+        /*
+        $('#price .add-btn.add-price a').click(function(){
+            partsapi.addParts('price', '#price_container', function(){
+                $('#price .add-btn.add-condition a').unbind('click');
+                $('#price .add-btn.add-condition a').click(function(){
+                    partsapi.addParts('price_condition', $(this).parent().prevAll('.price_condition_container'));
+                });
+            });
         });
-        $('#product_course .add-btn a').click(function(){
-            partsapi.addParts('product_course', '#course_container', setUploadEvent);
+        $('#price .add-btn.add-condition a').click(function(){
+            partsapi.addParts('price_condition', $(this).parent().prevAll('.price_condition_container'));
         });
-        $('#plan_info .add-btn a').click(function(){
-            partsapi.addParts('plan_info', '#plan_included_container');
+        */
+        $('#plan_info .add-btn.plan-included a').click(function(){
+            partsapi.addParts('plan_info_included', '#plan_included_container');
+        });
+        $('#product_course .add-btn.product-course a').click(function(){
+            partsapi.addParts('product_course', '#product_course_container');
+        });
+        $('#location .add-btn a').click(function(){
+            partsapi.addParts('location', '#location_container', function(){
+                $('#location_container > .box').each(function(){
+                    initMap($(this));
+                });
+            });
         });
         $('#caution_other #caution_add a').click(function(){
             partsapi.addParts('caution', '#caution_container');
@@ -1024,32 +1232,18 @@
         $('#caution_other #other_add a').click(function(){
             partsapi.addParts('other', '#other_container');
         });
-        /***************************
-        カレンダー設定
-        stockmanager.js
-        ****************************/
-        var stockmanager = new StockManager();
-        stockmanager.setButton('#stock_calendar_picker');
-        {/literal}
-        {foreach from=$data.stock_calen_ym item=ym}
-            {assign var='stock_calen_data' value='stock_calen_data_'|cat:$ym}
-            var data = {$data.$stock_calen_data|@json_encode};
-            var dt = new Date('{$ym|substr:0:4}/{$ym|substr:4:6}/01');
-		    stockmanager.changeCalendar(dt, data);
-        {/foreach}
-        {if count($data.stock_calen_ym) > 0}
-        var init_dt = new Date('{$data.stock_calen_ym[0]|substr:0:4}/{$data.stock_calen_ym[0]|substr:4:6}/01');
-        stockmanager.changeCalendar(init_dt);
-        {/if}
-        {literal}
-        $('#calen_input_all a').click(function(){
-            $('#stock_calendars > div').each(function(){
-                if($(this).css('opacity') == 1) {
-                    $(this).find('td input').val($('#calen_input_all input').val());
-                    return false;
-                }
-            });
+        $('#product_plan .add-btn a').click(function(){
+            partsapi.addParts('product_plan', '#plan_container', setUploadEvent);
+            var incre = parseInt($('#plan_container').attr('data-option')) + 1;
+            $('#plan_container').attr('data-option', incre);
         });
+        $('#cancel .add-btn.cancel_rate a').click(function(){
+            partsapi.addParts('cancel_rate', '#cancel_rate_container');
+        });
+        $('#cancel .add-btn.cancel_note a').click(function(){
+            partsapi.addParts('cancel_note', '#cancel_note_container');
+        });
+
         /***************************
         プログレスバー処理
         ****************************/

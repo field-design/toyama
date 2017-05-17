@@ -1570,11 +1570,13 @@ a:hover {
   }
 }
 
-.tour .tours .overview .inner .keyword {
+.keyword {
   font-size: 0;
+  margin: 0;
+  padding: 0;
 }
 
-.tour .tours .overview .inner .keyword li {
+.keyword li {
   font: 400 12px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
   color: #fff;
@@ -1584,24 +1586,24 @@ a:hover {
 }
 
 @media screen and (max-width: 999px) {
-  .tour .tours .overview .inner .keyword li {
+  .keyword li {
     font: 400 15px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.5rem/160% "Noto Sans Japanese", sans-serif;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .tour .tours .overview .inner .keyword li {
+  .keyword li {
     font: 400 12px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
   }
 }
 
-.tour .tours .overview .inner .keyword li.area {
+.keyword li.area {
   background-color: #d49488;
 }
 
-.tour .tours .overview .inner .keyword li.genre {
+.keyword li.genre {
   background-color: #84b7a3;
 }
 

@@ -1,5 +1,5 @@
 <p class="control has-addons">
-    <a class="button">
+    <a class="button sortable_button">
         <i class="fa fa-navicon"></i>
     </a>
     <input name="{$input_name|default:''}" class="input is-expanded" type="text" placeholder="{$placeholder|default:''}" value="{$value|default:''}">

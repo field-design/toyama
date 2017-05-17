@@ -52,8 +52,8 @@
     <div class="breadcrumbs section">
         <div class="notification">
             <ul class="is-clearfix">
-              <li><a href="/"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><a href="/order"><span>受注管理</span></a></li>
+              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
+              <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order"><span>受注一覧</span></a></li>
               <li><span>詳細情報</span></li>
             </ul>
         </div>
@@ -72,64 +72,41 @@
     <h2 class="title is-3">詳細情報</h2>
 
     <section>
-        <h3 class="title is-5">決済情報</h3>
-        <hr>
-        <table class="order-edit table is-bordered">
-          <tbody>
-            <tr>
-                <th>決済種別</th>
-                <td>{$data.settlementType|default:''}</td>
-            </tr>
-            <tr>
-                <th>与信承認番号</th>
-                <td>{$data.CreditNumber|default:''}</td>
-            </tr>
-            <tr>
-                <th>支払方法</th>
-                <td>{$data.Payment|default:''}</td>
-            </tr>
-            <tr>
-                <th>決済金額</th>
-                <td>{$data.settlement|number_format|default:''}円</td>
-            </tr>
-          </tbody>
-        </table>
-    </section>
-
-    <section>
         <h3 class="title is-5">受注ステータス</h3>
         <hr>
         <table class="order-edit table is-bordered">
           <tbody>
             <tr>
-                <th>受注番号</th>
+                <th>予約番号</th>
                 <td>{$data.OderID|default:''}</td>
             </tr>
             <tr>
                 <th>受注日</th>
-                <td>{$data.registDate|default:''}</td>
-            </tr>
-            <tr>
-                <th>予約日</th>
-                <td>{$data.oderDate|default:''}</td>
+                <td>{$data.registDate_a|default:''}</td>
             </tr>
             <tr>
                 <th>対応状況</th>
                 <td>
-                    {$data.Correspondence|default:''}
-                    {if $data.request == 1}
+                    {$data.order_status_text|default:''}
+                    {if $data.request_flg == 1}
                     <a class="button is-success is-outlined is-small">
                       <span class="icon is-small">
                         <i class="fa fa-check"></i>
                       </span>
                       <span>承認する</span>
                     </a>
+                    <a class="button is-danger is-outlined is-small">
+                      <span class="icon is-small">
+                        <i class="fa fa-check"></i>
+                      </span>
+                      <span>承認しない</span>
+                    </a>
                     {/if}
                 </td>
             </tr>
             <tr>
                 <th>入金日</th>
-                <td>{$data['paymentDate']}</td>
+                <td>{$data['pay_date']|default:''}</td>
             </tr>
           </tbody>
         </table>
@@ -190,6 +167,18 @@
     <section>
         <h3 class="title is-5">受注詳細</h3>
         <hr>
+        <table class="order-edit table is-bordered">
+            <tbody>
+            <tr>
+                <th>商品名</th>
+                <td>{$product_data.title}<br /><small>{$course_data.course_name[0]}</small></td>
+            </tr>
+            <tr>
+                <th>予約日</th>
+                <td>{$data.oderDate}</td>
+            </tr>
+            </tbody>
+        </table>
         <table class="order-list table">
           <thead>
             <tr>
@@ -201,21 +190,15 @@
           </thead>
           <tbody>
             {assign var="sales" value=0}
-            {section name=i start=0 loop=5}
+            {section name=i start=0 loop=count($price_data.price_type)}
                 {assign var='index' value=$smarty.section.i.index}
-                {assign var='plan_title' value='plan_title'|cat:($index+1)}
-                {assign var='plan_Fee' value='plan_Fee'|cat:($index+1)}
-                {assign var='plan_Kind' value='plan_Kind'|cat:($index+1)}
-                {assign var='volume' value='volume'|cat:($index+1)}
-                {if $data.$plan_title != '' || $data.$plan_Fee != '' || $data.$plan_Kind}
                 <tr>
-                <td class="order-product-name">{$data.$plan_title}{if $data.$plan_Kind != ''}({$data.$plan_Kind}){/if}</td>
-                <td class="order-amount">{$data.$plan_Fee|number_format}円</td>
-                <td class="order-number">{$data.$volume|number_format}</td>
-                <td class="order-amount">{($data.$plan_Fee * $data.$volume)|number_format}円</td>
+                <td class="order-product-name">{$price_data.price_type_text[$index]|default:''}</td>
+                <td class="order-amount">{$price_data.price_value[$index]|default:0|number_format}円</td>
+                <td class="order-number">{$data.amount[$index]|default:0|number_format}</td>
+                <td class="order-amount">{($price_data.price_value[$index]|default:0 * $data.amount[$index]|default:0)|number_format}円</td>
                 </tr>
-                {assign var="sales" value=$sales + $data.$plan_Fee * $data.$volume}
-                {/if}
+                {assign var="sales" value=$sales + $price_data.price_value[$index] * $data.amount[$index]}
             {/section}
           </tbody>
           <tfoot>
@@ -224,6 +207,35 @@
               <th class="order-amount">{$sales|number_format}円</th>
             </tr>
           </tfoot>
+        </table>
+    </section>
+
+    <section>
+        <h3 class="title is-5">決済情報</h3>
+        <hr>
+        <table class="order-edit table is-bordered">
+          <tbody>
+            <tr>
+                <th>決済種別</th>
+                <td>{$data.settlement_type_text|default:''}</td>
+            </tr>
+            <tr>
+                <th>与信承認番号</th>
+                <td>{$data.credit_number|default:''}</td>
+            </tr>
+            <tr>
+                <th>支払方法</th>
+                <td>{$data.payment_text|default:''}</td>
+            </tr>
+            <tr>
+                <th>コンビニ名</th>
+                <td>{$data.settlement_name|default:''}</td>
+            </tr>
+            <tr>
+                <th>決済金額</th>
+                <td>{$data.settlement|number_format|default:''}円</td>
+            </tr>
+          </tbody>
         </table>
     </section>
 
@@ -329,6 +341,11 @@
         submitボタン設定
         ****************************/
         $('a.button.is-success').click(function(){
+            $('form').append($('<input/>', {type: 'hidden', name: 'approval', value: 'ok'}));
+            $('form').submit();
+        });
+        $('a.button.is-danger').click(function(){
+            $('form').append($('<input/>', {type: 'hidden', name: 'approval', value: 'cancel'}));
             $('form').submit();
         });
     });

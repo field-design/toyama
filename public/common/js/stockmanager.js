@@ -17,8 +17,8 @@ function StockManager() {
 							type: 'text',
 							style: 'position:absolute;z-index:-1;opacity:0;padding: 0;border: 0'
 					});
-		dpInput.css('top', _this.offset().top);
-		dpInput.css('left', _this.offset().left);
+		dpInput.css('top', 0);
+		dpInput.css('left',0);
 		dpInput.height(_this.outerHeight());
 		_this.after(dpInput);
 
@@ -38,6 +38,7 @@ function StockManager() {
 		// 年月指定ボタン
 		_this.click(function() {
 			dpInput.datepicker('show');
+			$('#ui-datepicker-div').css('z-index', '10');
 		});
 
 		// 前月ボタン
@@ -72,7 +73,7 @@ function StockManager() {
 	/**
 	 * カレンダー変更時処理
 	 */
-	THIS.changeCalendar = function(dt, data) {
+	THIS.changeCalendar = function(dt, data, disp) {
 		var dt_y = dt.getFullYear();
 		var dt_m = dt.getMonth() + 1;
 		var dt_d = dt.getDate();
@@ -80,6 +81,7 @@ function StockManager() {
 		var dt_ymd = dt_y + '/' + getLeftZero(dt_m, 2) + '/' + getLeftZero(dt_d, 2);
 
 		data = data || {};
+		disp = disp || 'show';
 
 		// 対象年月文字設定
 		$('#stock_calendar_picker span').html(dt_y + '年' + dt_m + '月');
@@ -95,17 +97,19 @@ function StockManager() {
 		// 対象年月作成
 		if(!$("." + dt_ym).length) {
 			// カレンダーがなければ作成
-			setCalendar(dt_ym, '', data);
+			setCalendar(dt_ym, '', data, disp);
 		} else {
 			// カレンダーがあれば既存のものを表示
-			$("." + dt_ym).showCalendar();
+			if(disp == 'show') {
+				$("." + dt_ym).showCalendar();
+			}	
 		}
 	}
 
 	/**
 	 * カレンダー作成
 	 */
-	function setCalendar(ym, value, data) {
+	function setCalendar(ym, value, data, disp) {
 		//idには連番を付与
 		calenNum++;
 
@@ -127,7 +131,8 @@ function StockManager() {
 		$('#stock_calendar' + calenNum).stockcalendar({
 			'start' : ym,
 			'prefix': 'calen' + calenNum + '_',
-			'data'  : data 
+			'data'  : data,
+			'disp'  : disp
 		});
 
 	}

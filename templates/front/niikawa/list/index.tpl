@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
 <!-- END global-header -->
 
 
@@ -73,28 +73,26 @@
             {else}
                 {foreach from=$productlist item=product}
                 <div class="tours">
-                    <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.ProductID|default:''}">
+                    <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.product_id|default:''}">
                         <div class="image" style="background-image: url({$product.main_photo1|default:''});"></div>
                         <div class="overview">
                             <div class="inner">
-                                <p>{$product.SubTitle|default:''}</p>
+                                <p>{$product.sub_title|default:''}</p>
                                 <h3>{$product.title|default:''}</h3>
                                 <ul class="cost">
-                                    {section name=i start=0 loop=5}
-                                        {assign var='index' value=$smarty.section.i.index}
-                                        {assign var='plan_title' value='plan_title'|cat:($index + 1)}
-                                        {assign var='plan_Fee' value='plan_Fee'|cat:($index + 1)}
-                                        {assign var='plan_Kind' value='plan_Kind'|cat:($index + 1)}
-                                        {if isset($product.$plan_title) }
-                                        <li>{$product.$plan_title}{if $product.$plan_Kind != ''}({$product.$plan_Kind}){/if} {$product.$plan_Fee}円</li>
+                                    {if $product.price_value_min != '' || $product.price_value_max != ''}
+                                        {if $product.price_value_min == $product.price_value_max}
+                                        <li>{$product.price_title} <span class="num3">{$product.price_value_max}</span>円</li>
+                                        {else}
+                                        <li>{$product.price_title} <span class="num3">{$product.price_value_min}</span>〜<span class="num3">{$product.price_value_max}</span>円</li>
                                         {/if}
-                                    {/section}
+                                    {/if}
                                 </ul>
                                 <ul class="keyword">
-                                    {foreach from=$product.area item=value}
+                                    {foreach from=$product.area_text item=value}
                                     <li class="area">{$value|default:''}</li>
                                     {/foreach}
-                                    {foreach from=$product.Category item=value}
+                                    {foreach from=$product.category_text item=value}
                                     <li class="genre">{$value|default:''}</li>
                                     {/foreach}
                                 </ul>
@@ -134,7 +132,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 

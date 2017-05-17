@@ -100,7 +100,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">プラン名</th>
-                            <td class="text-left">{$data.title}</td>
+                            <td class="text-left">{$course_data.course_name[0]}</td>
                         </tr>
                         <tr>
                             <th class="text-center">出発日</th>
@@ -108,23 +108,21 @@
                         </tr>
                         <tr>
                             <th class="text-center">集合場所</th>
-                            <td class="text-left">{$data.locationname}</td>
+                            <td class="text-left">
+                                {foreach from=$product_data.meeting_place item=value}
+                                {$value}<br>
+                                {/foreach}
+                            </td>
                         </tr>
                         <tr>
                             <th class="text-center">人数</th>
                             <td class="text-left">
                             <ul>
                                 {assign var="sum" value=0}
-                                {section name=i start=0 loop=5}
+                                {section name=i start=0 loop=count($price_data.price_type)}
                                     {assign var='index' value=$smarty.section.i.index}
-                                    {assign var='plan_title' value='plan_title'|cat:($index+1)}
-                                    {assign var='plan_Fee' value='plan_Fee'|cat:($index+1)}
-                                    {assign var='plan_Kind' value='plan_Kind'|cat:($index+1)}
-                                    {assign var='volume' value='volume'|cat:($index+1)}
-                                    {if $data.$plan_title != ''}
-                                        <li>{$data.$plan_title}{if $data.$plan_Kind != ''}({$data.$plan_Kind}){/if} ：{$data.$volume|default:0|number_format}名</li>
-                                        {assign var="sum" value=$sum + $data.$volume|default:0}
-                                    {/if}
+                                    <li>{$price_data.price_type_text[$index]}：{$data.amount[$index]|default:0|number_format}名</li>
+                                    {assign var="sum" value=$sum + $data.amount[$index]|default:0}
                                 {/section}
                                 <li>合計：{$sum|number_format}名</li>
                             </ul>
@@ -135,16 +133,10 @@
                             <td class="text-left">
                             <ul>
                                 {assign var="sum" value=0}
-                                {section name=i start=0 loop=5}
+                                {section name=i start=0 loop=count($price_data.price_type)}
                                     {assign var='index' value=$smarty.section.i.index}
-                                    {assign var='plan_title' value='plan_title'|cat:($index+1)}
-                                    {assign var='plan_Fee' value='plan_Fee'|cat:($index+1)}
-                                    {assign var='plan_Kind' value='plan_Kind'|cat:($index+1)}
-                                    {assign var='volume' value='volume'|cat:($index+1)}
-                                    {if $data.$plan_title != ''}
-                                        <li>{$data.$plan_title}{if $data.$plan_Kind != ''}({$data.$plan_Kind}){/if}：{$data.$plan_Fee|default:0|number_format}円×{$data.$volume|default:0|number_format}名＝{($data.$plan_Fee|default:0 * $data.$volume|default:0)|number_format}円</li>
-                                    {assign var="sum" value=$sum + ($data.$plan_Fee|default:0 * $data.$volume|default:0)}
-                                {/if}
+                                    <li>{$price_data.price_type_text[$index]}：{$price_data.price_value[$index]|default:0|number_format}円×{$data.amount[$index]|default:0|number_format}名＝{($price_data.price_value[$index]|default:0 * $data.amount[$index]|default:0)|number_format}円</li>
+                                    {assign var="sum" value=$sum + ($price_data.price_value[$index]|default:0 * $data.amount[$index]|default:0)}
                                 {/section}
                                 <li>合計：{$sum|number_format}円</li>
                             </ul>
@@ -159,7 +151,6 @@
         </div>
         <section class="order-style order-contact">
             <h3 class="contact-ttl">ご予約に関するお問い合わせ先</h3>
-            <p>事業者情報（{$settings_data.display_name}・{$settings_data.tel_[0]}-{$settings_data.tel_[1]}-{$settings_data.tel_[2]}）</p>
             <ul class="contact-info">
               <li><span>事業者名</span>{$settings_data.display_name}</li>
               <li><span>電話</span>{$settings_data.tel_[0]}-{$settings_data.tel_[1]}-{$settings_data.tel_[2]}</li>

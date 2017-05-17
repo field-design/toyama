@@ -1026,7 +1026,7 @@ h2 span {
   border: 1px solid #dbdbdb;
   border-width: 0 0 1px;
   padding: .5em .75em;
-  vertical-align: top;
+  vertical-align: middle;
 }
 
 .order-table thead th,
@@ -1105,6 +1105,14 @@ h2 span {
   margin-right: .5em;
 }
 
+.order-input .input-area .must,
+.order-payment .input-area .must {
+  margin-left: 1em;
+  color: #ff3860;
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+}
+
 .order-input .input-field,
 .order-payment .input-field {
   display: inline;
@@ -1149,6 +1157,40 @@ h2 span {
   border: none;
   box-shadow: none;
   vertical-align: middle;
+  border-radius: 0;
+  background: none;
+  line-height: 1;
+  height: auto;
+  position: relative;
+  -webkit-appearance: button;
+  -moz-appearance: button;
+       appearance: button;
+  box-sizing: border-box;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  content: "";
+  background-color: #FFFFFF;
+  border: 1px solid #999999;
+  border-radius: 24px;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.2);
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.order-input .input-field input[type="radio"]:checked:after,
+.order-input .input-field input[type="checkbox"]:checked:after,
+.order-payment .input-field input[type="radio"]:checked:after,
+.order-payment .input-field input[type="checkbox"]:checked:after {
+  display: block;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  content: "";
+  width: 12px;
+  height: 12px;
+  background: #333;
+  border-radius: 12px;
 }
 
 .order-input .input-field .notes,
@@ -1253,6 +1295,9 @@ h2 span {
 .pagenation .back,
 .pagenation .next {
   display: inline-block;
+  width: 47%;
+  margin: 1%;
+  max-width: 200px;
 }
 
 .pagenation button {
@@ -1263,14 +1308,17 @@ h2 span {
   -webkit-appearance: none;
      -moz-appearance: none;
           appearance: none;
-  padding: .25em 2em;
-  margin: 1em;
-  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
-  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+  padding: .25em .5em;
+  margin: 0;
+  font: 400 18px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.8rem/160% "Noto Sans Japanese", sans-serif;
   color: #666;
   border: 1px solid;
   -webkit-transition: all .2s ease;
   transition: all .2s ease;
+  width: 100%;
+  display: block;
+  box-sizing: border-box;
 }
 
 .pagenation button:hover {

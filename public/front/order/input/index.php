@@ -9,12 +9,14 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'Product.php');
-require_once(CLS_DIR . 'Order.php');
+require_once(CLS_DIR . 'ProductMy.php');
+require_once(CLS_DIR . 'ProductStockMy.php');
+require_once(CLS_DIR . 'OrderMy.php');
 
 $smarty = new SmartyExtends();
-$product = new Product();
-$order = new Order();
+$product = new ProductMy();
+$stock = new ProductStockMy();
+$order = new OrderMy();
 $log = new Log();
 
 //=============
@@ -48,8 +50,9 @@ if( !$err_flg ) {
 
 //商品データチェック
 if( !$err_flg ) {
-    $product_data = $product->getProduct(htmlspecialchars($order_data['ProductID']), 1);
-    $order_date = strtotime(htmlspecialchars($order_data['oderDate']));
+    $product_data = $product->getProduct($order_data['ProductID'], 1);
+    $course_data = $stock->getCourse($order_data['ProductID'], $order_data['course_id']);
+    $order_date = strtotime($order_data['oderDate']);
 
     //商品データがなければリダイレクト
     if( !isset($product_data) || !is_array($product_data) || !$order_date) {
@@ -61,24 +64,44 @@ if( !$err_flg ) {
 
 //在庫チェック
 if( !$err_flg ) {
-    $stock_data = $product->getProductStock($product_data['ProductID'], date('Y/m', $order_date));
+    $stock_data = $stock->getCourseCurrentStock($order_data['course_id'], date('Y-m-01', $order_date));
+    $stock_type = intval($stock_data['stock_type'][date('j', $order_date) - 1]);
+    $stock_value = intval($stock_data['stock_value'][date('j', $order_date) - 1]);
+    $stock_option = intval($stock_data['stock_option'][date('j', $order_date) - 1]);
+
+    if( $stock_value == 0 ) {
+        //在庫がないとき、リクエストプランでなければエラー
+        if ($stock_type != 1 && $stock_option != 1) {
+            $smarty->assign('global_message', MESSAGE_ERROR_DB_NO_STOCK);
+            $err_flg = true;
+        }
+    }
 
     $select_volume = 0;
-    for($i = 1; $i <=5; $i++) {
-        $select_volume += is_numeric($order_data['volume' . $i]) ? intval($order_data['volume' . $i]) : 0;
+    foreach($order_data['amount'] as $value) {
+        $select_volume += is_numeric($value) ? intval($value) : 0;
     }
-    if( $stock_data['stock' . date('j', $order_date)] - $select_volume < 0 ) {
-        $smarty->assign('global_message', MESSAGE_ERROR_DB_NO_STOCK);
-        $err_flg = true;
+
+    if( $stock_value - $select_volume < 0 ) {
+        //在庫以上の購入の場合、リクエストプランでなければエラー
+        if ($stock_type != 1 && $stock_option != 1) {
+            $smarty->assign('global_message', MESSAGE_ERROR_OVER_STOCK);
+            $err_flg = true;
+        }
     }
 }
 
 //手じまい日チェック
 if( !$err_flg ) {
-    $msg = $product->checkClosingOut($product_data, $order_date);
+    $msg = $stock->checkClosingOut($order_data['course_id'], $order_date);
     if( !empty($msg) ) {
-        $smarty->assign('global_message', $msg);
-        $err_flg = true;
+        //手じまい日以降であっても、オプション１かつ過去日でなければリクエストプラン
+        if($stock_option == 1 && (date('Ymd', $order_date) >= date('Ymd')) ) {
+
+        } else {
+            $smarty->assign('global_message', $msg);
+            $err_flg = true;
+        }
     }
 }
 

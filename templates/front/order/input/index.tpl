@@ -39,7 +39,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
 <!-- END global-header -->
 
 
@@ -78,59 +78,58 @@
                 <div class="input-wrap">
 
                     <div class="input-area">
-                        <label class="label">お名前</label>
+                        <label class="label">お名前<span class="must">※必須入力</span></label>
                         <div class="input-group">
                             <div class="input-field">
                                 <input name="nameSei" class="input medium" type="text" placeholder="姓" value="{$order_data.nameSei|default:''}">
-                                {if isset($err_msg.nameSei) && $err_msg.nameSei != ''}
-                                <span class="error has-icon">{$err_msg.nameSei}</span>
-                                {/if}
                             </div>
                             <div class="input-field">
                                 <input name="nameMei" class="input medium" type="text" placeholder="名" value="{$order_data.nameMei|default:''}">
-                                {if isset($err_msg.nameMei) && $err_msg.nameMei != ''}
-                                <span class="error has-icon">{$err_msg.nameMei}</span>
-                                {/if}
                             </div>
                         </div>
+                        {if isset($err_msg.nameSei) && $err_msg.nameSei != ''}
+                        <span class="error has-icon">{$err_msg.nameSei}</span>
+                        {elseif isset($err_msg.nameMei) && $err_msg.nameMei != ''}
+                        <span class="error has-icon">{$err_msg.nameMei}</span>
+                        {/if}
                     </div>
 
                     <div class="input-area">
-                        <label class="label">フリガナ</label>
+                        <label class="label">フリガナ<span class="must">※必須入力</span></label>
                         <div class="input-group">
                             <div class="input-field">
                                 <input name="kanaSei" class="input medium" type="text" placeholder="セイ" value="{$order_data.kanaSei|default:''}">
-                                {if isset($err_msg.kanaSei) && $err_msg.kanaSei != ''}
-                                <span class="error has-icon">{$err_msg.kanaSei}</span>
-                                {/if}
                             </div>
                             <div class="input-field">
                                 <input name="kanaMei" class="input medium" type="text" placeholder="メイ" value="{$order_data.kanaMei|default:''}">
-                                {if isset($err_msg.kanaMei) && $err_msg.kanaMei != ''}
-                                <span class="error has-icon">{$err_msg.kanaMei}</span>
-                                {/if}
                             </div>
                         </div>
+                        {if isset($err_msg.kanaSei) && $err_msg.kanaSei != ''}
+                        <span class="error has-icon">{$err_msg.kanaSei}</span>
+                        {elseif isset($err_msg.kanaMei) && $err_msg.kanaMei != ''}
+                        <span class="error has-icon">{$err_msg.kanaMei}</span>
+                        {/if}
                     </div>
 
                     <div class="input-area">
-                        <label class="label">メールアドレス</label>
+                        <label class="label">メールアドレス<span class="must">※必須入力</span></label>
                         <div class="input-field">
                             <input name="mail" class="input long" type="email" placeholder="例：sample@example.com" value="{$order_data.mail|default:''}">
-                            {if isset($err_msg.mail) && $err_msg.mail != ''}
-                            <span class="error has-icon">{$err_msg.mail}</span>
-                            {/if}
                         </div>
+                        {if isset($err_msg.mail) && $err_msg.mail != ''}
+                        <div><span class="error has-icon">{$err_msg.mail}</span><div>
+                        {/if}
                     </div>
 
                     <div class="input-area">
-                        <label class="label">郵便番号</label>
+                        <label class="label">郵便番号<span class="must">※必須入力</span></label>
                         <div class="input-group">
                             <div class="input-field">
                                 <input name="zipCode[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.zipCode[0]|default:''}">
                             </div>
+                            <span class="notes">ー</span>
                             <div class="input-field">
-                                <input name="zipCode[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.zipCode[0]|default:''}">
+                                <input name="zipCode[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.zipCode[1]|default:''}">
                             </div>
                         </div>
                         {if isset($err_msg.zipCode) && $err_msg.zipCode != ''}
@@ -139,7 +138,7 @@
                     </div>
 
                     <div class="input-area">
-                        <label class="label">都道府県</label>
+                        <label class="label">都道府県<span class="must">※必須入力</span></label>
                         <div class="input-group">
                             <span class="select input-field">
                                 <select name="pref" class="short">
@@ -156,7 +155,7 @@
                     </div>
 
                     <div class="input-area">
-                        <label class="label">市区町村、丁目・番地、ビル・マンション名等</label>
+                        <label class="label">市区町村、丁目・番地、ビル・マンション名等<span class="must">※必須入力</span></label>
                         <div class="input-field">
                             <input name="adress" class="input full" type="text" placeholder="例：〇〇市〇〇 1丁目123 〇〇ビル101" value="{$order_data.adress|default:''}">
                             {if isset($err_msg.adress) && $err_msg.adress != ''}
@@ -166,38 +165,42 @@
                     </div>
 
                     <div class="input-area">
-                        <label class="label">電話番号</label>
-                        <div class="input-group">
-                            <div class="input-field">
-                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.tel_[0]|default:''}">
-                            </div>
-                            <div class="input-field">
-                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.tel_[1]|default:''}">
-                            </div>
-                            <div class="input-field">
-                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：8901" value="{$order_data.tel_[2]|default:''}">
-                            </div>
-                        </div>
-                        {if isset($err_msg.tel_) && $err_msg.tel_ != ''}
-                        <span class="error has-icon">{$err_msg.tel_}</span>
-                        {/if}
-                    </div>
-
-                    <div class="input-area">
-                        <label class="label">携帯電話番号</label>
+                        <label class="label">携帯電話番号<span class="must">※必須入力</span></label>
                         <div class="input-group">
                             <div class="input-field">
                                 <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.mobile[0]|default:''}">
                             </div>
+                            <span class="notes">ー</span>
                             <div class="input-field">
                                 <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.mobile[1]|default:''}">
                             </div>
+                            <span class="notes">ー</span>
                             <div class="input-field">
                                 <input name="mobile[]" class="input short" type="number" min="0" placeholder="例：8901" value="{$order_data.mobile[2]|default:''}">
                             </div>
                         </div>
                         {if isset($err_msg.mobile) && $err_msg.mobile != ''}
                         <span class="error has-icon">{$err_msg.mobile}</span>
+                        {/if}
+                    </div>
+
+                    <div class="input-area">
+                        <label class="label">電話番号</label>
+                        <div class="input-group">
+                            <div class="input-field">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：123" value="{$order_data.tel_[0]|default:''}">
+                            </div>
+                            <span class="notes">ー</span>
+                            <div class="input-field">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：4567" value="{$order_data.tel_[1]|default:''}">
+                            </div>
+                            <span class="notes">ー</span>
+                            <div class="input-field">
+                                <input name="tel_[]" class="input short" type="number" min="0" placeholder="例：8901" value="{$order_data.tel_[2]|default:''}">
+                            </div>
+                        </div>
+                        {if isset($err_msg.tel_) && $err_msg.tel_ != ''}
+                        <span class="error has-icon">{$err_msg.tel_}</span>
                         {/if}
                     </div>
 
@@ -246,8 +249,8 @@
                     <div class="input-area">
                         <label class="label">性別</label>
                         <div class="input-field">
-                            <label class="radio"><input type="radio" name="gender" value="1" {if ($order_data.gender|default:1) == 1}checked="checked"{/if}> 男性</label>
-                            <label class="radio"><input type="radio" name="gender" value="2" {if ($order_data.gender|default:1) == 2}checked="checked"{/if}> 女性</label>
+                            <input type="radio" id="male" name="gender" value="1" {if ($order_data.gender|default:1) == 1}checked="checked"{/if}> <label for="male" class="radio">男性</label>
+                            <input type="radio" id="female" name="gender" value="2" {if ($order_data.gender|default:1) == 2}checked="checked"{/if}> <label for="female" class="radio">女性</label>
                         </div>
                         {if isset($err_msg.gender) && $err_msg.gender != ''}
                         <span class="error has-icon">{$err_msg.gender}</span>

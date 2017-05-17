@@ -9,14 +9,14 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'Product.php');
-require_once(CLS_DIR . 'Order.php');
+require_once(CLS_DIR . 'ProductMy.php');
+require_once(CLS_DIR . 'OrderMy.php');
 require_once(CLS_DIR . 'Settings.php');
 require_once(CLS_DIR . 'Contact.php');
 
 $smarty = new SmartyExtends();
-$product = new Product();
-$order = new Order();
+$product = new ProductMy();
+$order = new OrderMy();
 $settings = new Settings();
 $contact = new Contact();
 $log = new Log();
@@ -82,7 +82,7 @@ if ( !$err_flg ) {
     if( $order_data['settlementType'] == 0 ) {
         $order_data['Correspondence'] = 4;
         $paymentDate = htmlspecialchars($_POST['TranDate']);
-        $order_data['paymentDate'] = substr($paymentDate, 0, 4) . '/' . substr($paymentDate, 4, 2) . '/' . substr($paymentDate, 6, 2) . ' ' . substr($paymentDate, 8, 2) . ':' . substr($paymentDate, 10, 2);
+        $order_data['paymentDate'] = substr($paymentDate, 0, 4) . '-' . substr($paymentDate, 4, 2) . '-' . substr($paymentDate, 6, 2) . ' ' . substr($paymentDate, 8, 2) . ':' . substr($paymentDate, 10, 2);
     } else {
         $order_data['Correspondence'] = 2;
         $order_data['paymentDate'] = '';
@@ -96,7 +96,7 @@ if ( !$err_flg ) {
 
     if( isset($_POST['FinishDate']) && $_POST['FinishDate'] != '' ) {
         $paymentDate = htmlspecialchars($_POST['FinishDate']);
-        $order_data['paymentDate'] = substr($paymentDate, 0, 4) . '/' . substr($paymentDate, 4, 2) . '/' . substr($paymentDate, 6, 2) . ' ' . substr($paymentDate, 8, 2) . ':' . substr($paymentDate, 10, 2);
+        $order_data['paymentDate'] = substr($paymentDate, 0, 4) . '-' . substr($paymentDate, 4, 2) . '-' . substr($paymentDate, 6, 2) . ' ' . substr($paymentDate, 8, 2) . ':' . substr($paymentDate, 10, 2);
     }
 
     if( isset($_POST['Status']) ) {
@@ -112,6 +112,12 @@ if ( !$err_flg ) {
         } elseif( htmlspecialchars($_POST['Status']) == 'CANCEL' ) {
             $order_data['Correspondence'] = '3';
         }
+    }
+
+    if( isset($_POST['CvsCode']) ) {
+        $order_data['settlement_name'] = ConstantMy::$aryCvs[$_POST['CvsCode']];
+    } else {
+        $order_data['settlement_name'] = '';
     }
 
     //結果データ更新

@@ -1,40 +1,50 @@
-<div class="columns notification">
-    <button type="button" class="delete" onclick="$(this).parent().next().remove();$(this).parent().remove();"></button>
-    <div class="column">
-        <label class="label">料金タイトル</label>
-        <p class="control has-icon has-icon-right">
-            <span class="select is-fullwidth">
-                <select name="plan_title[]">
-                <option value="1" {if $plan_title==1}selected{/if}>おとな</option>
-                <option value="2" {if $plan_title==2}selected{/if}>こども</option>
-                <option value="3" {if $plan_title==3}selected{/if}>その他</option>
+<div class="notification">
+    <button class="delete" onclick="((this).parentNode.remove())"></button>
+    <div class="columns">
+        <div class="column">
+            <label class="label">区分<span class="must">必須</span></label>
+            <p class="control has-icon has-icon-right">
+                <span class="select is-fullwidth">
+                <select name="price_type[]" class="price_type">
+                    {foreach from=ConstantMy::$aryPriceType key=key item=val}
+                    <option value="{$key}" {if $price_type==$key}selected{/if}>{$val}</option>                                       
+                    {/foreach}
                 </select>
-            </span>
-        </p>
-    </div>
-    <div class="column">
-        <label class="label">料金</label>
-        <p class="control has-icon has-icon-right">
-            <input name="plan_Fee[]" class="input {if $plan_Fee == ''}is-danger{/if}" type="text" placeholder="例：2000" value="{$plan_Fee|default:''}">
-            <span class="icon is-small">
+                </span>
+                {if isset($err_msg_price_type) && $err_msg_price_type != ''}
+                <span class="error has-icon">{$err_msg_price_type}</span>
+                {/if}
+            </p>
+        </div>
+        <div class="column">
+            <label class="label">代金<span class="must">必須</span></label>
+            <p class="control has-icon has-icon-right">
+                <input name="price_value[]" class="input price_value" type="text" placeholder="例：2000" value="{$price_value|default:''}">
+                <span class="icon is-small">
                 円
-            </span>
-        </p>
+                </span>
+                {if isset($err_msg_price_value) && $err_msg_price_value != ''}
+                <span class="error has-icon">{$err_msg_price_value}</span>
+                {/if}
+            </p>
+        </div>
     </div>
-    <div class="column">
-        <label class="label">料金種別</label>
-        <p class="control has-icon has-icon-right">
-            <span class="select is-fullwidth">
-                <select name="plan_Kind[]">
-                <option value="">未選択</option>
-                <option value="1" {if $plan_Kind==1}selected{/if}>幼児</option>
-                <option value="2" {if $plan_Kind==2}selected{/if}>小学生</option>
-                <option value="3" {if $plan_Kind==3}selected{/if}>中学生</option>
-                <option value="4" {if $plan_Kind==4}selected{/if}>1台</option>
-                <option value="5" {if $plan_Kind==5}selected{/if}>1組</option>
-                </select>
+    <div>
+        <label class="label">条件
+            <span class="help">最大5件まで追加可能</span>
+        </label>
+        <div class="control sortable price_condition_container" data-option="{$number}">
+            {foreach from=$price_condition item=val}
+                {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_single.tpl' placeholder='例：6歳以上' input_name='price_condition'|cat:$number|cat:'[]' value=$val}
+            {/foreach}
+        </div>
+        <div class="control add-btn add-condition">
+        <a class="button is-primary">
+            <span class="icon">
+            <i class="fa fa-plus-circle"></i>
             </span>
-        </p>
+            <span>条件を追加</span>
+        </a>
+        </div>
     </div>
 </div>
-<div></div>

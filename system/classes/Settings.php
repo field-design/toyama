@@ -124,6 +124,78 @@ class Settings extends Entity {
 
         $this->columns[] = 'pass';
         $this->columnsDef[] = '';
+
+        $this->columns[] = 'Registered';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'Travel';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'TravelAdmin';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'SalesOffice1';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'SalesOffice2';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'SalesOffice3';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'Clause';
+        $this->columnsDef[] = 1;
+
+        $this->columns[] = 'file2';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'ClauseURL';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'privacypolicy';
+        $this->columnsDef[] = 1;
+
+        $this->columns[] = 'file3';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'PrivacyURL';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'TravelPriceList';
+        $this->columnsDef[] = 1;
+
+        $this->columns[] = 'file4';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'PricelistURL';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'mt_cancel_text';
+        $this->columnsDef[] = array('');
+
+        $this->columns[] = 'settlement';
+        $this->columnsDef[] = array();
+
+        $this->columns[] = 'info';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'tel_2';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'informationTime';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'siteID';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'shopID';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'pass2';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'APIurl';
+        $this->columnsDef[] = '';
     }
 
     /******************************
@@ -133,8 +205,8 @@ class Settings extends Entity {
 
         $err_msg = array();
 
-        if( empty($data['display_name']) ) {
-            $err_msg['display_name'] = MESSAGE_ERROR_REQUIRE;
+        if( empty($data['company_name']) ) {
+            $err_msg['company_name'] = MESSAGE_ERROR_REQUIRE;
         }
         if( empty($data['photo_text']) ) {
             $err_msg['photo_text'] = MESSAGE_ERROR_REQUIRE_IMAGE_ONE;
@@ -142,21 +214,155 @@ class Settings extends Entity {
         if( empty($data['logomark']) ) {
             $err_msg['logomark'] = MESSAGE_ERROR_REQUIRE_IMAGE_ONE;
         }
+        if( empty($data['zipcode'][0]) || empty($data['zipcode'][1]) ) {
+            $err_msg['zipcode'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['pref']) ) {
+            $err_msg['pref'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['address']) ) {
+            $err_msg['address'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['tel_'][0]) || empty($data['tel_'][1]) || empty($data['tel_'][2]) ) {
+            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['service_time']) ) {
+            $err_msg['service_time'] = MESSAGE_ERROR_REQUIRE;
+        }
+
         if( empty($data['name01']) ) {
             $err_msg['name01'] = MESSAGE_ERROR_REQUIRE;
         }
         if( empty($data['name02']) ) {
             $err_msg['name02'] = MESSAGE_ERROR_REQUIRE;
         }
+        if( empty($data['kana01']) ) {
+            $err_msg['kana01'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['kana02']) ) {
+            $err_msg['kana02'] = MESSAGE_ERROR_REQUIRE;
+        }
         if( empty($data['email']) ) {
             $err_msg['email'] = MESSAGE_ERROR_REQUIRE;
         }
-        if( empty($data['tel_'][0]) || empty($data['tel_'][1]) || empty($data['tel_'][2]) ) {
-            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
+
+        //旅行業に基づく旅行商品の取り扱い 「あり」の場合
+        if( $data['agency'] == 1 ) {
+            if( empty($data['Registered']) ) {
+                $err_msg['Registered'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['Travel']) ) {
+                $err_msg['Travel'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['projectNumber']) ) {
+                $err_msg['projectNumber'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['marketer_type']) ) {
+                $err_msg['marketer_type'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['projectAddress']) ) {
+                $err_msg['projectAddress'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['TravelAdmin']) ) {
+                $err_msg['TravelAdmin'] = MESSAGE_ERROR_REQUIRE;
+            }
+
+            //約款
+            if( $data['Clause'] == '2') {
+                if( empty($data['file2']) ) {
+                    $err_msg['file2'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+            if( $data['Clause'] == '3') {
+                if( empty($data['ClauseURL']) ) {
+                    $err_msg['ClauseURL'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+
+            //旅行条件書
+            if( $data['file_select'] == '1') {
+                if( empty($data['file']) ) {
+                    $err_msg['file'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+            if( $data['file_select'] == '2') {
+                if( empty($data['condition_url']) ) {
+                    $err_msg['condition_url'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+
+            //プライバシーポリシー
+            if( $data['privacypolicy'] == '1') {
+                if( empty($data['file']) ) {
+                    $err_msg['file3'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+            if( $data['privacypolicy'] == '2') {
+                if( empty($data['PrivacyURL']) ) {
+                    $err_msg['PrivacyURL'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+
+            //旅行業務取扱料金表
+            if( $data['TravelPriceList'] == '1') {
+                if( empty($data['file']) ) {
+                    $err_msg['file4'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+            if( $data['TravelPriceList'] == '2') {
+                if( empty($data['PricelistURL']) ) {
+                    $err_msg['PricelistURL'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
         }
-        if( empty($data['cancel_version']) ) {
-            $err_msg['cancel_version'] = MESSAGE_ERROR_REQUIRE;
+
+        //取消料
+        if( count($data['mt_cancel_text']) == 0 ) {
+            $err_msg['mt_cancel_text'] = MESSAGE_ERROR_REQUIRE;
         }
+        foreach($data['mt_cancel_text'] as $value) {
+            if( empty($value) ) {
+                $err_msg['mt_cancel_text'] = MESSAGE_ERROR_REQUIRE;
+                break;
+            }
+        }
+
+        //取引決済コンビニ
+        if( count($data['settlement']) == 0 ) {
+            $err_msg['settlement'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( in_array('2', $data['settlement']) ) {
+
+            if( empty($data['info']) ) {
+                $err_msg['info'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['tel_2']) ) {
+                $err_msg['tel_2'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['informationTime']) ) {
+                $err_msg['informationTime'] = MESSAGE_ERROR_REQUIRE;
+            }
+
+        }
+
+        //GMOペイメント
+        if( empty($data['siteID']) ) {
+            $err_msg['siteID'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['shopID']) ) {
+            $err_msg['shopID'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['pass2']) ) {
+            $err_msg['pass2'] = MESSAGE_ERROR_REQUIRE;
+        }
+        if( empty($data['APIurl']) ) {
+            $err_msg['APIurl'] = MESSAGE_ERROR_REQUIRE;
+        }
+
+        //if( empty($data['cancel_version']) ) {
+        //    $err_msg['cancel_version'] = MESSAGE_ERROR_REQUIRE;
+        //}
+
         if( empty($data['PersonID']) ) {
             if( empty($data['pass']) ) {
                 $err_msg['pass'] = MESSAGE_ERROR_REQUIRE;
@@ -180,6 +386,7 @@ class Settings extends Entity {
         $spiral = new SpiralApi('database/select', 'admin_DB');
 
         $multi_value_columns = array('mt_cancel_ttl' => 10, 
+                                     'mt_cancel_text' => 5,
                                      'MtCancelRatio' => 10,
                                      'mt_cancel_note' => 10);
 
@@ -241,9 +448,9 @@ class Settings extends Entity {
                 if( $new_column == 'mt_cancel_ttl' || $new_column == 'MtCancelRatio' ) {
 
                     if($value != '' && $new_column == 'mt_cancel_ttl') {
-                        $resultData[$new_column . '_text'][] = Constant::$aryMtCancelTtl[$value];
+                        $resultData[$new_column . '_text'][] = ConstantMy::$aryMtCancelTtl[$value];
                     } elseif($value != '' && $new_column == 'MtCancelRatio') {
-                        $resultData[$new_column . '_text'][] = Constant::$aryMtCancelRatio[$value];
+                        $resultData[$new_column . '_text'][] = ConstantMy::$aryMtCancelRatio[$value];
                     } else {
                         $resultData[$new_column . '_text'][] = '';
                     }
@@ -254,6 +461,22 @@ class Settings extends Entity {
                     $resultData[$column] = URL_UPL_DIR . $personID . '/' . $value;
                 } elseif( $column == 'zipcode' || $column == 'tel_' || $column == 'fax_' ) {
                     $resultData[$column] = explode('-', $value);
+                } elseif( $column == 'settlement' ) {
+                    $resultData[$column] = explode(',', $value);
+                    
+                    $resultData[$column . '_text'] = array();
+                    if( in_array('1', $resultData[$column]) ) {
+                        $resultData[$column . '_text'][] = 'クレジットカード';
+                    }
+                    if( in_array('2', $resultData[$column]) ) {
+                        $resultData[$column . '_text'][] = 'コンビニ';
+                    }
+                } elseif( $column == 'Registered' ) {
+                    $resultData[$column] = $value;
+                    $resultData[$column . '_text'] = ConstantMy::$aryGovernor[$value];
+                } elseif( $column == 'Travel' ) {
+                    $resultData[$column] = $value;
+                    $resultData[$column . '_text'] = ConstantMy::$aryTravel[$value];
                 } else {
                     $resultData[$column] = $value;
                 }
@@ -356,15 +579,25 @@ class Settings extends Entity {
                 }
             } elseif ($column == 'mt_cancel_ttl' ||
                       $column == 'MtCancelRatio' ||
+                      $column == 'mt_cancel_text' ||
                       $column == 'mt_cancel_note') {
                 for($i = 0; $i < count($data[$column]); $i++) {
                     $update_columns[] = $column . ($i + 1);
                     $update_data[$column . ($i + 1)] = $data[$column][$i];
                 }
-            } elseif($column == 'file') {
-                if($data[$column] != '' && strpos($data[$column], 'https://') === false) {
-                    $pdf_file = str_replace(URL_UPL_DIR, UPL_DIR, $data[$column]);
+            } elseif($column == 'file' ||
+                     $column == 'file2' ||
+                     $column == 'file3' ||
+                     $column == 'file4') {
+                if($data[$column] != '' && strpos($data[$column], 'spiral/public_file') === false) {
+                    if(is_null($pdf_file)) {
+                        $pdf_file = array();
+                    }
+                    $pdf_file[$column] = str_replace(URL_UPL_DIR, UPL_DIR, $data[$column]);
                 }
+            } elseif($column == 'settlement') {
+                $update_columns[] = $column;
+                $update_data[$column] = implode(',', $data[$column]);
             } elseif($column == 'pass') {
                 if($data[$column] != '') {
                     $update_columns[] = $column;

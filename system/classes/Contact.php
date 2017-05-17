@@ -127,7 +127,7 @@ class Contact {
     /*******************
     申し込み完了（カード）
     ********************/
-    function sendCardOrderComp($order_data, $settings_data) {
+    function sendCardOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
@@ -141,11 +141,11 @@ class Contact {
         $message = '';
         $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
         $message .= "\r\n";
-        $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にお申し込み頂きありがとうございます。\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申し込み頂きありがとうございます。\r\n";
         $message .= "下記の内容にて、お申し込みを承りました。\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data);
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data);
         $message .= "\r\n";
@@ -169,11 +169,11 @@ class Contact {
         $message = "";
         $message .= (empty($settings_data['company_name']) ? $settings_data['display_name'] : $settings_data['company_name']) . "　御中\r\n";
         $message .= "\r\n";
-        $message .= "いますぐ選べるトラベルより「" . $order_data['title'] . "」にお申込がありました。\r\n";
+        $message .= "いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申込がありました。\r\n";
         $message .= "下記の内容にて承りましたので、内容の確認、お客様へ確定書面のご発送をお願い致します。\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data);
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data);
 
@@ -189,7 +189,7 @@ class Contact {
     /*******************
     申し込み完了（コンビニ）
     ********************/
-    function sendConveniOrderComp($order_data, $settings_data) {
+    function sendConveniOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
@@ -202,11 +202,11 @@ class Contact {
         $message = "";
         $message .= $order_data['nameSei'] . "　" . $order_data['nameMei'] . "　様\r\n";
         $message .= "\r\n";
-        $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にお申し込み頂きありがとうございます。\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申し込み頂きありがとうございます。\r\n";
         $message .= "下記の内容にて、お申し込みを承りました。\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data);
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
         $message .= "\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data);
@@ -241,11 +241,11 @@ class Contact {
         $message = "";
         $message .= (empty($settings_data['company_name']) ? $settings_data['display_name'] : $settings_data['company_name']) . "　御中\r\n";
         $message .= "\r\n";
-        $message .= "いますぐ選べるトラベルより「" . $order_data['title'] . "」にお申込がありました。\r\n";
+        $message .= "いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申込がありました。\r\n";
         $message .= "下記の内容にて承りましたので、内容の確認、お客様へ確定書面のご発送をお願い致します。\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data);
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data);
         $message .= "コンビニ名：" . Constant::$aryCvs[$order_data['CvsCode']] . " \r\n";
@@ -266,7 +266,7 @@ class Contact {
     /*******************
     リクエスト申し込み
     ********************/
-    function sendRequestComp($order_data, $settings_data) {
+    function sendRequestComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
@@ -279,11 +279,11 @@ class Contact {
         $message = '';
         $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
         $message .= "\r\n";
-        $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエスト頂きありがとうございます。\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にリクエスト頂きありがとうございます。\r\n";
         $message .= "下記の内容にて、リクエストを承りました。\r\n";
         $message .= "参加日より3日前までにお申し込みの場合24時間以内／参加日の前日・前々日にお申し込みの場合は3時間以内にご連絡いたします。（※上記時間内にご連絡がない場合は、お手数ですが各事業者の営業時間内にお電話でお問い合わせください。）\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data, 'リクエスト');
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data, 'リクエスト');
         $message .= "\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data, 'リクエスト');
@@ -305,12 +305,12 @@ class Contact {
         $message = '';
         $message .= (empty($settings_data['company_name']) ? $settings_data['display_name'] : $settings_data['company_name']) . "　御中\r\n";
         $message .= "\r\n";
-        $message .= "いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエストがありました。\r\n";
+        $message .= "いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にリクエストがありました。\r\n";
         $message .= "下記の内容にて承りましたので、内容の確認後、お客様へリクエスト回答をお願い致します。\r\n";
         $message .= URL_ROOT_PATH_HOST . "/admin/\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data, 'リクエスト');
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data, 'リクエスト');
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data, 'リクエスト');
 
@@ -326,7 +326,7 @@ class Contact {
     /*******************
     承認完了
     ********************/
-    function sendRequestApproval($order_data, $settings_data) {
+    function sendRequestApproval($order_data, $product_data, $course_data, $price_data, $settings_data) {
 
         $enc_id = sha1(ORDER_ID_SALT . $order_data['OderID']);
 
@@ -339,13 +339,13 @@ class Contact {
         $message = '';
         $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
         $message .= "\r\n";
-        $message .= "この度は、いますぐ選べるトラベルより「" . $order_data['title'] . "」にリクエスト頂きありがとうございます。\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にリクエスト頂きありがとうございます。\r\n";
         $message .= "お客様のリクエストが承認されましたので、下記のページより決済をお願いいたします。\r\n";
         $message .= "\r\n";
         $message .= "【決済ページ】\r\n";
         $message .= URL_ROOT_PATH_HOST . "/order/requestapp/?order=" . $enc_id . "&date=" . date('Y-m-d', strtotime($order_data['oderDate'])) . " \r\n";
         $message .= "\r\n";
-        $message .= $this->getOrderInfo($order_data, 'リクエスト');
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data, 'リクエスト');
         $message .= "\r\n";
         $message .= "\r\n";
         $message .= $this->getOrderPerson($order_data, 'リクエスト');
@@ -359,7 +359,41 @@ class Contact {
         }
     }
 
-    function getOrderInfo($order_data, $type_name = '申込') {
+    /*******************
+    承認キャンセル
+    ********************/
+    function sendRequestApprovalCancel($order_data, $product_data, $course_data, $price_data, $settings_data) {
+
+        $enc_id = sha1(ORDER_ID_SALT . $order_data['OderID']);
+
+        //============
+        //お客様宛
+        //============
+        $to      = $order_data['mail'];
+        $subject = 'リクエストがキャンセルされました';
+
+        $message = '';
+        $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
+        $message .= "\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にリクエスト頂きありがとうございます。\r\n";
+        $message .= "お客様のリクエストがキャンセルされました。\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data, 'リクエスト');
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderPerson($order_data, 'リクエスト');
+        $message .= "\r\n";
+        $message .= $this->getProductSettings($settings_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !mb_send_mail($to, $subject, $message, $headers) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+    }
+
+    function getOrderInfo($order_data, $product_data, $course_data, $price_data, $type_name = '申込') {
         $message = '';
         $message .= "********************\r\n";
         $message .= $type_name . "内容\r\n";
@@ -370,17 +404,18 @@ class Contact {
         $message .= "*********************\r\n";
         $message .= $type_name . "プラン\r\n";
         $message .= "*********************\r\n";
-        $message .= "・プラン名：" . $order_data['title'] . "\r\n";
+        $message .= "・プラン名：" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）" . "\r\n";
         $message .= "・参加日：" . date('Y年m月d日', strtotime($order_data['oderDate'])) . "\r\n";
-        $message .= "・集合場所：" . $order_data['locationname'] . "\r\n";
+        $message .= "・集合場所：" . "\r\n";
+        foreach($product_data['meeting_place'] as $value) {
+            $message .= "　" . $value . "\r\n";
+        }
         $message .= "・人数：\r\n";
 
         $total = 0;
-        for($i = 1; $i <= 5; $i++) {
-            if($order_data['plan_title' . $i] != '') {
-                $message .= "　" . $order_data['plan_title' . $i] . ($order_data['plan_Kind' . $i] != '' ? "（" . $order_data['plan_Kind' . $i] . "）" : "" ) . " ：" . number_format($order_data['volume' . $i]) . "名\r\n";
-            }
-            $total += intval($order_data['volume' . $i]);
+        for($i = 0; $i < count($price_data['price_type']); $i++) {
+            $message .= "　" . $price_data['price_type_text'][$i] . " ：" . number_format($order_data['amount'][$i]) . "名\r\n";
+            $total += intval($order_data['amount'][$i]);
         }
 
         $message .= "　合計：" . $total . "名\r\n";
@@ -388,12 +423,10 @@ class Contact {
         $message .= "・ご旅行代金：\r\n";
 
         $total = 0;
-        for($i = 1; $i <= 5; $i++) {
-            if($order_data['plan_title' . $i] != '') {
-                $sum = intval($order_data['plan_Fee' . $i]) * intval($order_data['volume' . $i]);
-                $message .= "　" . $order_data['plan_title' . $i] . ($order_data['plan_Kind' . $i] != '' ? "（" . $order_data['plan_Kind' . $i] . "）" : "" ) . "：" . number_format($order_data['plan_Fee' . $i]) . "円×" . number_format($order_data['volume' . $i]) . "名＝" . number_format($sum) . "円\r\n";
-                $total += $sum;
-            }
+        for($i = 0; $i < count($price_data['price_type']); $i++) {
+            $sum = intval($price_data['price_value'][$i]) * intval($order_data['amount'][$i]);
+            $message .= "　" . $price_data['price_type_text'][$i] . "：" . number_format($price_data['price_value'][$i]) . "円×" . number_format($order_data['amount'][$i]) . "名＝" . number_format($sum) . "円\r\n";
+            $total += $sum;
         }
 
         $message .= "　合計：" . number_format($total) . "円\r\n";
@@ -431,7 +464,7 @@ class Contact {
         $message .= "・電話：" . $settings_data['tel_'][0] . "-" . $settings_data['tel_'][1] . "-" . $settings_data['tel_'][2] . "\r\n";
         $message .= "・住所：〒" . $settings_data['zipcode'][0] . "-" . $settings_data['zipcode'][1] . $settings_data['pref'] . $settings_data['address'] . "\r\n";
         $message .= "・メール：" . $settings_data['email'] . "\r\n";
-        $message .= "・旅行業登録：観光庁長官登録旅行業者第" . $settings_data['projectNumber'] . "号\r\n";
+        $message .= "・旅行業登録：" . $settings_data['Registered_text'] . $settings_data['Travel_text'] . "第" . $settings_data['projectNumber'] . "号\r\n";
         $message .= "・営業時間：" . $settings_data['service_time'] . "\r\n";
         $message .= "\r\n";
         $message .= "※ご予約のお取消・変更につきましては、上記連絡先までご連絡をお願い致します。\r\n";

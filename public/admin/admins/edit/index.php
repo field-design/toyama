@@ -79,7 +79,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calcel' ) {
     if(intval($_POST['count']) >= 10) {
         exit;
     }
-    $smarty->assign('mt_cancel_ttl', '');
+    $smarty->assign('mt_cancel_text', '');
     $smarty->assign('MtCancelRatio', '');
     $smarty->display(ADMIN_DIR . 'addparts/settings_cancel.tpl');
     exit;
@@ -97,7 +97,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'note' ) {
     exit;
 }
 
-//PDFファイルアップロード
+//旅行条件書PDFファイルアップロード
 if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'pdf_file' && isset($_FILES['files']) ) {
 
     $ary_result = $uploader->upload();
@@ -105,6 +105,46 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'pdf_
     if( count($ary_result['url']) > 0 ) {
         $smarty->assign('url', $ary_result['url'][0]);
     }
+    $smarty->assign('input_name', 'file');
+    $smarty->display(ADMIN_DIR . 'addparts/settings_pdf_file.tpl');
+    exit;
+}
+
+//約款PDFファイルアップロード
+if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'pdf_file2' && isset($_FILES['files']) ) {
+
+    $ary_result = $uploader->upload();
+
+    if( count($ary_result['url']) > 0 ) {
+        $smarty->assign('url', $ary_result['url'][0]);
+    }
+    $smarty->assign('input_name', 'file2');
+    $smarty->display(ADMIN_DIR . 'addparts/settings_pdf_file.tpl');
+    exit;
+}
+
+//プライバシーポリシーPDFファイルアップロード
+if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'pdf_file3' && isset($_FILES['files']) ) {
+
+    $ary_result = $uploader->upload();
+
+    if( count($ary_result['url']) > 0 ) {
+        $smarty->assign('url', $ary_result['url'][0]);
+    }
+    $smarty->assign('input_name', 'file3');
+    $smarty->display(ADMIN_DIR . 'addparts/settings_pdf_file.tpl');
+    exit;
+}
+
+//旅行業務取扱料金表PDFファイルアップロード
+if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'pdf_file4' && isset($_FILES['files']) ) {
+
+    $ary_result = $uploader->upload();
+
+    if( count($ary_result['url']) > 0 ) {
+        $smarty->assign('url', $ary_result['url'][0]);
+    }
+    $smarty->assign('input_name', 'file4');
     $smarty->display(ADMIN_DIR . 'addparts/settings_pdf_file.tpl');
     exit;
 }
@@ -195,7 +235,7 @@ if(!is_array($data)) {
     $data = $settings->getPostData();
 }
 
-$smarty->assign('const_pref', Constant::$aryPref);
+$smarty->assign('const_pref', ConstantMy::$aryPref);
 $smarty->assign('data', $data);
 $smarty->assign('err_flg', false);
 $smarty->display(ADMIN_DIR . 'admins/edit/index.tpl');

@@ -22,7 +22,7 @@
     var class_month_del  = settings.prefix+'month_del';
 
     var input_data       = settings.data;
-
+    var disp             = settings.disp;
 
     /*
     * 開始日を設定
@@ -134,15 +134,38 @@
                     }
                     var id = settings.prefix + ymd;
                     html +='  <td class="' + class_td + ' ' + settings.week_en[d] + '" id="' + id + '">';
-                    html +='      <span>' + day + '</span>';
+                    html +='      <span class="day">' + day + '</span>';
 
                     if(day) {
-                        var value = 0;
-                        if(input_data.length > 0) {
-                            value = input_data[day - 1];
+                        var value = '';
+                        var option = '';
+                        if(Object.keys(input_data).length > 0) {
+                            value = input_data.stock_value[day - 1];
+                            option = input_data.stock_option[day - 1];
                         }
+
                         html +='      <div class="status">';
-                        html +='          <input type="number" name="stock_calen_data_' + s_yy + getLeftZero(s_mm, 2) + '[]" min="0" value="' + value + '">';
+                        //html +='          <input type="number" name="stock_calen_data_' + s_yy + getLeftZero(s_mm, 2) + '[]" min="0" value="' + value + '">';
+                        html +='          <p class="has-icon has-icon-right">';
+                        html +='              <span class="select is-small is-fullwidth">';
+                        html +='              <select class="calen_val" name="stock_value_' + s_yy + '-' + getLeftZero(s_mm, 2) + '-01[]">';
+                        html +='                  <option ' + ( value == '' ? 'selected' : '' ) + ' value="">期間外</option>';
+                        html +='                  <option ' + ( value == '-1' ? 'selected' : '' ) + ' value="-1">リクエスト</option>';
+                        html +='                  <option ' + ( value == '-2' ? 'selected' : '' ) + ' value="-2">空きなし</option>';
+                        for(i=1; i<=30; i++) {
+                            html +='              <option ' + ( value == String(i) ? 'selected' : '' ) + ' value="' + i + '">' + i + '</option>';
+                        }
+                        html +='              </select>';
+                        html +='              </span>';
+                        html +='          </p>';
+                        html +='          <p class="has-icon has-icon-right">';
+                        html +='              <span class="select is-small is-fullwidth">';
+                        html +='              <select class="calen_option" name="stock_option_' + s_yy + '-' + getLeftZero(s_mm, 2) + '-01[]">';
+                        html +='                  <option ' + ( option == '0' ? 'selected' : '' ) + ' value="0">なし</option>';
+                        html +='                  <option ' + ( option == '1' ? 'selected' : '' ) + ' value="1">オプション1</option>';
+                        html +='              </select>';
+                        html +='              </span>';
+                        html +='          </p>';
                         html +='      </div>';
                     }
 
@@ -152,13 +175,15 @@
             }
             html +='    </tbody>';            
             html +='</table>';
-            html +='<input name="stock_calen_ym[]" type="hidden" value="' + s_yy + getLeftZero(s_mm, 2) + '">';
+            html +='<input name="stock_date[]" type="hidden" value="' + s_yy + '-' + getLeftZero(s_mm, 2) + '-01">';
 
         }
 
         hideCalendar(obj);
         obj.html(html);//HTMLを挿入
-        showCalendar(obj);
+        if(disp == 'show') {
+            showCalendar(obj);
+        }
     };
     
     /*

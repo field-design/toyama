@@ -11,8 +11,8 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>{$smarty.const.SITE_TITLE_FRONT}</title>
-<meta name="description" content="">
+<title>{$page_data.title_tag|default:''}</title>
+<meta name="description" content="{$page_data.description_tag|default:''}">
 <meta name="keywords" content="">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
@@ -26,12 +26,12 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{$smarty.const.SITE_TITLE_FRONT}">
+<meta property="og:site_name" content="{$page_data.title_tag|default:''}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="{$smarty.const.SITE_TITLE_FRONT}">
-<meta property="og:description" content="">
+<meta property="og:title" content="{$page_data.title_tag|default:''}">
+<meta property="og:description" content="{$page_data.description_tag|default:''}">
 <meta property="og:url" content="{$smarty.const.URL_ROOT_PATH_FULL}">
-<meta property="og:image" content="{$smarty.const.URL_ROOT_PATH_HOST}/assets/img/index/slide01.jpg">
+<meta property="og:image" content="{$smarty.const.URL_ROOT_PATH_HOST}{$page_data.slide_photo[0]|default:''}">
 <meta property="fb:app_id" content="">
 <!-- Twitter Card -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/twitter_card.tpl'}
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 
@@ -57,9 +57,9 @@
 
 <div class="mainvisual">
     <div class="bxslider">
-        <div class="slide" style="background-image: url(/assets/img/niikawa/slide01.jpg);"></div>
-        <div class="slide" style="background-image: url(/assets/img/niikawa/slide02.jpg);"></div>
-        <div class="slide" style="background-image: url(/assets/img/niikawa/slide03.jpg);"></div>
+        {foreach from=$page_data.slide_photo item=photo}
+        <div class="slide" style="background-image: url({$photo});"></div>
+        {/foreach}
     </div>
     <p>いますぐ えらべる<br>いますぐ とらべる</p>
 </div>
@@ -96,18 +96,18 @@
     </div>
     <div class="area-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="魚津市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=2""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="黒部市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=3""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="入善町"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=4""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="朝日町"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="魚津市"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_2""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="黒部市"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_3""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="入善町"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_4""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="朝日町"></a></li>
         </ul>
     </div>
     <div class="genre-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="体験する"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="見る"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="食べる"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="買う"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="体験する"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="見る"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="食べる"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="買う"></a></li>
         </ul>
     </div>
 </div>
@@ -119,28 +119,24 @@
         {else}
             {foreach from=$productlist item=product}
             <div class="tours">
-                <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.ProductID|default:''}">
+                <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.product_id|default:''}">
                     <div class="image" style="background-image: url({$product.main_photo1|default:''});"></div>
                     <div class="overview">
                         <div class="inner">
-                            <p>{$product.SubTitle|default:''}</p>
+                            <p>{$product.sub_title|default:''}</p>
                             <h3>{$product.title|default:''}</h3>
                             <ul class="cost">
-                                {section name=i start=0 loop=5}
-                                    {assign var='index' value=$smarty.section.i.index}
-                                    {assign var='plan_title' value='plan_title'|cat:($index + 1)}
-                                    {assign var='plan_Fee' value='plan_Fee'|cat:($index + 1)}
-                                    {assign var='plan_Kind' value='plan_Kind'|cat:($index + 1)}
-                                    {if isset($product.$plan_title) }
-                                    <li>{$product.$plan_title}{if $product.$plan_Kind != ''}({$product.$plan_Kind}){/if} {$product.$plan_Fee|number_format}円</li>
-                                    {/if}
-                                {/section}
+                                {if $product.price_value_min == $product.price_value_max}
+                                <li>{$product.price_title} <span class="num3">{$product.price_value_max}</span>円</li>
+                                {else}
+                                <li>{$product.price_title} <span class="num3">{$product.price_value_min}</span>〜<span class="num3">{$product.price_value_max}</span>円</li>
+                                {/if}
                             </ul>
                             <ul class="keyword">
-                                {foreach from=$product.area item=value}
+                                {foreach from=$product.area_text item=value}
                                 <li class="area">{$value|default:''}</li>
                                 {/foreach}
-                                {foreach from=$product.Category item=value}
+                                {foreach from=$product.category_text item=value}
                                 <li class="genre">{$value|default:''}</li>
                                 {/foreach}
                             </ul>
@@ -153,26 +149,34 @@
     </div>
 </div>
 
-<!--
 <div class="pagination">
     <div data-lg>
         <ul>
-            <li class="prev"><a href="">前へ</a></li>
-            <li><a class="page" href="">1</a></li>
-            <li><span class='current'>2</span></li>
-            <li><a class="page" href="">3</a></li>
-            <li class="next"><a href="">次へ</a></li>
+            {foreach from=$pager item=value}
+                {if $value == ($current_page - 2) && $current_page != count($pager) || ($current_page == count($pager) && $value == $current_page - 3)}
+                    <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}">前へ</a></li>
+                {elseif $value == $current_page - 1 || $value == $current_page + 1 }
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                {elseif $current_page == 1 && $value == $current_page + 2 }
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                {elseif $current_page == count($pager) && $value == $current_page - 2 }
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                {elseif $value == ($current_page + 2) && $current_page != 1 || ($current_page == 1 && $value == $current_page + 3) }
+                    <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }">次へ</a></li>
+                {elseif $value == $current_page}
+                    <li><span class='current'>{$value}</span></li>
+                {/if}
+            {/foreach}
         </ul>
     </div>
 </div>
--->
 
 </main>
 <!-- END main -->
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 

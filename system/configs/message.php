@@ -16,6 +16,7 @@ define('MESSAGE_ERROR_REQUIRE', '必須項目を入力してください。');
 define('MESSAGE_ERROR_REQUIRE_IMAGE', '画像を１つ以上登録してください。');
 define('MESSAGE_ERROR_REQUIRE_IMAGE_ONE', '画像を登録してください。');
 define('MESSAGE_ERROR_REQUIRE_TEL', '電話番号または携帯電話番号を入力してください。');
+define('MESSAGE_ERROR_TEL', '電話番号が不正です。');
 define('MESSAGE_ERROR_DATE', '日付が不正です。');
 define('MESSAGE_ERROR_NUMBER', '数値を入力してください。');
 

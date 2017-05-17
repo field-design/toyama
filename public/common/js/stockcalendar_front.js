@@ -28,7 +28,7 @@
     * 開始日を設定
     */
     if(settings.start){
-        var s_Date     = settings.start.split("/");
+        var s_Date     = settings.start.split("-");
         str_Date = new Date(s_Date[0],s_Date[1]-1,1);
     }　else　{
         var sdate = new Date();
@@ -116,24 +116,37 @@
 
                     if(day) {
                         var status = 'not';
-                        var stock_value = eval('input_data.stock' + day);
+                        var stock_type = input_data.stock_type[day - 1];
+                        var stock_value = input_data.stock_value[day - 1];
+                        var stock_option = input_data.stock_option[day - 1];
                         var t_date = new Date(yyyy, (mmmm - 1) + i, day);
                         var now = new Date();
                         var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
-                        var now_plus_closingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + settings.closingout_date);
+                        var now_plus_closingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.close_date);
 
                         if( t_date.getTime() < now_plus_closingout.getTime() ) {
                             //手じまい日未満は期限切れ
                             status = 'out';
-                        } else if( t_date.getTime() == now_plus_closingout.getTime() && now_time >= settings.closingout_time ) {
+                        } else if( t_date.getTime() == now_plus_closingout.getTime() && now_time >= input_data.close_time ) {
                             //手じまい日の手じまい時刻以降は期限切れ
-                            status = 'out';
+                            if(stock_option == 1) {
+                                status = 'ask';
+                            } else {
+                                status = 'out';
+                            }
                         } else {
-                            if(stock_value <= 0) {
-                                status = 'not';
-                            } else if(settings.plan_type == 2) {
+                            if(stock_type == null) {
+                                //期間外
+                                status = 'out';
+                            } else if(stock_type == 1) {
                                 //リクエストプラン
                                 status = 'ask';
+                            } else if(stock_type == 2) {
+                                //在庫なし
+                                status = 'not';
+                            } else if(stock_value <= 0) {
+                                //在庫なし
+                                status = 'not';
                             } else if(stock_value <= settings.few) {
                                 //残りわずか
                                 status = 'few';
@@ -144,7 +157,7 @@
 
                         html +='      <div class="order-status">';
                         if( status == 'ask' || status == 'few' || status == 'many' ) {
-                            html +='          <a href="' + settings.url_root + 'order/?plan=' + settings.plan + '&ymd=' + ymd + '"><div class="' + status + '"></div></a>';
+                            html +='          <a href="' + settings.url_root + 'order/?plan=' + settings.plan + '&course=' + settings.course + '&ymd=' + ymd + '"><div class="' + status + '"></div></a>';
                         } else {
                             html +='          <div class="' + status + '"></div>';
                         }

@@ -124,13 +124,13 @@
           <tbody>
             {foreach from=$saleslist item=sales}
             <tr>
-              <td class="order-date">{$sales.paymentDate|replace:' ':'<br />'}</td>
-              <td class="order-number">{$sales.OrderNumber|string_format:'%06d'}</td>
+              <td class="order-date">{$sales.pay_date|replace:' ':'<br />'}</td>
+              <td class="order-number">{$sales.order_id|default:''}</td>
               <td class="order-product-name">{$sales.title}</td>
               <td class="order-name">{$sales.nameSei} {$sales.nameMei}</td>
-              <td class="order-number">{($sales.volume1 + $sales.volume2 + $sales.volume3 + $sales.volume4 + $sales.volume5)|number_format}</td>
-              <td class="order-amount">{($sales.plan_Fee1 * $sales.volume1 + $sales.plan_Fee2 * $sales.volume2 + $sales.plan_Fee3 * $sales.volume3 + $sales.plan_Fee4 * $sales.volume4 + $sales.plan_Fee5 * $sales.volume5)|number_format}</td>
-              <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$sales.OderID}">詳細</a></td>
+              <td class="order-number">{$sales.amount_total|number_format}</td>
+              <td class="order-amount">{$sales.price_total|number_format}</td>
+              <td class="order-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}order/edit?OderID={$sales.order_id}">詳細</a></td>
             </tr>
             {/foreach}
           </tbody>

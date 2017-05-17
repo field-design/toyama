@@ -10,7 +10,10 @@
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'Order.php');
+require_once(CLS_DIR . 'ProductMy.php');
+require_once(CLS_DIR . 'ProductStockMy.php');
+require_once(CLS_DIR . 'ProductPriceMy.php');
+require_once(CLS_DIR . 'OrderMy.php');
 require_once(CLS_DIR . 'Contact.php');
 require_once(CLS_DIR . 'Settings.php');
 
@@ -26,7 +29,12 @@ $smarty->assign('is_admin', $login->isAuthAdmin());
 $smarty->assign('menu_person_id', $login->getPersonID());
 
 //受注データ取得
-$order = new Order();
+$product = new ProductMy();
+$stock = new ProductStockMy();
+$order = new OrderMy($login);
+$price = new ProductPriceMy();
+
+$err_flg = false;
 
 if( isset($_POST['OderID']) ) {
     $data = $order->getOrder(htmlspecialchars($_POST['OderID']));
@@ -37,25 +45,76 @@ if( isset($_POST['OderID']) ) {
 if(!is_array($data)) {
     $smarty->assign('global_message', $data);
     $data = array();
+    $err_flg = true;
 }
 
-if( isset($_POST['OderID']) ) {
-    //承認処理
-    $data = $order->update_approval($data);
-
-    if(!is_array($data)) {
-        $smarty->assign('global_message', $data);
-        $data = array();
+if( !$err_flg ) {
+    
+    //商品情報取得
+    $product_data = $product->getProduct($data['product_id']);
+    if(!is_array($product_data)) {
+        $smarty->assign('global_message', $product_data);
+        $err_flg = true;
     }
 
-    //承認メール送信
-    $settings = new Settings();
-    $settings_data = $settings->getSettings($data['PersonID']);
-    $contact = new Contact();
-    $contact = $contact->sendRequestApproval($data, $settings_data);
+    //コース情報取得
+    $course_data = $stock->getCourse($data['product_id'], $data['course_id']);
+    if(!is_array($course_data)) {
+        $smarty->assign('global_message', $course_data);
+        $err_flg = true;
+    }
+
+    //コースメタ情報取得
+    $price_data = $price->getCourseMeta($data['course_id']);
+    if(!is_array($price_data)) {
+        $smarty->assign('global_message', $price_data);
+        $err_flg = true;
+    }
 }
 
-$data['oderDate'] = date('Y月m日d', strtotime($data['oderDate']));
+if( !$err_flg ) {
+
+    if( isset($_POST['approval']) ) {
+
+        if( $_POST['approval'] == 'ok' ) {
+            //承認処理
+            $data = $order->update_approval($data);
+
+            if(!is_array($data)) {
+                $smarty->assign('global_message', $data);
+                $data = array();
+            }
+
+            //承認メール送信
+            $settings = new Settings();
+            $settings_data = $settings->getSettings($data['PersonID']);
+            $contact = new Contact();
+            $contact = $contact->sendRequestApproval($data, $product_data, $course_data, $price_data, $settings_data);
+ 
+        } elseif( $_POST['approval'] == 'cancel' ) {
+            //非承認処理
+            $data = $order->update_approval_cancel($data);
+
+            if(!is_array($data)) {
+                $smarty->assign('global_message', $data);
+                $data = array();
+            }
+
+            //承認メール送信
+            $settings = new Settings();
+            $settings_data = $settings->getSettings($data['PersonID']);
+            $contact = new Contact();
+            $contact = $contact->sendRequestApprovalCancel($data, $product_data, $course_data, $price_data, $settings_data);
+ 
+        }
+    }
+
+    $data['oderDate'] = date('Y/m/d', strtotime($data['oderDate']));
+
+}
 
 $smarty->assign('data', $data);
+$smarty->assign('product_data', $product_data);
+$smarty->assign('course_data', $course_data);
+$smarty->assign('price_data', $price_data);
 $smarty->display(ADMIN_DIR . 'order/edit/index.tpl');
