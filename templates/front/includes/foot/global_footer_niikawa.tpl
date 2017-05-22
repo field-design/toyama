@@ -32,6 +32,9 @@
                         <td><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat4">買う</a></td>
                         <td><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_4">朝日町</a></td>
                     </tr>
+                    <tr>
+                        <td><a href="{$smarty.const.URL_ROOT_PATH}law/">特定商取引法に基づく表記</a></td>
+                    </tr>
                 </tbody>
             </table>
         </nav>

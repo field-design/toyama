@@ -35,6 +35,10 @@
                   <i class="fa fa-fw fa-cog"></i>
                   設定
               </a> -->
+              <a class="button is-white" href="{$smarty.const.URL_ROOT_PATH_ADMIN}assets/docs/manual.pdf" target="_blank">
+                  <i class="fa fa-fw fa-file-text"></i>
+                  操作マニュアル
+              </a>
               <a class="button is-light" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/?PersonID={$menu_person_id|default:''}">
                   <i class="fa fa-fw fa-user"></i>
                   プロフィール

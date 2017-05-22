@@ -71,7 +71,7 @@
 
     <h2 class="title is-3">詳細情報</h2>
 
-    <section>
+    <section class="order-edit-detail">
         <h3 class="title is-5">受注ステータス</h3>
         <hr>
         <table class="order-edit table is-bordered">
@@ -108,19 +108,23 @@
                 <th>入金日</th>
                 <td>{$data['pay_date']|default:''}</td>
             </tr>
+            {if $data.request_flg == 1 || $data.request_flg == 2}
+            <tr>
+                <th>決済ページURL</th>
+                <td class="word-break">
+                    <a href="{$data.payment_url|default:''}" target="_blank">{$data.payment_url|default:''}</a>
+                </td>
+            </tr>
+            {/if}
           </tbody>
         </table>
     </section>
 
-    <section>
+    <section class="order-edit-detail">
         <h3 class="title is-5">注文者情報</h3>
         <hr>
         <table class="order-edit table is-bordered">
           <tbody>
-            <tr>
-                <th>会員ID</th>
-                <td>{$data.MemberID|default:''}</td>
-            </tr>
             <tr>
                 <th>お名前</th>
                 <td>{$data.nameSei|default:''} {$data.nameMei|default:''}</td>
@@ -219,6 +223,7 @@
                 <th>決済種別</th>
                 <td>{$data.settlement_type_text|default:''}</td>
             </tr>
+            {if $data.settlement_type == 0}
             <tr>
                 <th>与信承認番号</th>
                 <td>{$data.credit_number|default:''}</td>
@@ -227,10 +232,12 @@
                 <th>支払方法</th>
                 <td>{$data.payment_text|default:''}</td>
             </tr>
+            {elseif $data.settlement_type == 3}
             <tr>
                 <th>コンビニ名</th>
                 <td>{$data.settlement_name|default:''}</td>
             </tr>
+            {/if}
             <tr>
                 <th>決済金額</th>
                 <td>{$data.settlement|number_format|default:''}円</td>

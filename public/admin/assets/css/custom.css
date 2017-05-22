@@ -209,6 +209,13 @@ body.login footer {
 .order-list .order-edit {
   text-align: center; }
 
+.order-edit-detail th {
+  width: 30%;
+  vertical-align: middle; }
+
+.order-edit-detail .word-break {
+  word-break: break-all; }
+
 /* =====================
   admin styles
 ===================== */

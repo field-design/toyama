@@ -110,6 +110,9 @@ if( !$err_flg ) {
     }
 
     $data['oderDate'] = date('Y/m/d', strtotime($data['oderDate']));
+    //決済情報URL
+    $enc_id = sha1(ORDER_ID_SALT . $data['OderID']);
+    $data['payment_url'] = URL_ROOT_PATH_HOST . "/order/requestapp/?order=" . $enc_id . "&date=" . date('Y-m-d', strtotime($data['oderDate']));
 
 }
 

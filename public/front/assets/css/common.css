@@ -1868,6 +1868,46 @@ a:hover {
 }
 
 /* =====================
+  maintenance
+===================== */
+.maintenance {
+  padding: 30px 0 60px;
+}
+
+.maintenance .intro {
+  margin-bottom: 30px;
+}
+
+.maintenance .intro h3 {
+  padding-bottom: .5em;
+  font: 400 20px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 2rem/160% "Noto Sans Japanese", sans-serif;
+  border-bottom: 1px solid #ddd;
+}
+
+.maintenance .intro p {
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.maintenance .detail {
+  padding: .5em 1em;
+  border: 1px dashed #eee;
+}
+
+.maintenance .detail h4 {
+  margin: .25em 0;
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.maintenance .detail p {
+  margin-top: 0;
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+/* =====================
   common layouts
 ===================== */
 /*  global

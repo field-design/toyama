@@ -73,4 +73,10 @@
     <!-- <li><a class="{$bank|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/bank">口座設定</a></li> -->
     <!-- <li><a class="{$account|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/account">アカウント</a></li> -->
   </ul>
+  <p class="menu-label">
+    その他
+  </p>
+  <ul class="menu-list">
+    <li><a class="{$banner|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}promotion/banner">バナー掲載について</a></li>
+  </ul>
 </aside>

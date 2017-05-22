@@ -23,6 +23,7 @@
                     <li class="inquiry"><a href="{$smarty.const.URL_ROOT_PATH}contact/"><i class="fa fa-envelope-o" aria-hidden="true"></i>お問い合わせ</a></li>
                     <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}guide/">サイトのご利用案内</a></li>
                     <li class="sub"><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">プライバシーポリシー</a></li>
+                    <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}law/">特定商取引法に基づく表記</a></li>
                 </ul>
             </nav>
         </div>

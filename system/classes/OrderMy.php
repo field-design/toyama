@@ -402,7 +402,7 @@ class OrderMy extends Entity {
         $sql .= 'on        t_order.order_id = t_order_meta.order_id ';
         $sql .= 'and       t_order_meta.meta_type = "price_value"';
         $sql .= 'where  SHA1(CONCAT("' . ORDER_ID_SALT . '", t_order.order_id)) = :order_id ';
-        $sql .= 'and    t_order.order_status = 5 ';
+        //$sql .= 'and    t_order.order_status = 5 ';
         $sql .= 'and    t_order.request_flg = 2 ';
         $sql .= 'group by t_order.order_id ';
         $sql .= '       , t_order.product_id ';
