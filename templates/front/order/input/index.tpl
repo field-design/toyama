@@ -74,7 +74,7 @@
         <form method="post" action="{$smarty.server.PHP_SELF|replace:'index.php':''}">
 
             <section class="order-input">
-                <h3 class="input-ttl">お申込者様の情報</h3>
+                <h3 class="product-ttl">お申込者様の情報</h3>
                 <div class="input-wrap">
 
                     <div class="input-area">
@@ -144,7 +144,7 @@
                                 <select name="pref" class="short">
                                     <option value="">都道府県</option>
                                     {foreach from=$const_pref item=pref key=key}
-                                    <option value="{$pref}" {if $order_data.pref==$pref}selected{/if}>{$pref}</option>                                       
+                                    <option value="{$key}" {if $order_data.pref==$key}selected{/if}>{$pref}</option>                                       
                                     {/foreach}
                                 </select>
                             </span>
@@ -262,17 +262,55 @@
                         <div class="input-field">
                             <span class="select">
                                 <select name="job_" class="short">
-                                    <option value="1" {if ($order_data.job_|default:1) == 1}selected{/if}>学生</option>
-                                    <option value="2" {if ($order_data.job_|default:1) == 2}selected{/if}>会社員</option>
-                                    <option value="3" {if ($order_data.job_|default:1) == 3}selected{/if}>自営</option>
-                                    <option value="4" {if ($order_data.job_|default:1) == 4}selected{/if}>主婦</option>
-                                    <option value="5" {if ($order_data.job_|default:1) == 5}selected{/if}>その他</option>
+                                    {foreach from=Constant::$aryProfession item=item key=key}
+                                    <option value="{$key}" {if ($order_data.job_|default:1) == $key}selected{/if}>{$item}</option>
+                                    {/foreach}
                                 </select>
                             </span>
                         </div>
                         {if isset($err_msg.job_) && $err_msg.job_ != ''}
                         <span class="error has-icon">{$err_msg.job_}</span>
                         {/if}
+                    </div>
+
+                </div>
+            </section>
+
+            <section id="member" class="order-input">
+                <h3 class="product-ttl">同行者様の情報</h3>
+
+                <div id="member_container">
+                    {section name=i start=0 loop=count($order_data.withSei)}
+                        {assign var='index' value=$smarty.section.i.index}
+                        {if !isset($err_msg)}
+                            {assign var='err_msg' value=array()}
+                        {/if}
+                        {include file=$smarty.const.FRONT_DIR|cat:'addparts/order_input_member.tpl'
+                                 num=$index
+                                 order_data=$order_data
+                                 err_msg=$err_msg}
+                    {/section}
+                </div>
+
+                <div class="add-btn">
+                    <a class="button">
+                        <span class="icon">
+                        <i class="fa fa-plus-circle"></i>
+                        </span>
+                        <span>同行者を追加</span>
+                    </a>
+                    <p class="help">最大10名まで追加可能</p>
+                </div>
+            </section>
+
+            <section class="order-input">
+                <h3 class="product-ttl">備考欄</h3>
+                <div class="input-wrap">
+
+                    <div class="input-area">
+                        <div class="input-field">
+                            <textarea class="full" name="note" placeholder="ご要望やご質問がございましたら、こちらにご記入ください。">{$order_data.note|default:''}</textarea>
+                        </div>
                     </div>
 
                 </div>
@@ -296,7 +334,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 
@@ -311,7 +349,21 @@
 
 
 <!-- Page Script -->
+{literal}
+<script>
+    $(function() {
+        /***************************
+        追加ボタン処理
+        partsapi.js
+        ****************************/
+        var partsapi = new PartsApi();
 
+        $('#member .add-btn a').click(function(){
+            partsapi.addParts('member', '#member_container');
+        });
+    });
+</script>
+{/literal}
 
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/sns_script.tpl'}
 

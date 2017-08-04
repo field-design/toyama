@@ -62,7 +62,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' order='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -164,9 +164,46 @@
                 <th>職業</th>
                 <td>{$data.job_|default:''}</td>
             </tr>
+            <tr>
+                <th>備考欄</th>
+                <td>
+                    {$data.note|default:''}
+                </td>
+            </tr>
           </tbody>
         </table>
     </section>
+
+    {if count($data.withSei) > 0}
+    <section class="order-edit-detail">
+        <h3 class="title is-5">同行者情報</h3>
+        <hr>
+        {section name=i start=0 loop=count($data.withSei)}
+            {assign var='index' value=$smarty.section.i.index}
+            <table class="order-edit table is-bordered with">
+            <caption>同行者</caption>
+            <tbody>
+                <tr>
+                    <th>お名前</th>
+                    <td>{$data.withSei[$index]|default:''} {$data.withMei[$index]|default:''}</td>
+                </tr>
+                <tr>
+                    <th>フリガナ</th>
+                    <td>{$data.withKanaSei[$index]|default:''} {$data.withKanaMei[$index]|default:''}</td>
+                </tr>
+                <tr>
+                    <th>生年月日</th>
+                    <td>{$data.withBirthday[$index]|default:''}</td>
+                </tr>
+                <tr>
+                    <th>性別</th>
+                    <td>{$data.withGender[$index]|default:''}</td>
+                </tr>
+            </tbody>
+            </table>
+        {/section}
+    </section>
+    {/if}
 
     <section>
         <h3 class="title is-5">受注詳細</h3>
@@ -214,6 +251,26 @@
         </table>
     </section>
 
+    {if isset($product_data.question)}
+    <section class="order-edit-detail">
+        <h3 class="title is-5">質問事項</h3>
+        <hr>
+        <table class="order-edit table is-bordered">
+          <tbody>
+            {section name=i start=0 loop=count($product_data.question)}
+                {assign var='index' value=$smarty.section.i.index}
+                <tr>
+                    <th>{$product_data.question[$index]}</th>
+                    <td>
+                        {$data.question[$index]|default:''}
+                    </td>
+                </tr>
+            {/section}
+          </tbody>
+        </table>
+    </section>
+    {/if}
+
     <section>
         <h3 class="title is-5">決済情報</h3>
         <hr>
@@ -253,6 +310,10 @@
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' order='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->

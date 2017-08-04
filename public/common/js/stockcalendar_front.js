@@ -8,6 +8,7 @@
         'prefix'    : 'mycld_',   //カレンダーで使われる変数名 他と被らないようユニークに
         'delimiter' : '-',        //送信時の日付の区切り文字 yyy/mm/dd
         'data'      : {},
+        'lang'      : 1,
     }, options);
 
     $(this).html('');//カレンダー展開場所の中身をクリア
@@ -42,6 +43,33 @@
     var m = str_Date.getMonth()+1;
 
     /*
+    * 言語設定
+    */
+    var text_prev_month = '前月';
+    var text_next_month = '翌月';
+    var text_yaer = '年';
+    var text_month = '月';
+    var text_mark_title = 'ーカレンダーの見方ー';
+    var text_many = '予約可能';
+    var text_few = '残りわずか';
+    var text_not = '空きなし';
+    var text_out = '期間外';
+    var text_ask = 'お申し込み後、主催会社から受け入れ可否の連絡';
+    if(settings.lang == 2) {
+        text_prev_month = 'last month';
+        text_next_month = 'next month';
+        text_yaer = '/';
+        text_month = '';
+        settings.week = settings.week_en;
+        text_mark_title = '- How to read the calendar -';
+        text_many = 'Reservation Available';
+        text_few = 'Limited Places Remaining';
+        text_not = 'Sold Out';
+        text_out = 'Outside of Time Frame';
+        text_ask = 'After you apply, the operating company will contact you on the result of your application';
+    }
+
+    /*
     * カレンダー展開
     */
     var Calendar = function(obj,yyyy,mmmm){
@@ -63,15 +91,15 @@
             html +='    <div class="wrap cf">';
             html +='        <a class="button prev" href="javascript:void(0);" >';
             html +='            <span class="icon">';
-            html +='                <i class="fa fa-fw fa-angle-left"></i>前月';
+            html +='                <i class="fa fa-fw fa-angle-left"></i>' + text_prev_month;
             html +='            </span>';
             html +='        </a>';
             html +='        <a class="button current">';
-            html +='            <span>' + s_yy + '年' + s_mm + '月' + '</span>';
+            html +='            <span>' + s_yy + text_yaer + s_mm + text_month + '</span>';
             html +='        </a>';
             html +='        <a class="button next" href="javascript:void(0);" >';
             html +='            <span class="icon">';
-            html +='                翌月<i class="fa fa-fw fa-angle-right"></i>';
+            html +='                ' + text_next_month + '<i class="fa fa-fw fa-angle-right"></i>';
             html +='            </span>';
             html +='        </a>';
             html +='    </div>';
@@ -171,12 +199,13 @@
             html +='    </tbody>';
             html +='</table>';
 
+            html +='<h4>' + text_mark_title + '</h4>';
             html +='<ul class="notes">';
-            html +='    <li><p class="many">予約可能</p></li>';
-            html +='    <li><p class="few">残りわずか</p></li>';
-            html +='    <li><p class="not">空きなし</p></li>';
-            html +='    <li><p class="out">期間外</p></li>';
-            html +='    <li><p class="ask">お申し込み後、主催会社から受け入れ可否の連絡</p></li>';
+            html +='    <li><p class="many">'+ text_many +'</p></li>';
+            html +='    <li><p class="few">'+ text_few +'</p></li>';
+            html +='    <li><p class="not">'+ text_not +'</p></li>';
+            html +='    <li><p class="out">'+ text_out +'</p></li>';
+            html +='    <li><p class="ask">'+ text_ask +'</p></li>';
             html +='</ul>';
         }
 

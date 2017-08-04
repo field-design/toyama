@@ -9,14 +9,13 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
-require_once(CLS_DIR . 'Contact.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$order = new OrderMy();
+$product = new Product();
+$order = new Order();
 $settings = new Settings();
 $contact = new Contact();
 $log = new Log();
@@ -114,8 +113,8 @@ if ( !$err_flg ) {
         }
     }
 
-    if( isset($_POST['CvsCode']) ) {
-        $order_data['settlement_name'] = ConstantMy::$aryCvs[$_POST['CvsCode']];
+    if( isset($_POST['CvsCode']) && $_POST['CvsCode'] != '') {
+        $order_data['settlement_name'] = Constant::$aryCvs[$_POST['CvsCode']];
     } else {
         $order_data['settlement_name'] = '';
     }

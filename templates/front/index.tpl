@@ -13,7 +13,7 @@
 
 <title>{$page_data.title_tag|default:''}</title>
 <meta name="description" content="{$page_data.description_tag|default:''}">
-<meta name="keywords" content="">
+<meta name="keywords" content="{$page_data.keyword_tag|default:''}">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->

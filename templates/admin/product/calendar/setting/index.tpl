@@ -61,7 +61,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' calendar='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -119,11 +119,38 @@
                     </div>
                     <div id="stock_calendars">
                     </div>
-                
-                    <div id="calen_val_all" class="control is-grouped">
+
+                    <hr>
+
+                    <label class="label">
+                        一括入力
+                        <span class="help">期間、在庫種別、オプションの有無を選択して一括入力が可能です。</span>
+                    </label>
+
+                    <div class="control is-grouped">
                         <div class="control has-addons has-icon has-icon-right">
+                            <input id="calen_date_start" class="input js-datepicker" type="text" placeholder="開始日">
+                        </div>
+                        <div class="control has-addons has-icon has-icon-right">
+                            <input id="calen_date_end" class="input js-datepicker" type="text" placeholder="終了日">
+                        </div>
+                    </div>
+                    <div class="control">
+                        <div class="control">
+                            <label class="checkbox"><input class="chk_week" value="sun" type="checkbox" checked="checked">日</label>
+                            <label class="checkbox"><input class="chk_week" value="mon" type="checkbox" checked="checked">月</label>
+                            <label class="checkbox"><input class="chk_week" value="tue" type="checkbox" checked="checked">火</label>
+                            <label class="checkbox"><input class="chk_week" value="wed" type="checkbox" checked="checked">水</label>
+                            <label class="checkbox"><input class="chk_week" value="thu" type="checkbox" checked="checked">木</label>
+                            <label class="checkbox"><input class="chk_week" value="fri" type="checkbox" checked="checked">金</label>
+                            <label class="checkbox"><input class="chk_week" value="sat" type="checkbox" checked="checked">土</label>
+                        </div>
+                    </div>
+                    <div class="control is-grouped">
+                        <div id="calen_val_all" class="control has-addons has-icon has-icon-right">
                             <span class="select">
                             <select>
+                                <option value="999">-設定なし-</option>
                                 <option value="">期間外</option>
                                 <option value="-1">リクエスト</option>
                                 <option value="-2">空きなし</option>
@@ -135,30 +162,26 @@
                             
                             </span>
                         </div>
-                        <div class="control has-addons">
-                            <a class="button">
-                            一括入力
-                            </a>
-                        </div>
-                    </div>
-                
-                    <div id="calen_option_all" class="control is-grouped">
-                        <div class="control has-addons has-icon has-icon-right">
+                        <div id="calen_option_all" class="control has-addons has-icon has-icon-right">
                             <span class="select">
                             <select>
+                                <option value="999">-設定なし-</option>
                                 <option value="0">なし</option>
                                 <option value="1">オプション1</option>
                             </select>
                             
                             </span>
                         </div>
+                    </div>
+
+                    <div id="calen_val_option_btn" class="control is-grouped">
                         <div class="control has-addons">
-                            <a class="button">
-                            一括入力
+                            <a class="button is-info is-outlined">
+                            上記条件で一括入力
                             </a>
                         </div>
                     </div>
-                
+
                     <div class="message is-dark notes">
                         <div class="message-header">
                             <p>オプション説明</p>
@@ -219,6 +242,10 @@
 </div>
 <div id="dialog" title="確認">
     現在の設定を保存せず、コースを変更しますか？
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' calendar='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->
@@ -330,6 +357,18 @@ $(function() {
 });
 </script>
 <script>
+function getLeftZero(number, keta)
+{
+    var number = String(number);
+
+    if (number.length > keta) {
+        return number;
+    }
+
+    //乗算により0を追加後、指定桁数分切り出し
+    temp = Math.pow(10, keta) + number;
+    return temp.slice(keta * -1);
+}
 $(function() {
     /***************************
     submitボタン設定
@@ -455,21 +494,70 @@ $(function() {
         }
         
     });
-    $('#calen_val_all a').click(function(){
-        $('#stock_calendars > div').each(function(){
-            if($(this).css('opacity') == 1) {
-                $(this).find('td select.calen_val').val($('#calen_val_all select').val());
-                return false;
-            }
+    $('#calen_val_option_btn a').click(function(){
+
+        $('#error').remove();
+        if($('#calen_date_start').val().trim() == '' || $('#calen_date_end').val().trim() == '') {
+            $(this).parent().parent().append('<span id="error" class="error has-icon">期間を入力してください。</span>')
+            return false;
+        }
+        if($('#calen_date_start').val().trim().length != 10 || $('#calen_date_end').val().trim().length != 10) {
+            $(this).parent().parent().append('<span id="error" class="error has-icon">日付はyyyy/mm/ddで入力してください。</span>')
+            return false;
+        }
+    
+        //曜日取得
+        var chk_week = [];
+        $('.chk_week:checked').each(function(){
+            chk_week.push($(this).val());
         });
-    });
-    $('#calen_option_all a').click(function(){
-        $('#stock_calendars > div').each(function(){
-            if($(this).css('opacity') == 1) {
-                $(this).find('td select.calen_option').val($('#calen_option_all select').val());
-                return false;
+
+        var now = new Date();
+        var dt = new Date($('#calen_date_start').val());
+        var dt_end = new Date($('#calen_date_end').val());
+    
+        var range_from = dt.getDate();
+        var range_to;
+
+        if(dt.getMonth() < now.getMonth()) {
+            dt.setMonth(now.getMonth());
+        }
+
+        while(dt.getTime() <= dt_end.getTime()) {
+            //カレンダー作成
+            stockmanager.changeCalendar(dt);
+
+            var ym = dt.getFullYear() + '-' + getLeftZero(dt.getMonth() + 1 ,2)
+
+            if(dt.getMonth() < dt_end.getMonth()) {
+                range_to = 31;
+            } else {
+                range_to = dt_end.getDate();
             }
-        });
+
+
+            for(var i=0; i<chk_week.length; i++) {
+                $('#stock_calendars > div.' + ym).find('td.' + chk_week[i]).each(function(){
+                    if(parseInt($(this).find('.day').html()) >= range_from && parseInt($(this).find('.day').html()) <= range_to) {
+                        if($('#calen_val_all select').val() != '999') {
+                            $(this).find('select.calen_val').val($('#calen_val_all select').val());
+                        }
+                        if($('#calen_option_all select').val() != '999') {
+                            $(this).find('select.calen_option').val($('#calen_option_all select').val());
+                        }
+                    }
+                });
+            }
+
+            dt.setMonth(dt.getMonth() + 1);
+
+            range_from = 1;
+            if(dt.getMonth() == dt_end.getMonth()) {
+                dt.setDate(dt_end.getDate());
+            }
+        }
+        
+        return false;
     });
 
     $edit_flg = false;

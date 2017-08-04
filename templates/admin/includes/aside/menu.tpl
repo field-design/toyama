@@ -10,6 +10,7 @@
     {/if}
     <ul class="menu-product">
       <li><a href="javascript:void(0);">基本情報</a></li>
+      <li><a href="javascript:void(0);">代金</a></li>
       <li><a href="javascript:void(0);">プラン詳細</a></li>
       <li><a href="javascript:void(0);">集合場所</a></li>
       <li><a href="javascript:void(0);">注意事項・その他</a></li>
@@ -17,6 +18,7 @@
       <li><a href="javascript:void(0);">お申し込み</a></li>
       <li><a href="javascript:void(0);">プラン内容</a></li>
       <li><a href="javascript:void(0);">エリア・カテゴリ</a></li>
+      <li><a href="javascript:void(0);">質問事項</a></li>
       <li><a href="javascript:void(0);">公開設定</a></li>
     </ul>
   </li>
@@ -47,7 +49,9 @@
   </p>
   <ul class="menu-list">
     <li><a class="{$page_toyama|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}page/top?PageID=1">in富山</a></li>
+    <li><a class="{$page_toyama_en|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}page/top?PageID=3">in富山（EN）</a></li>
     <li><a class="{$page_niikawa|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}page/niikawa?PageID=2">inにいかわ</a></li>
+    <li><a class="{$page_niikawa_en|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}page/niikawa?PageID=4">inにいかわ（EN）</a></li>
   </ul>
   {/if}
   <p class="menu-label">
@@ -60,15 +64,13 @@
     売上管理
   </p>
   <ul class="menu-list">
-    <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}sales/">売上一覧</a></li>
+    <li><a class="{$sales|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}sales/">売上一覧</a></li>
   </ul>
   <p class="menu-label">
     設定
   </p>
   <ul class="menu-list">
-    {if $is_admin}
     <li><a class="{$users|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/">事業者一覧</a></li>
-    {/if}
     <li><a class="{$settings|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/?PersonID={$menu_person_id|default:''}">プロフィール</a></li>
     <!-- <li><a class="{$bank|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/bank">口座設定</a></li> -->
     <!-- <li><a class="{$account|default:''}" href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit/account">アカウント</a></li> -->

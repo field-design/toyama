@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>お申し込み | {$smarty.const.SITE_TITLE_FRONT}</title>
+<title>お申し込み | {Constant::$siteNameNiikawa}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -39,7 +39,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 
@@ -79,7 +79,7 @@
                     <tbody>
                         <tr>
                             <th class="text-center">お申し込み日時</th>
-                            <td class="text-left">{$data.registDate}</td>
+                            <td class="text-left">{$data.registDate_text}</td>
                         </tr>
                         <tr>
                             <th class="text-center">お申し込み番号</th>
@@ -100,7 +100,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">プラン名</th>
-                            <td class="text-left">{$course_data.course_name[0]}</td>
+                            <td class="text-left">{$product_data.course_name[0]}</td>
                         </tr>
                         <tr>
                             <th class="text-center">出発日</th>
@@ -167,7 +167,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 

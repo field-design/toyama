@@ -61,7 +61,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' order='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -88,7 +88,7 @@
                         <span class="select">
                             <select name="order_status">
                             <option value="">指定しない</option>
-                            {foreach from=ConstantMy::$aryCorrespondence item=value key=key}
+                            {foreach from=Constant::$aryCorrespondence item=value key=key}
                             <option value="{$key}" {if ($search_params.order_status|default:'') == $key}selected{/if}>{$value}</option>
                             {/foreach}
                             </select>
@@ -184,7 +184,7 @@
                     <th>支払方法</th>
                     <td>
                         <p class="control">
-                        {foreach from=ConstantMy::$arySettlementType item=value key=key}
+                        {foreach from=Constant::$arySettlementType item=value key=key}
                         <label class="checkbox">
                             <input name="settlement_type[]" type="checkbox" value="{$key}" {if isset($search_params.settlement_type) && in_array($key, $search_params.settlement_type)}checked="checked"{/if}>
                             {$value}
@@ -247,6 +247,10 @@
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' order='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->

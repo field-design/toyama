@@ -9,18 +9,20 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$order = new OrderMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$order = new Order();
 $settings = new Settings();
+$page = new Page();
 $log = new Log();
 
 $order_data = $order->getNewData();
@@ -44,17 +46,19 @@ if( !$err_flg ) {
         exit;
     }
     if($order_data['gender'] != '') {
-        $order_data['gender_text'] = ConstantMy::$aryGender[$order_data['gender']];
+        $order_data['gender_text'] = Constant::$aryGender[$order_data['gender']];
     }
     if($order_data['job_'] != '') {
-        $order_data['job_text'] = ConstantMy::$aryJob[$order_data['job_']];
+        $order_data['job_text'] = Constant::$aryJob[$order_data['job_']];
     }
-
+    for($i = 0; $i < count($order_data['withSei']); $i++) {
+        $order_data['withGender_text'][$i] = Constant::$aryGender[$order_data['withGender'][$i]];        
+    }
 }
 
 //商品データチェック
 if( !$err_flg ) {
-    $product_data = $product->getProduct($order_data['ProductID'], 1);
+    $product_data = $product->getLangProduct($order_data['ProductID']);
     $course_data = $stock->getCourse($order_data['ProductID'], $order_data['course_id']);
     $price_data = $price->getCourseMeta($order_data['course_id']);
     $order_date = strtotime($order_data['oderDate']);
@@ -65,6 +69,8 @@ if( !$err_flg ) {
         header('Location: ' . URL_ROOT_PATH . 'niikawa/');
         exit;
     }
+
+    $order_data['oderDate_text'] = date(Constant::$formatYMD, $order_date);
 }
 
 //在庫チェック
@@ -115,11 +121,13 @@ if( !$err_flg ) {
 }
 
 //事業者情報取得
-$settings_data = $settings->getSettings($product_data['person_id']);
+$settings_data = $settings->getLangPerson($product_data['person_id']);
 if(!is_array($settings_data)) {
     $smarty->assign('global_message', $settings_data);
     $err_flg = true;
 }
+
+$page_data = $page->getLangPage(2, 4);
 
 /**********************************************
 ◆ 申し込み処理
@@ -211,5 +219,6 @@ $smarty->assign('course_data', $course_data);
 $smarty->assign('price_data', $price_data);
 $smarty->assign('order_data', $order_data);
 $smarty->assign('settings_data', $settings_data);
+$smarty->assign('page_data', $page_data);
 $smarty->assign('request_flg', $request_flg);
 $smarty->display(FRONT_DIR . 'order/check/index.tpl');

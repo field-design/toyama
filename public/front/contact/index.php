@@ -9,11 +9,15 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'Contact.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
 
 $err_msg = array();
+
+$page = new Page();
+
+$page_data = $page->getLangPage(1, 3);
 
 if( isset($_POST['send']) ) {
 
@@ -52,5 +56,6 @@ if( isset($_POST['send']) ) {
     }    
 }
 
+$smarty->assign('page_data', $page_data);
 $smarty->assign('err_msg', $err_msg);
 $smarty->display(FRONT_DIR . 'contact/index.tpl');

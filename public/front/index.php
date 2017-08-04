@@ -9,15 +9,15 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'PageMy.php');
-require_once(CLS_DIR . 'ProductMy.php');
+require_once(CLS_DIR . 'Page.php');
+require_once(CLS_DIR . 'Product.php');
 
 $smarty = new SmartyExtends();
 
-$product = new ProductMy();
-$page = new PageMy();
+$product = new Product();
+$page = new Page();
 
-$page_data = $page->getPageData('1');
+$page_data = $page->getLangPage(1, 3);
 
 $area = null;
 $category = null;

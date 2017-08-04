@@ -60,7 +60,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
           {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' users='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -87,6 +87,7 @@
           <th class="admin-number">事業者名</th>
           <th class="admin-date">事業者ID</th>
           <th class="admin-status">権限</th>
+          <th class="admin-status">言語</th>
           <th class="admin-edit">詳細</th>
         </tr>
       </thead>
@@ -104,6 +105,7 @@
           </td>
           <td class="admin-number">{$settings.PersonID}</td>
           <td class="admin-status">{$settings.authority}</td>
+          <td class="admin-status">{Constant::$aryLang[$settings.language]|default:''}</td>
           <td class="admin-edit"><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}admins/edit?PersonID={$settings.PersonID}">詳細</a></td>
         </tr>
         {/foreach}
@@ -114,6 +116,10 @@
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' users='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->

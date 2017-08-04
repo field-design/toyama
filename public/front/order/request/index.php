@@ -9,20 +9,21 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
-require_once(CLS_DIR . 'Contact.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$order = new OrderMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$order = new Order();
 $settings = new Settings();
 $contact = new Contact();
+$page = new Page();
 $log = new Log();
 
 $err_flg = false;
@@ -52,7 +53,7 @@ if ( !$err_flg ) {
 
 if ( !$err_flg ) {
     //商品情報取得
-    $product_data = $product->getProduct($order_data['product_id'], 1);
+    $product_data = $product->getLangProduct($order_data['product_id']);
     if(!is_array($product_data)) {
         $smarty->assign('global_message', $product_data);
         $err_flg = true;
@@ -73,11 +74,13 @@ if ( !$err_flg ) {
     }
 
     //事業者情報取得
-    $settings_data = $settings->getSettings($order_data['PersonID']);
+    $settings_data = $settings->getLangPerson($order_data['PersonID']);
     if(!is_array($settings_data)) {
         $smarty->assign('global_message', $settings_data);
         $err_flg = true;
     }
+
+    $page_data = $page->getLangPage(2, 4);
 
     //メール送信
     if( !isset($_SESSION['send_request_mail']) ) {
@@ -85,7 +88,9 @@ if ( !$err_flg ) {
         $_SESSION['send_request_mail'] = 1;
     }
 
-    $order_data['oderDate_text'] = date('Y年m月d日', strtotime($order_data['oderDate']));
+    $temp_regist_date = DateTime::createFromFormat('Y年m月d日 H時i分s秒', $order_data['registDate']);
+    $order_data['registDate_text'] =  $temp_regist_date->format(Constant::$formatYMDHIS);
+    $order_data['oderDate_text'] = date(Constant::$formatYMD, strtotime($order_data['oderDate']));
 }
 
 $smarty->assign('err_flg', $err_flg);
@@ -94,4 +99,5 @@ $smarty->assign('product_data', $product_data);
 $smarty->assign('course_data', $course_data);
 $smarty->assign('price_data', $price_data);
 $smarty->assign('settings_data', $settings_data);
+$smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'order/request/index.tpl');

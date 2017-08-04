@@ -10,11 +10,10 @@
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
-require_once(CLS_DIR . 'Contact.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
 
 $login = new Login();
@@ -29,10 +28,10 @@ $smarty->assign('is_admin', $login->isAuthAdmin());
 $smarty->assign('menu_person_id', $login->getPersonID());
 
 //受注データ取得
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$order = new OrderMy($login);
-$price = new ProductPriceMy();
+$product = new Product();
+$stock = new ProductStock();
+$order = new Order($login);
+$price = new ProductPrice();
 
 $err_flg = false;
 
@@ -87,9 +86,19 @@ if( !$err_flg ) {
 
             //承認メール送信
             $settings = new Settings();
-            $settings_data = $settings->getSettings($data['PersonID']);
+
+            $product_data_mail;
+            if($data['lang'] == 2) {
+                $settings_data = $settings->getLangPerson($data['PersonID'], 2);
+                require_once(CLS_DIR . 'en/Contact.php');
+                $product_data_mail = $product->getLangProduct($data['product_id'], 2);
+            } else {
+                $settings_data = $settings->getLangPerson($data['PersonID']);
+                require_once(CLS_DIR . 'jp/Contact.php');
+                $product_data_mail = $product->getLangProduct($data['product_id']);
+            }
             $contact = new Contact();
-            $contact = $contact->sendRequestApproval($data, $product_data, $course_data, $price_data, $settings_data);
+            $contact = $contact->sendRequestApproval($data, $product_data_mail, $course_data, $price_data, $settings_data);
  
         } elseif( $_POST['approval'] == 'cancel' ) {
             //非承認処理
@@ -100,11 +109,21 @@ if( !$err_flg ) {
                 $data = array();
             }
 
-            //承認メール送信
+            //非承認メール送信
             $settings = new Settings();
-            $settings_data = $settings->getSettings($data['PersonID']);
+
+            $product_data_mail;
+            if($data['lang'] == 2) {
+                $settings_data = $settings->getLangPerson($data['PersonID'], 2);
+                require_once(CLS_DIR . 'en/Contact.php');
+                $product_data_mail = $product->getLangProduct($data['product_id'], 2);
+            } else {
+                $settings_data = $settings->getLangPerson($data['PersonID']);
+                require_once(CLS_DIR . 'jp/Contact.php');
+                $product_data_mail = $product->getLangProduct($data['product_id']);
+            }
             $contact = new Contact();
-            $contact = $contact->sendRequestApprovalCancel($data, $product_data, $course_data, $price_data, $settings_data);
+            $contact = $contact->sendRequestApprovalCancel($data, $product_data_mail, $course_data, $price_data, $settings_data);
  
         }
     }

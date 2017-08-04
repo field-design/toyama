@@ -9,17 +9,17 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$order = new OrderMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$order = new Order();
 $settings = new Settings();
 $log = new Log();
 
@@ -54,7 +54,7 @@ if( !$err_flg ) {
 if( !$err_flg ) {
 
     //商品情報取得
-    $product_data = $product->getProduct($order_data['product_id'], 1);
+    $product_data = $product->getLangProduct($order_data['product_id']);
     if(!is_array($product_data)) {
         $smarty->assign('global_message', $product_data);
         $err_flg = true;
@@ -75,7 +75,7 @@ if( !$err_flg ) {
     }
 
     //事業者情報取得
-    $settings_data = $settings->getSettings($product_data['person_id']);
+    $settings_data = $settings->getLangPerson($product_data['person_id']);
     if(!is_array($settings_data)) {
         $smarty->assign('global_message', $settings_data);
         $err_flg = true;

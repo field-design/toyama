@@ -76,7 +76,7 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'logo
 
 //取消料
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'calcel' ) {
-    if(intval($_POST['count']) >= 10) {
+    if(intval($_POST['count']) >= 5) {
         exit;
     }
     $smarty->assign('mt_cancel_text', '');
@@ -187,9 +187,13 @@ if( !is_array($data) ) {
             $err_flg = true;
             $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
         } elseif( $data['PersonID'] != $login->getPersonID() ) {
-            //他事業者の編集不可
-            $err_flg = true;
-            $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
+            //他事業者の場合
+
+            //グループスラッグが異なる場合、編集不可
+            if($data['group'] != $login->getGroup()) {
+                $err_flg = true;
+                $smarty->assign('global_message', MESSAGE_ERROR_NO_AUTH);
+            }
         }
     }
 
@@ -213,7 +217,7 @@ if( !is_array($data) ) {
 if(isset($_POST['update'])) {
 
     //入力チェック
-    $err_msg = $settings->checkInputParam($data);
+    $err_msg = $settings->checkInputParam($data, $login);
 
     if( !empty(implode('', $err_msg)) ) {
 
@@ -225,7 +229,7 @@ if(isset($_POST['update'])) {
         if( $login->isAuthAdmin() && $data['PersonID'] == $login->getPersonID()) {
             $data['authority'] = $login->getAuthority();
         }
-        $data = $settings->update($data);
+        $data = $settings->update($data, $login);
     }
 
 }
@@ -235,7 +239,7 @@ if(!is_array($data)) {
     $data = $settings->getPostData();
 }
 
-$smarty->assign('const_pref', ConstantMy::$aryPref);
+$smarty->assign('const_pref', Constant::$aryPref);
 $smarty->assign('data', $data);
 $smarty->assign('err_flg', false);
 $smarty->display(ADMIN_DIR . 'admins/edit/index.tpl');

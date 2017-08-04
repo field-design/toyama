@@ -9,10 +9,10 @@
 *******************************************/
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'ProductAccessMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'ProductAccess.php');
 require_once(CLS_DIR . 'Settings.php');
 
 $login = new Login();
@@ -20,12 +20,10 @@ $login = new Login();
 //未ログインならログインページへ
 $login->notLoginToRedirect();
 
-$smarty = new SmartyExtends();
-
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$access = new ProductAccessMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$access = new ProductAccess();
 $settings = new Settings();
 
 /**********************************************
@@ -57,8 +55,14 @@ $price_list = array();
 foreach($post_data['course_id'] as $course_id) {
     $price_list[] = $price->getCourseMeta($course_id);
 }
-$person = $settings->getSettings($post_data['person_id']);
 
+if($post_data['lang'] == 2) {
+    $person = $settings->getLangPerson($post_data['person_id'], 2);
+    $smarty = new SmartyExtends('templates_en');
+} else {
+    $smarty = new SmartyExtends();
+    $person = $settings->getLangPerson($post_data['person_id'], 1);
+}
 $smarty->assign('data', $post_data);
 $smarty->assign('price_list', $price_list);
 $smarty->assign('person', $person);

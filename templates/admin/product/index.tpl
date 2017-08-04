@@ -60,7 +60,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' product='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -140,21 +140,21 @@
               </div>
               <div class="card-content">
                 <div class="content">
-                  <span class="product_title">
+                  <div>
                   {$data.sub_title}<br />
-                  {$data.title}
-                  </span>
+                  <span class="product_title">{$data.title}</span>
+                  </div>
+                  <div><small>{$data.regist_date}</small></div>
                   <div class="category">
-                      <ul class="is-clearfix">
+                      <ul>
                           {foreach from=$data.area_text item=area}
-                          <li><small>{$area}</small></li>
+                          <li><span class="tag">{$area}</span></li>
                           {/foreach}
                           {foreach from=$data.category_text item=cat}
-                          <li><small>{$cat}</small></li>
+                          <li><span class="tag">{$cat}</span></li>
                           {/foreach}
                       </ul>
                   </div>
-                  <small>{$data.regist_date}</small>
                 </div>
               </div>
               <footer class="card-footer">
@@ -196,6 +196,11 @@
 <div id="dialog" title="確認"></div>
 <form method="POST">
 </form>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' product='is-active' is_admin=$is_admin}
+</div>
+
 <!-- START global-footer -->
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->

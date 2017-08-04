@@ -29,15 +29,7 @@
   margin: 0; }
   .products .category ul li {
     list-style: none;
-    display: inline-block;
-    position: relative;
-    padding-right: .75em; }
-    .products .category ul li:not(:last-child):after {
-      position: absolute;
-      top: 0;
-      right: 0;
-      content: "/";
-      color: #999; }
+    display: inline-block; }
 
 .products .is-danger {
   color: #ff3860; }
@@ -133,7 +125,8 @@
   width: 100%;
   height: 300px; }
 
-.cautions .textarea {
+.cautions .textarea,
+.survey .textarea {
   min-height: 60px;
   min-width: auto; }
 
@@ -142,6 +135,9 @@
 
 .message-body a {
   text-decoration: none; }
+
+.plan-price .course {
+  background: white; }
 
 .plan-point .conts-body .notification,
 .meeting-place .conts-body .notification {
@@ -209,12 +205,20 @@ body.login footer {
 .order-list .order-edit {
   text-align: center; }
 
-.order-edit-detail th {
-  width: 30%;
-  vertical-align: middle; }
-
-.order-edit-detail .word-break {
-  word-break: break-all; }
+.order-edit-detail {
+  margin-bottom: 2.5em;
+  counter-reset: number 0; }
+  .order-edit-detail th {
+    width: 30%;
+    vertical-align: middle; }
+  .order-edit-detail .word-break {
+    word-break: break-all; }
+  .order-edit-detail .with caption {
+    padding-bottom: .5em;
+    text-align: left; }
+    .order-edit-detail .with caption:after {
+      counter-increment: number 1;
+      content: counter(number); }
 
 /* =====================
   admin styles
@@ -300,7 +304,6 @@ select.is-danger {
   color: #333;
   display: block;
   padding: 10px;
-  -webkit-transition: all .2s ease;
   transition: all .2s ease; }
 
 .ui-datepicker-calendar td a:hover {

@@ -11,9 +11,9 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>{$data.title|default:''} | {$smarty.const.SITE_TITLE_FRONT}</title>
-<meta name="description" content="{$data.ExplanatoryText|default:''}">
-<meta name="keywords" content="">
+<title>{$data.title|default:''} | {Constant::$siteNameNiikawa}</title>
+<meta name="description" content="{$page_data.description_tag|default:''}">
+<meta name="keywords" content="{$page_data.keyword_tag|default:''}">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->
@@ -26,7 +26,7 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{$smarty.const.SITE_TITLE_FRONT}">
+<meta property="og:site_name" content="{Constant::$siteNameNiikawa}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{$data.title|default:''}">
 <meta property="og:description" content="{$data.ExplanatoryText|default:''}">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$data.title|default:''|cat:'　|　'|cat:Constant::$siteNameNiikawa}
 <!-- END global-header -->
 
 
@@ -100,29 +100,60 @@
         </div>
         <div class="cost caption">
             <h3>代 金</h3>
-            {section name=i start=0 loop=count($data.course_id)}
-                {assign var='index' value=$smarty.section.i.index}
-                <div class="cost-group">
-                    <h4>{$data.course_name[$index]|default:''}</h4>
-                    <p>{$price_list[$index].price_title[0]}</p>
-                    <table>
-                        <tbody>
-                            {section name=j start=0 loop=count($price_list[$index].price_type_text)}
-                                {assign var='j_index' value=$smarty.section.j.index}
-                                <tr>
-                                    <th>{$price_list[$index].price_type_text[$j_index]}</th>
-                                    <td>
-                                        <span class="price"><span class="num3">{$price_list[$index].price_value[$j_index]}</span>円</span>
-                                        {foreach from=$price_list[$index].price_condition[$j_index] item=value}
-                                        {if $value != ''}<span class="remarks">{$value}</span>{/if}
-                                        {/foreach}
-                                    </td>
-                                </tr>
-                            {/section}
-                        </tbody>
-                    </table>
-                </div>
-            {/section}
+            {if $data.disp_price_page == 1}
+                {section name=i start=0 loop=count($data.disp_course)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    <div class="cost-group">
+                        <h4>{$data.disp_course[$index]|default:''}</h4>
+                        <p>{$data.disp_price_title[$index]|default:''}</p>
+                        <table>
+                            <tbody>
+                                {section name=j start=0 loop=count($data.disp_price_type[$index])}
+                                    {assign var='j_index' value=$smarty.section.j.index}
+                                    {if isset($data.disp_price_condition) && is_array($data.disp_price_condition) && array_key_exists($index, $data.disp_price_condition) && array_key_exists($j_index, $data.disp_price_condition[$index])}
+                                        {assign var='condition' value=$data.disp_price_condition[$index][$j_index]}            
+                                    {else}
+                                        {assign var='condition' value=array()}            
+                                    {/if}
+                                    <tr>
+                                        <th>{$data.disp_price_type_text[$index][$j_index]}</th>
+                                        <td>
+                                            <span class="price"><span class="num3">{$data.disp_price_value[$index][$j_index]}</span>円</span>
+                                            {foreach from=$condition item=value}
+                                            {if $value != ''}<span class="remarks">{$value}</span>{/if}
+                                            {/foreach}
+                                        </td>
+                                    </tr>
+                                {/section}
+                            </tbody>
+                        </table>
+                    </div>
+                {/section}
+            {else}
+                {section name=i start=0 loop=count($data.course_id)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    <div class="cost-group">
+                        <h4>{$data.course_name[$index]|default:''}</h4>
+                        <p>{$price_list[$index].price_title[0]}</p>
+                        <table>
+                            <tbody>
+                                {section name=j start=0 loop=count($price_list[$index].price_type_text)}
+                                    {assign var='j_index' value=$smarty.section.j.index}
+                                    <tr>
+                                        <th>{$price_list[$index].price_type_text[$j_index]}</th>
+                                        <td>
+                                            <span class="price"><span class="num3">{$price_list[$index].price_value[$j_index]}</span>円</span>
+                                            {foreach from=$price_list[$index].price_condition[$j_index] item=value}
+                                            {if $value != ''}<span class="remarks">{$value}</span>{/if}
+                                            {/foreach}
+                                        </td>
+                                    </tr>
+                                {/section}
+                            </tbody>
+                        </table>
+                    </div>
+                {/section}
+            {/if}
         </div>
         <div class="information caption">
             <h3>プラン詳細</h3>
@@ -274,48 +305,61 @@
                 </tbody>
             </table>
             <ul>
-                {foreach from=$data.cancel_notes item=value}
-                {if $value != ''}
-                <li>{$value|default:''}</li>
+                {if $cnt != 0}
+                    {foreach from=$data.cancel_notes item=value}
+                        {if $value != ''}
+                        <li>{$value|default:''}</li>
+                        {/if}
+                    {/foreach}
                 {/if}
-                {/foreach}
+                {if $cnt == 0}
+                    {foreach from=$person.mt_cancel_note item=value}
+                        {if $value != ''}
+                        <li>{$value|default:''}</li>
+                        {/if}
+                    {/foreach}
+                {/if}
             </ul>
         </div>
-        {if $person.agency == 1}
+
         <div class="planning caption">
             <h5>ー企画実施会社ー</h5>
-            <p>{$person.marketer_type|default:''}<br>{$person.projectAddress|default:''}<br>旅行業登録：{$person.Registered_text|default:''}{$person.Travel_text|default:''}第{$person.projectNumber|default:''}号<br>総合旅行業務取扱管理者：{$person.TravelAdmin|default:''}</p>
-            <ul>
-                {if $person.Clause == 2}
-                    <li><a href="{$person.file2|default:''}" target="_blank">約款</a></li>
-                {else if $person.Clause == 3}
-                    <li><a href="{$person.ClauseURL|default:''}" target="_blank">約款</a></li>
-                {else}
-                    <li><a href="{$smarty.const.DEFAULT_CLAUSE}" target="_blank">約款</a></li>
-                {/if}
+            {if $person.agency == 1}
+                <p>{$person.marketer_type|default:''}<br>{$person.projectAddress|default:''}<br>旅行業登録：{$person.Registered_text|default:''}{$person.Travel_text|default:''}第{$person.projectNumber|default:''}号<br>総合旅行業務取扱管理者：{$person.TravelAdmin|default:''}</p>
+                <ul>
+                    {if $person.Clause == 2}
+                        <li><a href="{$person.file2|default:''}" target="_blank">約款</a></li>
+                    {else if $person.Clause == 3}
+                        <li><a href="{$person.ClauseURL|default:''}" target="_blank">約款</a></li>
+                    {else}
+                        <li><a href="{$smarty.const.DEFAULT_CLAUSE}" target="_blank">約款</a></li>
+                    {/if}
 
-                {if $person.file_select == 1}
-                    <li><a href="{$person.file|default:''}" target="_blank">旅行条件書</a></li>
-                {else}
-                    <li><a href="{$person.condition_url|default:''}" target="_blank">旅行条件書</a></li>
-                {/if}
+                    {if $person.file_select == 1}
+                        <li><a href="{$person.file|default:''}" target="_blank">旅行条件書</a></li>
+                    {else}
+                        <li><a href="{$person.condition_url|default:''}" target="_blank">旅行条件書</a></li>
+                    {/if}
 
-                {if $person.privacypolicy == 1}
-                    <li><a href="{$person.file3|default:''}" target="_blank">個人情報保護方針</a></li>
-                {else}
-                    <li><a href="{$person.PrivacyURL|default:''}" target="_blank">個人情報保護方針</a></li>
-                {/if}
+                    {if $person.privacypolicy == 1}
+                        <li><a href="{$person.file3|default:''}" target="_blank">個人情報保護方針</a></li>
+                    {else}
+                        <li><a href="{$person.PrivacyURL|default:''}" target="_blank">個人情報保護方針</a></li>
+                    {/if}
 
-                {if $person.TravelPriceList == 1}
-                    <li><a href="{$person.file4|default:''}" target="_blank">旅行業務取扱料金表</a></li>
-                {else}
-                    <li><a href="{$person.PricelistURL|default:''}" target="_blank">旅行業務取扱料金表</a></li>
-                {/if}
+                    {if $person.TravelPriceList == 1}
+                        <li><a href="{$person.file4|default:''}" target="_blank">旅行業務取扱料金表</a></li>
+                    {else}
+                        <li><a href="{$person.PricelistURL|default:''}" target="_blank">旅行業務取扱料金表</a></li>
+                    {/if}
 
-            </ul>
+                </ul>
+            {else}
+                <p>{$person.display_name|default:''}<br>〒{$person.zipcode|implode:'-'|default:''} {Constant::$aryPref[$person.pref]|default:''}{$person.address|default:''}</p>                
+            {/if} 
             <p>お問い合わせ先TEL：<a href="tel:{$person.tel_|implode:''|default:''}">{$person.tel_|implode:'-'|default:''}</a></p>
         </div>
-        {/if}
+
         <div class="calendar caption" id="entry">
             <h3>お申し込み</h3>
             <div class="order-table-section">

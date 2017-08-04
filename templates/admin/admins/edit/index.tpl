@@ -74,7 +74,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' settings='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -83,8 +83,14 @@
 <main>
 
     <h2 class="title is-3">プロフィール</h2>
-
+    {foreach from=Constant::$aryLang item=lang key=key}
+        {if ($data.language|default:1) == $key}
+        <span class="tag is-light">{$lang}</span>
+        {/if}
+    {/foreach}
     <form method="POST">
+
+    <hr>
 
     <section class="profile">
         <h2 class="conts-ttl subtitle">
@@ -346,7 +352,7 @@
                   <span class="select">
                     <select name="Registered" class="{if $data.Registered == ''}is-danger{/if}">
                         <option value="" selected>選択してください</option>
-                        {foreach from=ConstantMy::$aryGovernor item=item key=key}
+                        {foreach from=Constant::$aryGovernor item=item key=key}
                         <option value="{$key}" {if $data.Registered==$key}selected{/if}>{$item}</option>                                       
                         {/foreach}
                     </select>
@@ -361,7 +367,7 @@
                     <span class="select">
                       <select name="Travel" class="{if $data.Travel == ''}is-danger{/if}">
                           <option value="" selected>選択してください</option>
-                          {foreach from=ConstantMy::$aryTravel item=item key=key}
+                          {foreach from=Constant::$aryTravel item=item key=key}
                           <option value="{$key}" {if $data.Travel==$key}selected{/if}>{$item}</option>                                       
                           {/foreach}
                       </select>
@@ -563,7 +569,7 @@
 
             <label class="label">
                 料率<span class="must">必須</span>
-                <span class="help">最大10件まで追加可能</span>
+                <span class="help">最大5件まで追加可能</span>
             </label>
             <div id="cancel_container" class="sortable">
                 {section name=i start=0 loop=count($data.mt_cancel_text)}
@@ -672,9 +678,11 @@
         </section>
     </section>
 
-    <hr {if !$is_admin}style="display: none;"{/if}>
+    {if $is_admin}
 
-    <section class="payment-gmo" {if !$is_admin}style="display: none;"{/if}>
+    <hr>
+
+    <section class="payment-gmo">
         <h2 class="conts-ttl subtitle">
             GMOペイメントゲートウェイ接続設定
         </h2>
@@ -732,9 +740,34 @@
         </div>
     </section>
 
-    <hr {if !$is_admin}style="display: none;"{/if}>
+    <hr>
 
-    <section class="password" {if !$is_admin}style="display: none;"{/if}>
+    <section class="region">
+        <h2 class="conts-ttl subtitle">
+            言語設定
+        </h2>
+        <div class="control">
+            <label class="label">表示言語</label>
+            <p class="control">
+                {foreach from=Constant::$aryLang item=lang key=key}
+                <label class="radio">
+                    <input type="radio" name="language" value="{$key}" {if ($data.language|default:1) == $key}checked="checked"{/if}> {$lang}
+                </label>
+                {/foreach}
+            </p>
+        </div>
+        <div class="control">
+            <label class="label">スラッグ</label>
+            <span class="help">日本語版プロフィールと英語版プロフィールの紐付けに使用します。半角英字で入力して下さい。</span>
+            <p class="control">
+                <input class="input" type="text" name="group" placeholder="例：kanko-pro" value="{$data.group|default:''}">
+            </p>
+        </div>
+    </section>
+
+    <hr>
+
+    <section class="password">
         <h2 class="conts-ttl subtitle">
             パスワード再設定
         </h2>
@@ -766,6 +799,8 @@
         </div>
     </section>
 
+    {/if}
+
     <hr>
 
     <div class="control save-point">
@@ -780,13 +815,19 @@
     </div>
 
     <input type="hidden" name="PersonID" value="{$data.PersonID|default:''}" />
-
+    {if !$is_admin}
+    <input type="hidden" name="group" value="{$data.group|default:''}" />
+    {/if}
     </form>
 </main>
 {/if}
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' settings='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->

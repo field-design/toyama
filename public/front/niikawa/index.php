@@ -9,15 +9,15 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'PageMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
 
-$product = new ProductMy();
-$page = new PageMy();
+$product = new Product();
+$page = new Page();
 
-$page_data = $page->getPageData('2');
+$page_data = $page->getLangPage(2, 4);
 
 $area = null;
 $category = null;
@@ -29,7 +29,7 @@ if( isset($_GET['Category']) ) {
     $category = htmlspecialchars($_GET['Category']);
 }
 
-$count_per_page = 6;
+$count_per_page = 12;
 
 //ページネーション作成
 $count_plan = $product->getProductTotalCount(1, $area, $category);

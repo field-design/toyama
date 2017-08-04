@@ -84,7 +84,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">プラン名</th>
-                            <td class="text-left">{$course_data.course_name[0]}</td>
+                            <td class="text-left">{$product_data.course_name[0]}</td>
                         </tr>
                         <tr>
                             <th class="text-center">出発日</th>
@@ -126,7 +126,8 @@
                                 <div class="input-field">
                                     <span class="select">
                                         <select class="amount" name="amount[]">
-                                            {section name=j start=0 loop=11}
+                                            <option value="0" {if ($order_data.amount[$index]|default:0) == 0}selected{/if}>0</option>
+                                            {section name=j start=$product_data.min_member loop=$product_data.max_order + 1}
                                             {assign var='index_j' value=$smarty.section.j.index}
                                             <option value="{$index_j}" {if ($order_data.amount[$index]|default:0) == $index_j}selected{/if}>{$index_j}</option>
                                             {/section}
@@ -146,6 +147,23 @@
                     </tfoot>
                 </table>
             </section>
+
+            {if isset($product_data.question)}
+            <section class="order-input">
+                <h3 class="product-ttl">ご質問事項</h3>
+                <div class="input-wrap">
+                    {section name=i start=0 loop=count($product_data.question)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    <div class="input-area">
+                        <label for="">{$product_data.question[$index]}</label>
+                        <div class="input-field">
+                            <textarea class="full" name="question[]" placeholder="こちらに回答をご記入ください。">{$order_data.question[$index]|default:''}</textarea>
+                        </div>
+                    </div>
+                    {/section}
+                </div>
+            </section>
+            {/if}
 
             <div class="pagenation">
                 <div class="back">
@@ -167,7 +185,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 

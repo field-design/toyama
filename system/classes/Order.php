@@ -11,7 +11,13 @@ define('SESSION_ORDER_DATA', 'session_order_data');
 
 class Order extends Entity {
 
-    function __construct() {
+    private $person_id = null;
+
+    function __construct($login = null) {
+
+        if( !is_null($login) && !$login->isAuthAdmin() ) {
+            $this->person_id = $login->getPersonID();
+        }
 
         $this->columns = array();
         $this->columnsDef = array();
@@ -102,43 +108,19 @@ class Order extends Entity {
         $this->columnsDef[] = '';
 
         //タイトル
-        $this->columns[] = 'title';
-        $this->columnsDef[] = '';
+        //$this->columns[] = 'title';
+        //$this->columnsDef[] = '';
 
         //サブタイトル
-        $this->columns[] = 'SubTitle';
-        $this->columnsDef[] = '';
+        //$this->columns[] = 'SubTitle';
+        //$this->columnsDef[] = '';
 
         //集合場所／場所名
-        $this->columns[] = 'locationname';
-        $this->columnsDef[] = '';
+        //$this->columns[] = 'locationname';
+        //$this->columnsDef[] = '';
 
-        $this->columns[] = 'plan_type';
-        $this->columnsDef[] = 1;
-
-        //料金タイトル
-        for($i = 1; $i <=5; $i++) {
-            $this->columns[] = 'plan_title' . $i;
-            $this->columnsDef[] = '';
-        }
-
-        //料金
-        for($i = 1; $i <=5; $i++) {
-            $this->columns[] = 'plan_Fee' . $i;
-            $this->columnsDef[] = '';
-        }
-
-        //料金種別
-        for($i = 1; $i <=5; $i++) {
-            $this->columns[] = 'plan_Kind' . $i;
-            $this->columnsDef[] = '';
-        }
-
-        //数量
-        for($i = 1; $i <=5; $i++) {
-            $this->columns[] = 'volume' . $i;
-            $this->columnsDef[] = '';
-        }
+        //$this->columns[] = 'plan_type';
+        //$this->columnsDef[] = 1;
 
         //対応状況
         $this->columns[] = 'Correspondence';
@@ -163,29 +145,38 @@ class Order extends Entity {
         //会員ID
         $this->columns[] = 'MemberID';
         $this->columnsDef[] = '';
+    
+        //同行者
+        $this->columns[] = 'withSei';
+        $this->columnsDef[] = array();
+
+        $this->columns[] = 'withMei';
+        $this->columnsDef[] = array();
+    
+        $this->columns[] = 'withKanaSei';
+        $this->columnsDef[] = array();
+    
+        $this->columns[] = 'withKanaMei';
+        $this->columnsDef[] = array();
+    
+        $this->columns[] = 'withBirthday';
+        $this->columnsDef[] = array();
+    
+        $this->columns[] = 'withGender';
+        $this->columnsDef[] = array();
     }
 
     /******************************
     人数・オプション入力チェック
     *******************************/
-    function checkInputVolume($data, $stock) {
+    function checkInputVolume($data, $stock_type, $stock_value, $stock_option) {
         $err_msg = array();
-
-        $volume_input = array();
-        for($i = 1; $i <= 5; $i++) {
-
-            $volume_input[] = $data['volume' . $i] == '' ? 0 : $data['volume' . $i];
-            
-            if( !is_numeric($volume_input[$i - 1]) ) {
-                $err_msg['volume' . $i] = MESSAGE_ERROR_NUMBER;
-                continue;
-            }
-        }
-    
-        if( count($err_msg) == 0) {
-            if( array_sum($volume_input) == 0) {
-                $err_msg['volume'] = MESSAGE_ERROR_NO_VOLUME;
-            } elseif( array_sum($volume_input) > $stock ) {
+   
+        if( array_sum($data['amount']) == 0) {
+            $err_msg['volume'] = MESSAGE_ERROR_NO_VOLUME;
+        } elseif( array_sum($data['amount']) > $stock_value ) {
+            //在庫がないとき、リクエストプランでなければエラー
+            if ($stock_type != 1 && $stock_option != 1) {
                 $err_msg['volume'] = MESSAGE_ERROR_OVER_STOCK;
             }
         }
@@ -205,11 +196,14 @@ class Order extends Entity {
         if( empty($data['nameMei']) ) {
             $err_msg['nameMei'] = MESSAGE_ERROR_REQUIRE;
         }
-        if( empty($data['kanaSei']) ) {
-            $err_msg['kanaSei'] = MESSAGE_ERROR_REQUIRE;
-        }
-        if( empty($data['kanaMei']) ) {
-            $err_msg['kanaMei'] = MESSAGE_ERROR_REQUIRE;
+        global $global_lang;
+        if($global_lang == 1) {
+            if( empty($data['kanaSei']) ) {
+                $err_msg['kanaSei'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['kanaMei']) ) {
+                $err_msg['kanaMei'] = MESSAGE_ERROR_REQUIRE;
+            }
         }
         if( empty($data['mail']) ) {
             $err_msg['mail'] = MESSAGE_ERROR_REQUIRE;
@@ -223,6 +217,9 @@ class Order extends Entity {
         if( empty($data['adress']) ) {
             $err_msg['adress'] = MESSAGE_ERROR_REQUIRE;
         }
+        if( empty($data['mobile'][0]) || empty($data['mobile'][1]) || empty($data['mobile'][2])) {
+            $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+        }
 
         $tel_input_cnt = 0;
         if( $data['tel_'][0] != '' ) {
@@ -234,34 +231,10 @@ class Order extends Entity {
         if( $data['tel_'][2] != '' ) {
             $tel_input_cnt++;
         }
-        $mb_input_cnt = 0;
-        if( $data['mobile'][0] != '' ) {
-            $mb_input_cnt++;
-        }
-        if( $data['mobile'][1] != '' ) {
-            $mb_input_cnt++;
-        }
-        if( $data['mobile'][2] != '' ) {
-            $mb_input_cnt++;
-        }
 
-        if( $tel_input_cnt == 0 && $mb_input_cnt == 0 ) {
-            $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE_TEL;
-            $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE_TEL;
-        } elseif( $tel_input_cnt > 0 && $mb_input_cnt == 0  ) {
+        if( $tel_input_cnt > 0 ) {
             if( $tel_input_cnt != 3 ) {
-                $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
-            }
-        } elseif( $tel_input_cnt == 0 && $mb_input_cnt > 0 ) {
-            if( $mb_input_cnt != 3 ) {
-                $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
-            }
-        } else {
-            if( $tel_input_cnt != 3 ) {
-                $err_msg['tel_'] = MESSAGE_ERROR_REQUIRE;
-            }
-            if( $mb_input_cnt != 3 ) {
-                $err_msg['mobile'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['tel_'] = MESSAGE_ERROR_TEL;
             }
         }
 
@@ -275,6 +248,23 @@ class Order extends Entity {
             $err_msg['job_'] = MESSAGE_ERROR_REQUIRE;
         }
     
+        for($i = 0; $i < count($data['withSei']); $i++) {
+            if(empty($data['withSei'][$i])) {
+                $err_msg['withSei' . $i] = MESSAGE_ERROR_REQUIRE;
+            }
+            if(empty($data['withMei'][$i])) {
+                $err_msg['withMei' . $i] = MESSAGE_ERROR_REQUIRE;
+            }
+            if($global_lang == 1) {
+                if(empty($data['withKanaSei'][$i])) {
+                    $err_msg['withKanaSei' . $i] = MESSAGE_ERROR_REQUIRE;
+                }
+                if(empty($data['withKanaMei'][$i])) {
+                    $err_msg['withKanaMei' . $i] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+        }
+
         return $err_msg;
     }
 
@@ -295,9 +285,13 @@ class Order extends Entity {
             return '';
         } 
 
-        foreach($data as $key => &$value) {
-            if( (is_null($value) || $value == '') && isset($session_data[$key]) ) {
-                $value = $session_data[$key];
+        foreach($session_data as $key => $value) {
+            if( array_key_exists($key, $data)) {
+                if ( is_null($data[$key]) || $data[$key] == '' || (is_array($data[$key]) && count($data[$key]) == 0))  {
+                    $data[$key] = $session_data[$key];
+                }
+            } else {
+                $data[$key] = $session_data[$key];
             }
         }
 
@@ -305,16 +299,40 @@ class Order extends Entity {
     }
 
     /******************************
-    商品取得
+    保持データ破棄
+    *******************************/
+    function clearSession() {
+        if( isset($_SESSION[SESSION_ORDER_DATA]) ) {
+            unset($_SESSION[SESSION_ORDER_DATA]);
+        }
+    }
+
+    /******************************
+    申込取得
     *******************************/
     function getOrder($orderID) {
 
+        //==========================================
+        //◆ Spiral申込管理DB
+        //==========================================
         $spiral = new SpiralApi('database/select', 'oderDB');
+
+        $search_columns = array();
+        foreach($this->columns as $column) {
+            if(strpos($column, 'with') !== false) {
+                for($i = 1; $i <= 10; $i++) {
+                    $search_columns[] = $column . $i;
+                }
+            } else {
+                $search_columns[] = $column;
+            }
+        }
 
         $serch_condition = array();
         $serch_condition[] = array('name' => 'OderID', 'value' => $orderID);
 
-        $spiral->setSelectParam($this->columns, $serch_condition);
+
+        $spiral->setSelectParam($search_columns, $serch_condition);
 
         $err_msg = $spiral->exec();
 
@@ -331,42 +349,178 @@ class Order extends Entity {
 
         //DB値調整
         foreach($selectData as &$data) {
+            $registDate = DateTime::createFromFormat('Y年m月d日 H時i分s秒', $data['registDate']);
+            $data['registDate_a'] = $registDate->format('Y/m/d H:i:s');
+
             $oderDate = DateTime::createFromFormat('Y年m月d日 H時i分', $data['oderDate']);
             $data['oderDate'] = $oderDate->format('Y/m/d H:i');
-
-            if ($data['paymentDate'] != '') {
-                $paymentDate = DateTime::createFromFormat('Y年m月d日 H時i分', $data['paymentDate']);
-                $data['paymentDate'] = $paymentDate->format('Y/m/d H:i');
-            } else {
-                $data['paymentDate'] = '未入金';
-            }
-
-            $data['request'] = $data['Correspondence'] == 1 ? 1 : 0;
-            if($data['Correspondence'] != '') {
-                $data['Correspondence'] = Constant::$aryCorrespondence[$data['Correspondence']];
-            }
-
-            if($data['Payment'] != '') {
-                $data['Payment'] = Constant::$aryPayment[$data['Payment']];
-            }
-            if($data['settlementType'] != '') {
-                $data['settlementType'] = Constant::$arySettlementType[$data['settlementType']];
-            }
-
-            for($i = 1; $i <= 5; $i++) {
-                if( $data['plan_title' . $i] != '' ) {
-                    $data['plan_title' . $i] = Constant::$aryPlanTitle[$data['plan_title' . $i]];
-                }
-                if( $data['plan_Kind' . $i] != '' ) {
-                    $data['plan_Kind' . $i] = Constant::$aryPlanKind[$data['plan_Kind' . $i]];
-                }
-            }
 
             if($data['job_'] != '') {
                 $data['job_'] = Constant::$aryJob[$data['job_']];
             }
 
+            $data['withSei'] = array();
+            $data['withMei'] = array();
+            $data['withKanaSei'] = array();
+            $data['withKanaMei'] = array();
+            $data['withBirthday'] = array();
+            $data['withGender'] = array();
+            for($i = 1; $i <= 10; $i++) {
+                if($data['withSei' . $i] != '') {
+                    $data['withSei'][] = $data['withSei' . $i];
+                }
+                if($data['withMei' . $i] != '') {
+                    $data['withMei'][] = $data['withMei' . $i];
+                }
+                if($data['withKanaSei' . $i] != '') {
+                    $data['withKanaSei'][] = $data['withKanaSei' . $i];
+                }
+                if($data['withKanaMei' . $i] != '') {
+                    $data['withKanaMei'][] = $data['withKanaMei' . $i];
+                }
+                if($data['withBirthday' . $i] != '') {
+                    $data['withBirthday'][] = $data['withBirthday' . $i];
+                }
+                if($data['withGender' . $i] != '') {
+                    $data['withGender'][] = $data['withGender' . $i];
+                }
+            }
         }
+
+        //==========================================
+        //◆ MySQL申込管理DB
+        //==========================================
+        $sql = '';
+        $sql .= 'select t_order.order_id ';
+        $sql .= '     , t_order.product_id ';
+        $sql .= '     , t_order.course_id ';
+        $sql .= '     , t_order.order_status ';
+        $sql .= '     , t_order.request_flg ';
+        $sql .= '     , t_order.pay_date ';
+        $sql .= '     , t_order.credit_number ';
+        $sql .= '     , t_order.settlement_type ';
+        $sql .= '     , t_order.settlement ';
+        $sql .= '     , t_order.settlement_name ';
+        $sql .= '     , t_order.payment ';
+        $sql .= '     , t_order.note ';
+        $sql .= '     , t_order.lang ';
+        $sql .= '     , meta1.amount ';
+        $sql .= '     , meta2.question ';
+        $sql .= 'from   t_order ';
+
+        $sql .= 'left join ( ';
+        $sql .= '       select   order_id, ';
+        $sql .= '                group_concat(meta_value SEPARATOR ",") amount ';
+        $sql .= '       from     t_order_meta ';
+        $sql .= '       where    meta_type = "amount" ';
+        $sql .= '       group by order_id ';
+        $sql .= ') meta1 ';
+        $sql .= 'on   t_order.order_id = meta1.order_id ';
+
+        $sql .= 'left join ( ';
+        $sql .= '       select   order_id, ';
+        $sql .= '                group_concat(meta_value SEPARATOR ",") question ';
+        $sql .= '       from     t_order_meta ';
+        $sql .= '       where    meta_type = "question" ';
+        $sql .= '       group by order_id ';
+        $sql .= ') meta2 ';
+        $sql .= 'on   t_order.order_id = meta2.order_id ';
+
+        $sql .= 'where  t_order.order_id = :order_id ';
+
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   t_order.person_id = :person_id ';
+        }
+
+        $sql .= 'group by t_order.order_id ';
+        $sql .= '       , t_order.product_id ';
+        $sql .= '       , t_order.course_id ';
+        $sql .= '       , t_order.order_status ';
+        $sql .= '       , t_order.request_flg ';
+        $sql .= '       , t_order.pay_date ';
+        $sql .= '       , t_order.credit_number ';
+        $sql .= '       , t_order.settlement_type ';
+        $sql .= '       , t_order.settlement ';
+        $sql .= '       , t_order.settlement_name ';
+        $sql .= '       , t_order.payment ';
+        $sql .= '       , t_order.note ';
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':order_id', $orderID);
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectDataMeta = $db->getResponse();
+
+        $selectData[0]['product_id'] = $selectDataMeta[0]['product_id'];
+        $selectData[0]['course_id'] = $selectDataMeta[0]['course_id'];
+        $selectData[0]['request_flg'] = $selectDataMeta[0]['request_flg'];
+        $selectData[0]['order_status'] = $selectDataMeta[0]['order_status'];
+        if($selectDataMeta[0]['pay_date'] != '') {
+            $selectData[0]['pay_date'] = date('Y/m/d H:i:s', strtotime($selectDataMeta[0]['pay_date']));
+        }
+        $selectData[0]['credit_number'] = $selectDataMeta[0]['credit_number'];
+        $selectData[0]['settlement_type'] = $selectDataMeta[0]['settlement_type'];
+        if($selectDataMeta[0]['settlement_type'] != '') {
+            $selectData[0]['settlement_type_text'] = Constant::$arySettlementType[$selectDataMeta[0]['settlement_type']];
+        }
+        $selectData[0]['settlement'] = $selectDataMeta[0]['settlement'];
+        $selectData[0]['settlement_name'] = $selectDataMeta[0]['settlement_name'];
+        $selectData[0]['payment'] = $selectDataMeta[0]['payment'];
+        if($selectDataMeta[0]['payment'] != '') {
+            $selectData[0]['payment_text'] = Constant::$aryPayment[$selectDataMeta[0]['payment']];
+        }
+        $selectData[0]['note'] = $selectDataMeta[0]['note'];
+        $selectData[0]['lang'] = $selectDataMeta[0]['lang'];
+        $selectData[0]['order_status_text'] = Constant::$aryCorrespondence[$selectDataMeta[0]['order_status']];
+        $selectData[0]['amount'] = explode(',', $selectDataMeta[0]['amount']);
+        $selectData[0]['question'] = explode(',', $selectDataMeta[0]['question']);
+        return $selectData[0];
+    }
+
+    /******************************
+    申込数取得
+    *******************************/
+    function getOrderAmount($sha1_order_id) {
+
+        $sql = '';
+        $sql .= 'select t_order.order_id ';
+        $sql .= '     , t_order.product_id ';
+        $sql .= '     , t_order.course_id ';
+        $sql .= '     , t_order.order_status ';
+        $sql .= '     , sum(t_order_meta.meta_value) amount ';
+        $sql .= 'from   t_order ';
+        $sql .= 'left join t_order_meta ';
+        $sql .= 'on        t_order.order_id = t_order_meta.order_id ';
+        $sql .= 'and       t_order_meta.meta_type = "price_value"';
+        $sql .= 'where  SHA1(CONCAT("' . ORDER_ID_SALT . '", t_order.order_id)) = :order_id ';
+        //$sql .= 'and    t_order.order_status = 5 ';
+        $sql .= 'and    t_order.request_flg = 2 ';
+        $sql .= 'group by t_order.order_id ';
+        $sql .= '       , t_order.product_id ';
+        $sql .= '       , t_order.course_id ';
+        $sql .= '       , t_order.order_status ';
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':order_id', $sha1_order_id);
+        
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $db->getResponse();
 
         return $selectData[0];
     }
@@ -376,13 +530,61 @@ class Order extends Entity {
     $num：
       デフォルト５件
     *******************************/
-    function getOrderListView($num = 5, $order_date = null) {
+    function getOrderListView($num = 5, $search_params = null) {
 
+        //==========================================
+        //◆ Spiral申込管理DB
+        //==========================================
         $spiral = new SpiralApi('database/select', 'oderDB');
 
+        $search_columns = array();
+        foreach($this->columns as $column) {
+            if(strpos($column, 'with') !== false) {
+                for($i = 1; $i <= 10; $i++) {
+                    $search_columns[] = $column . $i;
+                }
+            } else {
+                $search_columns[] = $column;
+            }
+        }
+
         $serch_condition = array();
-        if( !is_null($order_date) ) {
-            $serch_condition[] = array('name' => 'oderDate', 'value' => date('Y/m/d', strtotime($order_date)) . ' 00:00' );
+        if( !is_null($search_params) ) {
+            foreach($search_params as $key => $value) {
+                if(!isset($value) || $value == '') {
+                    continue;
+                }
+                if($key == 'order_id') {
+                    $serch_condition[] = array('name' => 'OderID', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'simei_sei') {
+                    $serch_condition[] = array('name' => 'nameSei', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'simei_mei') {
+                    $serch_condition[] = array('name' => 'nameMei', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'simei_kana_sei') {
+                    $serch_condition[] = array('name' => 'kanaSei', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'simei_kana_mei') {
+                    $serch_condition[] = array('name' => 'kanaMei', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'mail') {
+                    $serch_condition[] = array('name' => 'mail', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'tel') {
+                    $serch_condition[] = array('name' => 'tel_', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'mobile') {
+                    $serch_condition[] = array('name' => 'mobile', 'value' => '%' . $value . '%', 'operator' => 'like');
+                }
+                if($key == 'order_date_from') {
+                    $serch_condition[] = array('name' => 'oderDate', 'value' => $value, 'operator' => '>=');
+                }
+                if($key == 'order_date_to') {
+                    $serch_condition[] = array('name' => 'oderDate', 'value' => $value, 'operator' => '<=');
+                }
+            }
         }
 
         $lines_per_page = $num;
@@ -392,7 +594,7 @@ class Order extends Entity {
         $sort = array();
         $sort[] = array('name' => 'registDate', 'order' => 'desc');
 
-        $spiral->setSelectParam($this->columns, $serch_condition, null, $lines_per_page, $page, $sort);
+        $spiral->setSelectParam($search_columns, $serch_condition, null, $lines_per_page, $page, $sort);
 
         $err_msg = $spiral->exec();
 
@@ -404,22 +606,13 @@ class Order extends Entity {
         $selectData = $spiral->getSelectData();
 
         //DB値調整
+        $order_ids = array();
         foreach($selectData as &$data) {
             $regDate = DateTime::createFromFormat('Y年m月d日 H時i分s秒', $data['registDate']);
             $data['registDate'] = $regDate->format('Y/m/d H:i');
 
             $oderDate = DateTime::createFromFormat('Y年m月d日 H時i分', $data['oderDate']);
             $data['oderDate'] = $oderDate->format('Y/m/d H:i');
-
-            $data['Correspondence'] = Constant::$aryCorrespondence[$data['Correspondence']];
-
-            if($data['Payment'] != '') {
-                $data['Payment'] = Constant::$aryPayment[$data['Payment']];
-            }
-
-            if($data['settlementType'] != '') {
-                $data['settlementType'] = Constant::$arySettlementType[$data['settlementType']];
-            }
 
             $main_photo_thumb = UPL_DIR . $data['ProductID'] . '/thumb_' . PRODUCT_MAIN_PHOTO1_NAME;
 
@@ -429,18 +622,121 @@ class Order extends Entity {
                 $data['main_photo'] = URL_UPL_DIR . $data['ProductID'] . '/thumb_' . PRODUCT_MAIN_PHOTO1_NAME;
             }
 
+            $order_ids[] = $data['OderID'];
         }
 
-        return $selectData;
+        //==========================================
+        //◆ MySQL申込管理DB
+        //==========================================
+        $sql = '';
+        $sql .= 'select t_order.order_id ';
+        $sql .= '     , t_order.product_id ';
+        $sql .= '     , t_order.course_id ';
+        $sql .= '     , t_order.order_status ';
+        $sql .= '     , t_order.settlement_type ';
+        $sql .= '     , t_product.title ';
+        $sql .= '     , sum(t_order_meta.meta_value) total ';
+        $sql .= 'from   t_order ';
+        $sql .= 'left join t_order_meta ';
+        $sql .= 'on        t_order.order_id = t_order_meta.order_id ';
+        $sql .= 'and       t_order_meta.meta_type = "price_value" ';
+        $sql .= 'left join t_product ';
+        $sql .= 'on        t_order.product_id = t_product.product_id ';
+        $sql .= 'where  t_order.order_id in ("' . implode('","', $order_ids) . '") ';
+
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   t_order.person_id = :person_id ';
+        }
+
+        if( !is_null($search_params) ) {
+            foreach($search_params as $key => $value) {
+                if(!isset($value) || $value == '' || (is_array($value) && count($value) == 0) ) {
+                    continue;
+                }
+                if($key == 'order_status') {
+                    $sql .= 'and t_order.order_status = :order_status ';
+                }
+                if($key == 'settlement_type') {
+                    $sql .= 'and t_order.settlement_type in (:settlement_type) ';
+                }
+                if($key == 'title') {
+                    $sql .= 'and t_product.title like :title ';
+                }
+            }
+        }
+
+        $sql .= 'group by t_order.order_id ';
+        $sql .= '       , t_order.product_id ';
+        $sql .= '       , t_order.course_id ';
+        $sql .= '       , t_order.order_status ';
+        $sql .= '       , t_order.settlement_type ';
+        $sql .= '       , t_product.title ';
+        $sql .= 'order by t_order.regist_date desc ';
+
+        $db = new DB();
+        $db->setPrepare($sql);
+
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+        if( !is_null($search_params) ) {
+            foreach($search_params as $key => $value) {
+                if(!isset($value) || $value == '') {
+                    continue;
+                }
+                if($key == 'order_status') {
+                    $db->setBindValueSTR(':order_status', $value);
+                }
+                if($key == 'settlement_type') {
+                    $db->setBindValueSTR(':settlement_type', implode(',', $value));
+                }
+                if($key == 'title') {
+                    $db->setBindValueSTR(':title', '%' . $value . '%');
+                }
+            }
+        }
+
+        
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectMetaData = $db->getResponse();
+
+        $resultData = array();
+        $spiralData = array_column($selectData, null, 'OderID');
+        
+        for($i = 0; $i < count($selectMetaData); $i++) {
+            $resultData[] = $spiralData[$selectMetaData[$i]['order_id']];
+            $resultData[$i]['order_id'] = $selectMetaData[$i]['order_id'];
+            $resultData[$i]['order_status'] = $selectMetaData[$i]['order_status'];
+            $resultData[$i]['order_status_text'] = Constant::$aryCorrespondence[$selectMetaData[$i]['order_status']];
+            if($selectMetaData[$i]['settlement_type'] != '') {
+                $resultData[$i]['settlement_type_text'] = Constant::$arySettlementType[$selectMetaData[$i]['settlement_type']];
+            } else {
+                $resultData[$i]['settlement_type_text'] = '';
+            }
+            $resultData[$i]['total'] = $selectMetaData[$i]['total'];
+            $resultData[$i]['title'] = $selectMetaData[$i]['title'];
+        }
+
+        return $resultData;
     }
 
     /******************************
     申し込み登録
     *******************************/
-    function update($data, $product_data) {
+    function update($data, $product_data, $price_data, $request_flg) {
 
         $time_stamp = date("Y/m/d H:i:s");
 
+        //==========================================
+        //◆ Spiral申込管理DB
+        //==========================================
         $update_columns = array();
         $update_data = array();
 
@@ -458,18 +754,26 @@ class Order extends Entity {
             } elseif($column == 'birthday') {
                 $update_columns[] = $column;
                 $update_data[$column] = $data[$column][0] . '/' . $data[$column][1] . '/' . $data[$column][2];
-            } elseif(strpos($column, 'plan_title') !== false || strpos($column, 'plan_Fee') !== false || strpos($column, 'plan_Kind') !== false) {
-                $update_columns[] = $column;
-
-                $product_column = substr($column, 0, -1);
-                $product_value_index = intval(substr($column, -1)) - 1;
-                $update_data[$column] = $product_data[$product_column][$product_value_index]; //商品データより取得
-
-                //申し込みデータに設定
-                $data[$column] = $update_data[$column];
             } elseif($column == 'gender') {
                 $update_columns[] = $column;
                 $update_data[$column] = $data[$column . '_text'];
+            } elseif(strpos($column, 'with') !== false) {
+                if($column == 'withBirthday') {
+                    for($i=0; $i < count($data['withBirthdayYear']); $i++) {
+                        $update_columns[] = $column . ($i + 1);
+                        $update_data[$column . ($i + 1)] = $data['withBirthdayYear'][$i] . '/' . $data['withBirthdayMonth'][$i] . '/' . $data['withBirthdayDay'][$i];
+                    }
+                } else if($column == 'withGender') {
+                    for($i=0; $i < count($data[$column]); $i++) {
+                        $update_columns[] = $column . ($i + 1);
+                        $update_data[$column . ($i + 1)] = $data[$column . '_text'][$i];
+                    }
+                } else {
+                    for($i=0; $i < count($data[$column]); $i++) {
+                        $update_columns[] = $column . ($i + 1);
+                        $update_data[$column . ($i + 1)] = $data[$column][$i];
+                    }
+                }
             } else {
                 $update_columns[] = $column;
                 $update_data[$column] = $data[$column];
@@ -481,13 +785,8 @@ class Order extends Entity {
 
         $update_data['registDate'] = $time_stamp;
         $update_data['lastupDate'] = $time_stamp;
-        $update_data['title'] = $product_data['title'];
-        $update_data['SubTitle'] = $product_data['SubTitle'];
-        $update_data['locationname'] = $product_data['locationname'];
-        $update_data['plan_type'] = $product_data['plan_type'];
-        $update_data['PersonID'] = $product_data['PersonID'];
-        $update_data['ProductID'] = $product_data['ProductID'];
-        $update_data['Correspondence'] = $product_data['plan_type'] == 2 ? 1 : 5; // 1:承認待ち 5:決済処理中
+        $update_data['PersonID'] = $product_data['person_id'];
+        $update_data['ProductID'] = $product_data['product_id'];
 
         $spiral->setInsertParam($update_columns, $update_data);
 
@@ -505,6 +804,86 @@ class Order extends Entity {
             $data['OderID'] = 'order' . sprintf('%06d', $response['id']);
         }
 
+        //==========================================
+        //◆ MySQL申込管理DB
+        //==========================================
+        $db = new DB();
+
+        global $global_lang;
+
+        //申込管理
+        $params = array();
+        $params['order_id'] = $data['OderID'];
+        $params['person_id'] = $product_data['person_id'];
+        $params['product_id'] = $product_data['product_id'];
+        $params['course_id'] = $data['course_id'];
+        $params['order_date'] = $data['oderDate'];
+        $params['order_status'] = $request_flg ? 1 : 5; // 1:承認待ち 5:決済処理中;
+        $params['request_flg'] = $request_flg ? 1 : 0;
+        $params['note'] = $data['note'];
+        $params['lang'] = $global_lang;
+        $params['regist_date'] = $time_stamp;
+        $params['update_date'] = $time_stamp;
+
+        //トランザクション開始
+        $db->beginTransaction();
+
+        $err_msg = $db->execInsert('t_order', $params, false);
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        //申込管理メタ情報
+        $params = array();
+        $params['order_id'] = $data['OderID'];
+        for($i = 0; $i < count($price_data['price_type']); $i++) {
+            $params['meta_type'] = 'price_type';
+            $params['meta_type_no'] = $i + 1;
+            $params['meta_value'] = $price_data['price_type'][$i];
+            $err_msg = $db->execInsert('t_order_meta', $params, false);
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+        }
+        for($i = 0; $i < count($data['amount']); $i++) {
+            $params['meta_type'] = 'amount';
+            $params['meta_type_no'] = $i + 1;
+            $params['meta_value'] = $data['amount'][$i];
+            $err_msg = $db->execInsert('t_order_meta', $params, false);
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+        }
+        for($i = 0; $i < count($price_data['price_value']); $i++) {
+            $params['meta_type'] = 'price_value';
+            $params['meta_type_no'] = $i + 1;
+            $params['meta_value'] = $price_data['price_value'][$i] * $data['amount'][$i];
+            $err_msg = $db->execInsert('t_order_meta', $params, false);
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+        }
+        for($i = 0; $i < count($product_data['question']); $i++) {
+            $params['meta_type'] = 'question';
+            $params['meta_type_no'] = $i + 1;
+            $params['meta_value'] = $data['question'][$i];
+            $err_msg = $db->execInsert('t_order_meta', $params, false);
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+        }
+        $db->commit();
+
         return $data;
     }
 
@@ -514,6 +893,7 @@ class Order extends Entity {
     function update_payment($data) {
         $time_stamp = date("Y/m/d H:i:s");
 
+        /*
         $update_columns = array();
         $update_data = array();
         $serch_condition = array();
@@ -541,9 +921,29 @@ class Order extends Entity {
         $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
 
         $err_msg = $spiral->exec();
+        */
+
+        $db = new DB();
+
+        $params = array();
+        $params['update_date'] = $time_stamp;
+        $params['payment'] = $data['Payment'];
+        $params['settlement_type'] = $data['settlementType'];
+        $params['credit_number'] = $data['CreditNumber'];
+        $params['order_status'] = $data['Correspondence'];
+        $params['settlement'] = $data['settlement'];
+        $params['settlement_name'] = $data['settlement_name'];
+        $params['pay_date'] = $data['paymentDate'];
+
+        $where_params = array();
+        $where_params['order_id'] = $data['OderID'];
+
+        $err_msg = $db->execUpdate('t_order', $params, $where_params);
 
         if( !empty($err_msg) ) {
             //エラー処理
+            $log = new Log();
+            $log->setErrorLog($err_msg);
             return $err_msg;
         }
 
@@ -556,33 +956,129 @@ class Order extends Entity {
     function update_approval($data) {
         $time_stamp = date("Y/m/d H:i:s");
 
-        $update_columns = array();
-        $update_data = array();
-        $serch_condition = array();
+        $db = new DB();
 
-        $spiral = new SpiralApi('database/update', 'oderDB');
+        $params = array();
+        $params['update_date'] = $time_stamp;
+        $params['order_status'] = 5;
+        $params['request_flg'] = 2;
 
-        $update_columns[] = 'lastupDate';
-        $update_columns[] = 'Correspondence';
+        $where_params = array();
+        $where_params['order_id'] = $data['OderID'];
 
-        $update_data['lastupDate'] = $time_stamp;
-        $update_data['Correspondence'] = 5;
+        //トランザクション開始
+        $db->beginTransaction();
 
-        $serch_condition[] = array('name' => 'OderID', 'value' => $data['OderID']);
-
-        $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
-
-        $err_msg = $spiral->exec();
+        $err_msg = $db->execUpdate('t_order', $params, $where_params, false);
 
         if( !empty($err_msg) ) {
             //エラー処理
             return $err_msg;
         }
 
-        $data['request'] = 0;
-        $data['Correspondence'] = Constant::$aryCorrespondence[5];
+        $db->commit();
+
+        $data['request_flg'] = 2;
+        $data['order_status_text'] = Constant::$aryCorrespondence[5];
 
         return $data;
     }
 
+    /******************************
+    承認取消登録
+    *******************************/
+    function update_approval_cancel($data) {
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $db = new DB();
+
+        $params = array();
+        $params['update_date'] = $time_stamp;
+        $params['order_status'] = 6;
+        $params['request_flg'] = 2;
+
+        $where_params = array();
+        $where_params['order_id'] = $data['OderID'];
+
+        //トランザクション開始
+        $db->beginTransaction();
+
+        $err_msg = $db->execUpdate('t_order', $params, $where_params, false);
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $db->commit();
+
+        $data['request_flg'] = 2;
+        $data['order_status_text'] = Constant::$aryCorrespondence[6];
+
+        return $data;
+    }
+
+    /*******************
+    POSTデータ取得(override)
+    ********************/
+    function getPostData() {
+        $data = parent::getPostData();
+
+        if(isset($_POST['amount'])) {
+            $amount = $_POST['amount'];
+            $data['amount'] = array();
+            foreach($amount as $value) {
+                $data['amount'][] = htmlspecialchars($value);
+            }
+        }
+
+        if(isset($_POST['question'])) {
+            $question = $_POST['question'];
+            $data['question'] = array();
+            foreach($question as $value) {
+                $data['question'][] = htmlspecialchars($value);
+            }
+        }
+
+        if(isset($_POST['withBirthdayYear'])) {
+            $years = $_POST['withBirthdayYear'];
+            $data['withBirthdayYear'] = array();
+            foreach($years as $value) {
+                $data['withBirthdayYear'][] = htmlspecialchars($value);
+            }
+        }
+
+        if(isset($_POST['withBirthdayMonth'])) {
+            $years = $_POST['withBirthdayMonth'];
+            $data['withBirthdayMonth'] = array();
+            foreach($years as $value) {
+                $data['withBirthdayMonth'][] = htmlspecialchars($value);
+            }
+        }
+    
+        if(isset($_POST['withBirthdayDay'])) {
+            $years = $_POST['withBirthdayDay'];
+            $data['withBirthdayDay'] = array();
+            foreach($years as $value) {
+                $data['withBirthdayDay'][] = htmlspecialchars($value);
+            }
+        }
+    
+        if(isset($_POST['note'])) {
+            $data['note'] = htmlspecialchars($_POST['note']);
+        }
+
+        return $data;
+    }
+
+    /*******************
+    新規データ取得(override)
+    ********************/
+    function getNewData() {
+        $data = parent::getNewData();
+
+        $data['amount'] = array();
+
+        return $data;
+    }
 }

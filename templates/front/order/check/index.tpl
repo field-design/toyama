@@ -81,7 +81,7 @@
                   </tr>
                   <tr>
                       <th class="text-center">プラン名</th>
-                      <td class="text-left">{$course_data.course_name[0]}</td>
+                      <td class="text-left">{$product_data.course_name[0]}</td>
                   </tr>
                   <tr>
                       <th class="text-center">出発日</th>
@@ -133,6 +133,21 @@
             </table>
         </section>
 
+        {if isset($product_data.question)}
+        <section class="order-style order-check input">
+            <h3 class="product-ttl">ご質問事項</h3>
+            {section name=i start=0 loop=count($product_data.question)}
+                {assign var='index' value=$smarty.section.i.index}
+                <div class="survey">
+                    <h4 class="survey-ttl">{$product_data.question[$index]}</h4>
+                    <p class="notes">
+                        {$order_data.question[$index]|default:''}
+                    </p>
+                </div>
+            {/section}
+        </section>
+        {/if}
+
         <section class="order-style order-check input">
             <h3 class="product-ttl">お申込者様の情報</h3>
             <table class="order-table">
@@ -153,7 +168,7 @@
                         <th class="text-center">ご住所</th>
                         <td class="text-left">
                             〒{$order_data.zipCode[0]}-{$order_data.zipCode[1]}<br />
-                            {$order_data.pref} {$order_data.adress}
+                            {Constant::$aryPref[$order_data.pref]|default:''} {$order_data.adress}
                         </td>
                     </tr>
                     <tr>
@@ -178,6 +193,43 @@
                     </tr>
                 </tbody>
             </table>
+        </section>
+
+        {if count($order_data.withSei) > 0}
+        <section class="order-style order-check input">
+            <h3 class="product-ttl">同行者様の情報</h3>
+            {section name=i start=0 loop=count($order_data.withSei)}
+                {assign var='index' value=$smarty.section.i.index}
+                <table class="order-table">
+                    <caption>人目</caption>
+                    <tbody>
+                        <tr>
+                            <th class="text-center">お名前</th>
+                            <td class="text-left">{$order_data.withSei[$index]} {$order_data.withMei[$index]}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">フリガナ</th>
+                            <td class="text-left">{$order_data.withKanaSei[$index]} {$order_data.withKanaMei[$index]}</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">生年月日</th>
+                            <td class="text-left">{$order_data.withBirthdayYear[$index]}年{$order_data.withBirthdayMonth[$index]}月{$order_data.withBirthdayDay[$index]}日</td>
+                        </tr>
+                        <tr>
+                            <th class="text-center">性別</th>
+                            <td class="text-left">{$order_data.withGender_text[$index]}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            {/section}
+        </section>
+        {/if}
+
+        <section class="order-style order-check input">
+            <h3 class="product-ttl">備考欄</h3>
+            <p class="notes">
+                {$order_data.note|default:''}
+            </p>
         </section>
 
         <div class="conditions">
@@ -221,7 +273,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
 <!-- END global-footer -->
 
 

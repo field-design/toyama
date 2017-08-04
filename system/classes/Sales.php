@@ -9,7 +9,13 @@
 *******************************************/
 class Sales extends Entity {
 
-    function __construct() {
+    private $person_id = null;
+
+    function __construct($login = null) {
+
+        if( !is_null($login) && !$login->isAuthAdmin() ) {
+            $this->person_id = $login->getPersonID();
+        }
 
         $this->columns = array();
         $this->columnsDef = array();
@@ -73,20 +79,96 @@ class Sales extends Entity {
     $num：
       デフォルト５件
     *******************************/
-    function getSalesListView($num = 5) {
+    function getSalesListView($num = 5, $time = null) {
+
+        if(is_null($time)) {
+            $time = time();
+        }
+        $date_from = date('Y-m-01', $time);
+        $date_to = date('Y-m-d', strtotime("+1 month", $time));
+
+        //==========================================
+        //◆ MySQL申込管理DB
+        //==========================================
+        $sql = '';
+        $sql .= 'select t_order.order_id ';
+        $sql .= '     , t_order.product_id ';
+        $sql .= '     , t_order.course_id ';
+        $sql .= '     , t_order.order_status ';
+        $sql .= '     , t_order.pay_date ';
+        $sql .= '     , t_product.title ';
+        $sql .= '     , price.price_total ';
+        $sql .= '     , amount.amount_total ';
+        $sql .= 'from   t_order ';
+        $sql .= 'left join ( ';
+        $sql .= '          select order_id ';
+        $sql .= '               , sum(meta_value) price_total ';
+        $sql .= '          from   t_order_meta ';
+        $sql .= '          where  meta_type = "price_value" ';
+        $sql .= '          group by order_id ';
+        $sql .= ') price ';
+        $sql .= 'on        t_order.order_id = price.order_id ';
+        $sql .= 'left join ( ';
+        $sql .= '          select order_id ';
+        $sql .= '               , sum(meta_value) amount_total ';
+        $sql .= '          from   t_order_meta ';
+        $sql .= '          where  meta_type = "amount" ';
+        $sql .= '          group by order_id ';
+        $sql .= ') amount ';
+        $sql .= 'on        t_order.order_id = amount.order_id ';
+        $sql .= 'left join t_product ';
+        $sql .= 'on        t_order.product_id = t_product.product_id ';
+        $sql .= 'where     t_order.order_status = :order_status ';
+        $sql .= 'and       t_order.pay_date >= :pay_date_from ';
+        $sql .= 'and       t_order.pay_date <  :pay_date_to ';
+
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   t_order.person_id = :person_id ';
+        }
+
+        $sql .= 'group by  t_order.order_id ';
+        $sql .= '       ,  t_order.product_id ';
+        $sql .= '       ,  t_order.course_id ';
+        $sql .= '       ,  t_order.order_status ';
+        $sql .= '       ,  t_order.pay_date ';
+        $sql .= '       ,  t_product.title ';
+        $sql .= 'order by  t_order.regist_date desc ';
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':order_status', '4');
+        $db->setBindValueSTR(':pay_date_from', $date_from);
+        $db->setBindValueSTR(':pay_date_to', $date_to);
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectMySQLData = $db->getResponse();
+
+        $ids = array_column($selectMySQLData, 'order_id');
+
         $spiral = new SpiralApi('database/select', 'oderDB');
 
         $serch_condition = array();
-        $serch_condition[] = array('name' => 'Correspondence', 'value' => '4');
-        $serch_condition[] = array('name' => 'paymentDate', 'value' => date('Y/m/01'), 'operator' => '>=');
-        $serch_condition[] = array('name' => 'paymentDate', 'value' => date("Y/m/01", strtotime("+1 month")), 'operator' => '<');
+        foreach($ids as $id) {
+            $serch_condition[] = array('name' => 'OderID', 'value' => $id, 'logical_connection' => 'or');
+        }
+        if(count($serch_condition) == 0) {
+            $serch_condition[] = array('name' => 'OderID', 'value' => '');
+        }
 
         $lines_per_page = $num;
 
         $page = 1;
 
         $sort = array();
-        $sort[] = array('name' => 'paymentDate', 'order' => 'desc');
 
         $spiral->setSelectParam($this->columns, $serch_condition, null, $lines_per_page, $page, $sort);
 
@@ -99,91 +181,143 @@ class Sales extends Entity {
 
         $selectData = $spiral->getSelectData();
 
-        //DB値調整
-        foreach($selectData as &$data) {
-            $oderDate = DateTime::createFromFormat('Y年m月d日 H時i分', $data['paymentDate']);
-            $data['paymentDate'] = $oderDate->format('Y/m/d H:i');
-
-            $product = new Product();
-            $data['title'] = $product->getProductName($data['ProductID']);
+        $resultData = array();
+        $spiralData = array_column($selectData, null, 'OderID');
+        
+        for($i = 0; $i < count($selectMySQLData); $i++) {
+            $resultData[] = $spiralData[$selectMySQLData[$i]['order_id']];
+            $resultData[$i]['order_id'] = $selectMySQLData[$i]['order_id'];
+            $resultData[$i]['order_status'] = $selectMySQLData[$i]['order_status'];
+            $resultData[$i]['order_status_text'] = Constant::$aryCorrespondence[$selectMySQLData[$i]['order_status']];
+            $resultData[$i]['price_total'] = $selectMySQLData[$i]['price_total'];
+            $resultData[$i]['pay_date'] = date('Y/m/d H:i:s', strtotime($selectMySQLData[$i]['pay_date']));
+            $resultData[$i]['amount_total'] = $selectMySQLData[$i]['amount_total'];
+            $resultData[$i]['title'] = $selectMySQLData[$i]['title'];
         }
 
-        return $selectData;
+        return $resultData;
     }
 
     /******************************
     当月の売り上げ金額・数量取得
-    return：array('sales' => 当月売上, 'amount' => 当月数量, 'top' => array( TOP5商品配列 => TOP5金額配列 ))
+    return：array('sales' => 当月売上, 'amount' => 当月数量, 'product5' => TOP5商品（カンマ区切り文字列）, 'sales5' => TOP5売上配列（カンマ区切り文字列） )
     *******************************/
-    function getSalesSum() {
-        $spiral = new SpiralApi('database/select', 'oderDB');
+    function getSalesSum($time = null) {
 
-        $columns = array();
-        $columns[] = 'ProductID';
-        $columns[] = 'title';
-        for($i = 1; $i <=5; $i++) {
-          $columns[] = 'plan_Fee' . $i;
-        }
-        for($i = 1; $i <=5; $i++) {
-          $columns[] = 'volume' . $i;
+        if(is_null($time)) {
+            $time = time();
         }
 
-        $serch_condition = array();
-        $serch_condition[] = array('name' => 'paymentDate', 'value' => date('Y/m/01'), 'operator' => '>=');
-        $serch_condition[] = array('name' => 'paymentDate', 'value' => date("Y/m/01", strtotime("+1 month")), 'operator' => '<');
-        $serch_condition[] = array('name' => 'Correspondence', 'value' => '4');
+        $date_from = date('Y-m-01', $time);
+        $date_to = date('Y-m-d', strtotime("+1 month", $time));
 
-        $spiral->setSelectParam($columns, $serch_condition, null, 999);
+        $result = array('sales' => 0, 'amount' => 0, 'product5' => array(), 'sales5' => array());
 
-        $err_msg = $spiral->exec();
+        //当月売上取得
+        $sql = '';
+        $sql .= 'select sum(price.price_total) price_month_total ';
+        $sql .= '     , sum(amount.amount_total) amount_month_total ';
+        $sql .= 'from   t_order ';
+        $sql .= 'left join ( ';
+        $sql .= '          select order_id ';
+        $sql .= '               , sum(meta_value) price_total ';
+        $sql .= '          from   t_order_meta ';
+        $sql .= '          where  meta_type = "price_value" ';
+        $sql .= '          group by order_id ';
+        $sql .= ') price ';
+        $sql .= 'on        t_order.order_id = price.order_id ';
+        $sql .= 'left join ( ';
+        $sql .= '          select order_id ';
+        $sql .= '               , sum(meta_value) amount_total ';
+        $sql .= '          from   t_order_meta ';
+        $sql .= '          where  meta_type = "amount" ';
+        $sql .= '          group by order_id ';
+        $sql .= ') amount ';
+        $sql .= 'on        t_order.order_id = amount.order_id ';
+        $sql .= 'where     t_order.order_status = :order_status ';
+        $sql .= 'and       t_order.pay_date >= :pay_date_from ';
+        $sql .= 'and       t_order.pay_date <  :pay_date_to ';
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   t_order.person_id = :person_id ';
+        }
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':order_status', '4');
+        $db->setBindValueSTR(':pay_date_from', $date_from);
+        $db->setBindValueSTR(':pay_date_to', $date_to);
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+
+        $err_msg = $db->execute();
 
         if( !empty($err_msg) ) {
             //エラー処理
             return $err_msg;
         }
 
-        $selectData = $spiral->getSelectData();
+        $selectData = $db->getResponse();
 
-        $result = array('sales' => 0, 'amount' => 0, 'product5' => '', 'sales5' => '');
-        $top5 = array();
-        $top5_text = array();
-        foreach($selectData as $data) {
-
-            $sales = 0;
-            $amount = 0;
-
-            //売上
-            for($i = 1; $i <=5; $i++) {
-                $sales += $data['plan_Fee' . $i] * $data['volume' . $i];
-            }
-            
-            //数量
-            for($i = 1; $i <=5; $i++) {
-                $amount += $data['volume' . $i];
-            }
-
-            $result['sales'] += $sales;
-            $result['amount'] += $amount;
-
-            if ( !array_key_exists($data['ProductID'], $top5) ) {
-                $top5[$data['ProductID']] = $sales;
-                $top5_text[$data['ProductID']] = $data['title'];
-            } else {
-                $top5[$data['ProductID']] += $sales;
-            }
-            
+        if( count($selectData) > 0 ) {
+            $result['sales'] = $selectData[0]['price_month_total'];
+            $result['amount'] = $selectData[0]['amount_month_total'];
         }
 
-        arsort($top5);
-        $top5 = array_slice($top5, 0, 5);
 
-        foreach($top5 as $key => $value) {
-            $result['product5'] .= $top5_text[$key] . '","';
-            $result['sales5'] .= $value . ',';
+        //当月TOP5取得
+        $sql = '';
+        $sql .= 'select t_product.product_id ';
+        $sql .= '     , t_product.title ';
+        $sql .= '     , sum(price.price_total) price_month_total ';
+        $sql .= 'from   t_order ';
+        $sql .= 'left join ( ';
+        $sql .= '          select order_id ';
+        $sql .= '               , sum(meta_value) price_total ';
+        $sql .= '          from   t_order_meta ';
+        $sql .= '          where  meta_type = "price_value" ';
+        $sql .= '          group by order_id ';
+        $sql .= ') price ';
+        $sql .= 'on        t_order.order_id = price.order_id ';
+        $sql .= 'left join t_product ';
+        $sql .= 'on        t_order.product_id = t_product.product_id ';
+        $sql .= 'where     t_order.order_status = :order_status ';
+        $sql .= 'and       t_order.pay_date >= :pay_date_from ';
+        $sql .= 'and       t_order.pay_date <  :pay_date_to ';
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   t_order.person_id = :person_id ';
         }
 
-        $result['product5'] = trim($result['product5'], "\",\"");
-        $result['sales5'] = trim($result['sales5'], ",");
+        $sql .= 'group by  t_product.product_id ';
+        $sql .= '       ,  t_product.title ';
+        $sql .= 'order by  price_month_total desc ';
+        $sql .= 'limit     5 ';
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':order_status', '4');
+        $db->setBindValueSTR(':pay_date_from', $date_from);
+        $db->setBindValueSTR(':pay_date_to', $date_to);
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $db->getResponse();
+
+        foreach( $selectData as $data ) {
+            $result['product5'][] = $data['title'];
+            $result['sales5'][] = $data['price_month_total'];
+        }
+
+        $result['product5'] = implode('","', $result['product5']);
+        $result['sales5'] = implode(',', $result['sales5']);
 
         return $result;
     }

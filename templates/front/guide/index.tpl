@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>サイトのご利用案内 | {$smarty.const.SITE_TITLE_FRONT}</title>
+<title>サイトのご利用案内 | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -26,10 +26,10 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="サイト名">
+<meta property="og:site_name" content="{Constant::$siteName}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="ページタイトル">
-<meta property="og:description" content="ディスクリプション">
+<meta property="og:title" content="サイトのご利用案内">
+<meta property="og:description" content="">
 <meta property="og:url" content="">
 <meta property="og:image" content="">
 <meta property="fb:app_id" content="">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 

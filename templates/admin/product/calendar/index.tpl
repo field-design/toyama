@@ -60,7 +60,7 @@
 
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' calendar='is-active' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -81,6 +81,7 @@
           </thead>
           <tbody>
             {foreach from=$data_list item=data}
+            {if $data.lang == 1 || $data.lang == ''}
             <tr>
               <td class="product-image">
                   <p class="image is-64x64">
@@ -91,6 +92,7 @@
               <td class="product-date">{$data.regist_date|replace:' ':'<br />'}</td>
               <td class="product-edit"><a class="button is-primary is-outlined" href="{$smarty.const.URL_ROOT_PATH_ADMIN}product/calendar/setting/?ProductID={$data.product_id}">予約設定</a></td>
             </tr>
+            {/if}
             {/foreach}
           </tbody>
         </table>
@@ -99,6 +101,10 @@
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' calendar='is-active' is_admin=$is_admin}
 </div>
 
 <!-- START global-footer -->

@@ -24,6 +24,17 @@
                     <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}guide/">サイトのご利用案内</a></li>
                     <li class="sub"><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">プライバシーポリシー</a></li>
                     <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}law/">特定商取引法に基づく表記</a></li>
+                    <li class="translate">
+                        {if strpos($smarty.const.URL_ROOT_PATH_FULL, 'lang=') !== false}
+                            {assign var='url' value=$smarty.const.URL_ROOT_PATH_FULL|regex_replace:'/lang\=\d/':''}
+                        {elseif strpos($smarty.const.URL_ROOT_PATH_FULL, '?') !== false}
+                            {assign var='url' value=$smarty.const.URL_ROOT_PATH_FULL|cat:'&'}
+                        {else}
+                            {assign var='url' value=$smarty.const.URL_ROOT_PATH_FULL|cat:'?'}
+                        {/if}
+                        <div><a href="{$url}lang=1">JP(日本語)</a></div>
+                        <div><a href="{$url}lang=2">EN(English)</a></div>
+                    </li>
                 </ul>
             </nav>
         </div>

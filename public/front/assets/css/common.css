@@ -1176,6 +1176,21 @@ a:hover {
   padding: 0 15px 5px;
 }
 
+.global-header .global-nav .drawer-menu .translate {
+  padding: 0 15px;
+}
+
+.global-header .global-nav .drawer-menu .translate > div {
+  display: inline-block;
+}
+
+.global-header .global-nav .drawer-menu .translate > div a {
+  padding: 2px 5px;
+  font: 400 12px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.2rem/160% "Noto Sans Japanese", sans-serif;
+  border: 1px solid white;
+}
+
 .global-header .global-nav .drawer-hamburger-icon, .global-header .global-nav .drawer-hamburger-icon:after, .global-header .global-nav .drawer-hamburger-icon:before {
   height: 5.5px;
 }

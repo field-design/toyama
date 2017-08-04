@@ -9,18 +9,20 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'Order.php');
 require_once(CLS_DIR . 'Settings.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$order = new OrderMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$order = new Order();
 $settings = new Settings();
+$page = new Page();
 $log = new Log();
 
 //=============
@@ -67,8 +69,7 @@ if( !$err_flg ) {
 
 //商品データチェック
 if( !$err_flg ) {
-    $product_data = $product->getProduct($order_data['ProductID'], 1);
-
+    $product_data = $product->getLangProduct($order_data['ProductID']);
     //商品データがなければリダイレクト
     if( !isset($product_data) || !is_array($product_data) ) {
         $log = new Log();
@@ -81,7 +82,7 @@ if( !$err_flg ) {
     $price_data = $price->getCourseMeta($order_data['course_id']);
     $order_date = strtotime($order_data['oderDate']);
 
-    $order_data['oderDate_text'] = date('Y年m月d日', $order_date);
+    $order_data['oderDate_text'] = date(Constant::$formatYMD, $order_date);
 }
 
 //在庫チェック
@@ -128,11 +129,13 @@ if( !$err_flg ) {
 }
 
 //事業者情報取得
-$settings_data = $settings->getSettings($product_data['person_id']);
+$settings_data = $settings->getLangPerson($product_data['person_id']);
 if(!is_array($settings_data)) {
     $smarty->assign('global_message', $settings_data);
     $err_flg = true;
 }
+
+$page_data = $page->getLangPage(2, 4);
 
 //=============
 // 入力データチェック
@@ -161,4 +164,5 @@ $smarty->assign('course_data', $course_data);
 $smarty->assign('price_data', $price_data);
 $smarty->assign('order_data', $order_data);
 $smarty->assign('settings_data', $settings_data);
+$smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'order/index.tpl');

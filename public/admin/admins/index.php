@@ -26,7 +26,7 @@ $smarty->assign('menu_person_id', $login->getPersonID());
 //設定データ取得
 $settings = new Settings();
 
-$settingslist = $settings->getSettingsListView(100);
+$settingslist = $settings->getSettingsListView(100, $login);
 
 if( !is_array($settingslist) ) {
     $smarty->assign('global_message', $data);

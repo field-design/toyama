@@ -9,11 +9,13 @@
 *******************************************/
 define('SESSION_LOGIN_USER', 'session_login_user');
 define('SESSION_LOGIN_AUTH', 'session_login_authority');
+define('SESSION_LOGIN_GROUP', 'session_login_group');
 
 class Login {
 
     private $personID;
     private $authority;
+    private $group;
     private $email;
     private $pass;
 
@@ -26,6 +28,7 @@ class Login {
         // ユーザー取得
         $this->setPersonID();
         $this->setAuthority();
+        $this->setGroup();
     }
 
     /******************************
@@ -86,6 +89,18 @@ class Login {
         }
     }
 
+    //グループスラッグ
+    function setGroup($group = '') {
+        if($group != '') {
+            $this->group = $group;
+            $_SESSION[SESSION_LOGIN_GROUP] = $group;
+        } elseif(isset($_SESSION[SESSION_LOGIN_GROUP])) {
+            $this->group = $_SESSION[SESSION_LOGIN_GROUP];
+        } else {
+            $this->group = '';
+        }
+    }
+
     //メールアドレス
     function setEmail($mail) {
         $mail = htmlspecialchars(trim($mail));
@@ -116,6 +131,7 @@ class Login {
         $columns = array();
         $columns[] = 'PersonID';
         $columns[] = 'authority';
+        $columns[] = 'group';
 
         $serch_condition = array();
         $serch_condition[] = array("name" => "email", "value" => $this->email);
@@ -139,6 +155,7 @@ class Login {
         //ログイン処理後
         $this->setPersonID($data[0]['PersonID']);
         $this->setAuthority($data[0]['authority']);
+        $this->setGroup($data[0]['group']);
 
         $this->log->setSysLog('login:' . $data[0]['PersonID']);
 
@@ -162,5 +179,8 @@ class Login {
     }
     function getAuthority() {
         return $this->authority;
+    }
+    function getGroup() {
+        return $this->group;
     }
 }

@@ -9,19 +9,21 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
-require_once(CLS_DIR . 'ProductAccessMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'ProductPrice.php');
+require_once(CLS_DIR . 'ProductAccess.php');
 require_once(CLS_DIR . 'Settings.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
 
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$price = new ProductPriceMy();
-$access = new ProductAccessMy();
+$product = new Product();
+$stock = new ProductStock();
+$price = new ProductPrice();
+$access = new ProductAccess();
 $settings = new Settings();
+$page = new Page();
 
 /**********************************************
 ◆ Ajax処理
@@ -50,7 +52,7 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
 ***********************************************/
 
 if( isset($_GET['plan']) ) {
-    $data = $product->getProduct(htmlspecialchars($_GET['plan']), 1);
+    $data = $product->getLangProduct(htmlspecialchars($_GET['plan']));
 }
 
 if( !isset($data) || !is_array($data) ) {
@@ -62,7 +64,9 @@ $price_list = array();
 foreach($data['course_id'] as $course_id) {
     $price_list[] = $price->getCourseMeta($course_id);
 }
-$person = $settings->getSettings($data['person_id']);
+
+$person = $settings->getLangPerson($data['person_id']);
+
 $area_detail = null;
 $category = null;
 foreach($data['area'] as $val) {
@@ -75,12 +79,18 @@ foreach($data['area'] as $val) {
 }
 
 $recommend_data = $product->getProductListView(3, 1, 1, $area_detail, $category);
+//にいかわページ情報取得
+$page_data = $page->getLangPage(2, 4);
 
 //商品ページアクセス保存
 $access->access($data['product_id']);
+
+global $global_lang;
+$smarty->assign('lang', $global_lang);
 
 $smarty->assign('data', $data);
 $smarty->assign('price_list', $price_list);
 $smarty->assign('person', $person);
 $smarty->assign('recommend_data', $recommend_data);
+$smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'niikawa/plan/index.tpl');

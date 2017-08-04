@@ -9,12 +9,16 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
 
 //商品リスト取得
-$product = new ProductMy();
+$product = new Product();
+$page = new Page();
+
+$page_data = $page->getLangPage(2, 4);
 
 $area_detail = null;
 $area_text = '';
@@ -24,9 +28,9 @@ $category_text = '';
 if( isset($_GET['area']) ) {
     $area_detail = htmlspecialchars($_GET['area']);
     $area = explode('_', $area_detail)[0];
-    if( array_key_exists($area, ConstantMy::$aryArea) ) {
+    if( array_key_exists($area, Constant::$aryArea) ) {
 
-        $ary_area = ConstantMy::$aryAreaDetail[$area];
+        $ary_area = Constant::$aryAreaDetail[$area];
 
         if(  array_key_exists($area_detail, $ary_area) ) {
             $area_text = $ary_area[$area_detail];
@@ -37,8 +41,8 @@ if( isset($_GET['area']) ) {
 }
 if( isset($_GET['Category']) ) {
     $category = htmlspecialchars($_GET['Category']);
-    if( array_key_exists($category, ConstantMy::$aryCategory) ) {
-        $category_text = ConstantMy::$aryCategory[$category];
+    if( array_key_exists($category, Constant::$aryCategory) ) {
+        $category_text = Constant::$aryCategory[$category];
     } else {
         $category = null;
     }
@@ -75,4 +79,5 @@ $smarty->assign('current_page', $current_page);
 $smarty->assign('productlist', $productlist);
 $smarty->assign('area_text', $area_text);
 $smarty->assign('category_text', $category_text);
+$smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'niikawa/list/index.tpl');

@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 

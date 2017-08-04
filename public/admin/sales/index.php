@@ -10,8 +10,8 @@
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'SalesMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Sales.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -25,7 +25,7 @@ $smarty->assign('is_admin', $login->isAuthAdmin());
 $smarty->assign('menu_person_id', $login->getPersonID());
 
 //月間売上取得
-$sales = new SalesMy($login);
+$sales = new Sales($login);
 $time = time();
 $selessum = $sales->getSalesSum($time);
 $seleslist = $sales->getSalesListView(999, $time);

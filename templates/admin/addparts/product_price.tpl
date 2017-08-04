@@ -6,7 +6,7 @@
             <p class="control has-icon has-icon-right">
                 <span class="select is-fullwidth">
                 <select name="price_type[]" class="price_type">
-                    {foreach from=ConstantMy::$aryPriceType key=key item=val}
+                    {foreach from=Constant::$aryPriceType key=key item=val}
                     <option value="{$key}" {if $price_type==$key}selected{/if}>{$val}</option>                                       
                     {/foreach}
                 </select>

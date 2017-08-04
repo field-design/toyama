@@ -13,7 +13,7 @@
 
 <title>{$page_data.title_tag|default:''}</title>
 <meta name="description" content="{$page_data.description_tag|default:''}">
-<meta name="keywords" content="">
+<meta name="keywords" content="{$page_data.keyword_tag|default:''}">
 <!-- icons -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/icon.tpl'}
 <!-- Stylesheet -->
@@ -96,18 +96,18 @@
     </div>
     <div class="area-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="魚津市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_2""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="黒部市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_3""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="入善町"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=area1_4""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="朝日町"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={key(array_slice(Constant::$aryAreaDetail['area1'], 0, 1, true))}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="{current(array_slice(Constant::$aryAreaDetail['area1'], 0, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={key(array_slice(Constant::$aryAreaDetail['area1'], 1, 1, true))}""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="{current(array_slice(Constant::$aryAreaDetail['area1'], 1, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={key(array_slice(Constant::$aryAreaDetail['area1'], 2, 1, true))}""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="{current(array_slice(Constant::$aryAreaDetail['area1'], 2, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={key(array_slice(Constant::$aryAreaDetail['area1'], 3, 1, true))}""><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="{current(array_slice(Constant::$aryAreaDetail['area1'], 3, 1, true))}"></a></li>
         </ul>
     </div>
     <div class="genre-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="体験する"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="見る"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="食べる"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=cat4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="買う"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={key(array_slice(Constant::$aryCategory, 0, 1, true))}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="{current(array_slice(Constant::$aryCategory, 0, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={key(array_slice(Constant::$aryCategory, 1, 1, true))}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="{current(array_slice(Constant::$aryCategory, 1, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={key(array_slice(Constant::$aryCategory, 2, 1, true))}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="{current(array_slice(Constant::$aryCategory, 2, 1, true))}"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={key(array_slice(Constant::$aryCategory, 3, 1, true))}"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="{current(array_slice(Constant::$aryCategory, 3, 1, true))}"></a></li>
         </ul>
     </div>
 </div>

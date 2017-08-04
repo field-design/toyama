@@ -9,7 +9,7 @@
 *******************************************/
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'ProductPriceMy.php');
+require_once(CLS_DIR . 'ProductPrice.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -22,7 +22,7 @@ $smarty->assign('is_admin', $login->isAuthAdmin());
 //事業者ID取得
 $smarty->assign('menu_person_id', $login->getPersonID());
 
-$price = new ProductPriceMy();
+$price = new ProductPrice();
 
 $err_flg = false;
 $err_msg = array();

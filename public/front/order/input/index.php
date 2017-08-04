@@ -9,15 +9,39 @@
 *******************************************/
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'ProductStockMy.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'ProductStock.php');
+require_once(CLS_DIR . 'Order.php');
+require_once(CLS_DIR . 'Page.php');
 
 $smarty = new SmartyExtends();
-$product = new ProductMy();
-$stock = new ProductStockMy();
-$order = new OrderMy();
+$product = new Product();
+$stock = new ProductStock();
+$order = new Order();
+$page = new Page();
 $log = new Log();
+
+/**********************************************
+◆ Ajax処理
+***********************************************/
+//=============
+// 同行者追加
+//=============
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'member' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('num', intval($_POST['count']));
+    $smarty->display(FRONT_DIR . 'addparts/order_input_member.tpl');
+    exit;
+}
+
+
+
+
+/**********************************************
+◆ メイン処理
+***********************************************/
 
 //=============
 // データ設定
@@ -50,7 +74,7 @@ if( !$err_flg ) {
 
 //商品データチェック
 if( !$err_flg ) {
-    $product_data = $product->getProduct($order_data['ProductID'], 1);
+    $product_data = $product->getLangProduct($order_data['ProductID']);
     $course_data = $stock->getCourse($order_data['ProductID'], $order_data['course_id']);
     $order_date = strtotime($order_data['oderDate']);
 
@@ -105,6 +129,8 @@ if( !$err_flg ) {
     }
 }
 
+$page_data = $page->getLangPage(2, 4);
+
 //=============
 // 入力データチェック
 //=============
@@ -130,4 +156,5 @@ if ( isset($_POST['next']) ) {
 
 $smarty->assign('const_pref', Constant::$aryPref);
 $smarty->assign('order_data', $order_data);
+$smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'order/input/index.tpl');

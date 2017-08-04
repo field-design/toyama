@@ -10,7 +10,7 @@
 
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
-require_once(CLS_DIR . 'OrderMy.php');
+require_once(CLS_DIR . 'Order.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -68,7 +68,7 @@ if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
 }
 
 //受注一覧取得
-$order = new OrderMy($login);
+$order = new Order($login);
 $orderlist = $order->getOrderListView(100, $search_params);
 
 $smarty->assign('orderlist', $orderlist);

@@ -10,14 +10,14 @@
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
 require_once(CLS_DIR . 'FileUploader.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'PageMy.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Page.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
 
-$product = new ProductMy();
-$page = new PageMy();
+$product = new Product();
+$page = new Page();
 
 //未ログインならログインページへ
 $login->notLoginToRedirect();
@@ -113,10 +113,12 @@ $err_msg = array();
 
 //入力チェック
 if( !$err_flg ) {
-    if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
-        $err_msg = $page->checkInput($data);
-        if( !empty(implode('', $err_msg)) ) {
-            $err_flg = true;
+    if($data['page_id'] == 1) {
+        if( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
+            $err_msg = $page->checkInput($data);
+            if( !empty(implode('', $err_msg)) ) {
+                $err_flg = true;
+            }
         }
     }
 }

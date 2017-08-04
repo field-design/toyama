@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/meta.tpl'}
 
-<title>in富山</title>
+<title>{$data.page_name}</title>
 <meta name="description" content="">
 <!-- icons -->
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/head/icon.tpl'}
@@ -52,7 +52,7 @@
         <div class="notification">
             <ul class="is-clearfix">
               <li><a href="{$smarty.const.URL_ROOT_PATH_ADMIN}"><span class="icon is-small"><i class="fa fa-home" aria-hidden="true"></i></span></a></li>
-              <li><span>in富山</span></li>
+              <li><span>{$data.page_name}</span></li>
             </ul>
         </div>
     </div>
@@ -60,15 +60,20 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
-            {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' page_toyama='is-active' is_admin=$is_admin}
+        <div class="column is-3 is-hidden-mobile">
+            {if $data.page_id == 3}
+                {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' page_toyama_en='is-active' is_admin=$is_admin}
+            {else}
+                {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' page_toyama='is-active' is_admin=$is_admin}
+            {/if}
         </div>
         <div class="column is-9">
 <!-- START main -->
 <main>
     <form method="post">
-      <h2 class="title is-3">in富山</h2>
+      <h2 class="title is-3">{$data.page_name}</h2>
 
+    {if $data.page_id == 1}
     <section id="slide_photo" class="section">
         <div class="control">
             <h3 class="subtitle">スライドショー</h3>
@@ -114,6 +119,7 @@
               {/foreach}
           </select>​
     </section>
+    {/if}
 
     <section class="section">
         <div class="control">
@@ -137,6 +143,12 @@
             <div class="help counter">残り<span class="count">128</span>文字</strong></div>
             <textarea name="description_tag" class="textarea limited" placeholder="例：越中にいかわ観光圏は、富山県の魚津市・黒部市・入善町・朝日町が参加する、水との関わりが深いエリア。VISIT富山県のエリア特集「越中にいかわ観光圏」では、水をテーマにした、各市町村の現地観光プランをご紹介します！" maxlength="128">{$data.description_tag|default:''}</textarea>
         </div>
+    
+        <label class="label">keywordタグ</label>
+        <div class="control">
+            <div class="help counter">残り<span class="count">64</span>文字</strong></div>
+            <input name="keyword_tag" class="input limited" type="text" placeholder="例：TRAVEL,富山,観光,にいかわ,体験" maxlength="64" value="{$data.keyword_tag|default:''}">
+        </div>
     </section>
 
     <div class="control save-point">
@@ -151,11 +163,20 @@
     </div>
 
       <input type="hidden" name="page_id" value={$data.page_id|default:''} />
+      <input type="hidden" name="page_name" value={$data.page_name|default:''} />
     </form>
 </main>
 <!-- END main -->
         </div>
     </div>
+</div>
+
+<div class="section sitemap is-hidden-desktop">
+    {if $data.page_id == 3}
+        {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' page_toyama_en='is-active' is_admin=$is_admin}
+    {else}
+        {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' page_toyama='is-active' is_admin=$is_admin}
+    {/if}
 </div>
 
 <!-- START global-footer -->

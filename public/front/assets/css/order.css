@@ -972,6 +972,133 @@ h2 span {
   margin: auto;
 }
 
+.order-input {
+  counter-reset: numbering 0;
+}
+
+.order-input:first-of-type {
+  padding-top: 20px;
+}
+
+.order-input .input-wrap {
+  position: relative;
+  padding: 15px 0;
+  counter-increment: numbering 1;
+}
+
+.order-input .input-wrap:not(:first-of-type) {
+  border-top: 1px dashed #ddd;
+}
+
+.order-input .delete-btn {
+  position: absolute;
+  right: 0;
+  top: 25px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+      user-select: none;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(10, 10, 10, 0.2);
+  border: none;
+  border-radius: 290486px;
+  display: inline-block;
+  font-size: 1rem;
+  height: 20px;
+  outline: 0;
+  -webkit-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+          transform: rotate(45deg);
+  -webkit-transform-origin: center center;
+      -ms-transform-origin: center center;
+          transform-origin: center center;
+  vertical-align: top;
+  width: 20px;
+}
+
+.order-input .delete-btn:before, .order-input .delete-btn:after {
+  background-color: #fff;
+  display: block;
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+      -ms-transform: translateX(-50%) translateY(-50%);
+          transform: translateX(-50%) translateY(-50%);
+  content: "";
+}
+
+.order-input .delete-btn:before {
+  height: 2px;
+  width: 50%;
+}
+
+.order-input .delete-btn:after {
+  height: 50%;
+  width: 2px;
+}
+
+.order-input .add-btn {
+  position: relative;
+  text-align: right;
+}
+
+.order-input .add-btn .button {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  border-radius: 3px;
+  box-shadow: none;
+  font-size: 1rem;
+  height: 2.285em;
+  position: relative;
+  vertical-align: top;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  -webkit-user-select: none;
+          user-select: none;
+  border: 1px solid #dbdbdb;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding-left: 1em;
+  padding-right: 1em;
+  text-align: center;
+  background-color: #666;
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+  -webkit-transition: all .2s ease;
+  transition: all .2s ease;
+}
+
+.order-input .add-btn .button:hover {
+  opacity: 0.70;
+}
+
+.order-input .add-btn .button .icon {
+  margin-left: -.25rem;
+  margin-right: .5rem;
+}
+
+.order-input .add-btn .button span {
+  font-size: 14px;
+}
+
+.order-input .sub-ttl {
+  margin-top: 0;
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+}
+
+.order-input .sub-ttl:before {
+  content: counter(numbering);
+}
+
 .product-ttl,
 .order-ttl,
 .contact-ttl {
@@ -1017,6 +1144,21 @@ h2 span {
 .order-table {
   width: 100%;
   border-collapse: collapse;
+  counter-increment: numbering 1;
+}
+
+.order-table:not(:first-of-type) {
+  margin-top: 25px;
+}
+
+.order-table caption {
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
+  text-align: left;
+}
+
+.order-table caption:before {
+  content: counter(numbering);
 }
 
 .order-table th,
@@ -1263,6 +1405,21 @@ h2 span {
   .order-payment .input-field.box .notes {
     width: 1em;
   }
+}
+
+.order-check {
+  counter-reset: numbering 0;
+}
+
+.order-check .survey .survey-ttl {
+  font: 400 16px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+  margin-bottom: .25em;
+}
+
+.order-check .notes {
+  font: 400 14px/160% "Noto Sans Japanese", sans-serif;
+  font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
 }
 
 .notes-list {

@@ -67,7 +67,7 @@
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
     <div class="columns section">
-        <div class="column is-3">
+        <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' is_admin=$is_admin}
         </div>
         <div class="column is-9">
@@ -140,6 +140,68 @@
 
             <div class="control save-point">
                 <p class="control has-addons has-addons-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section id="disp_price" class="input-area message plan-price">
+        <h2 class="conts-ttl subtitle message-header">
+            代金
+            <span class="icon">
+            <i class="fa fa-plus-circle"></i>
+            </span>
+        </h2>
+
+        <div class="conts-body message-body">
+            <p class="control help">商品ページに表示する代金を入力してください。</p>
+
+            <div class="control category">
+                <label class="label">商品代金の表示方法</label>
+                <div class="control">
+                    <label class="radio">
+                        <input type="radio" name="disp_price_page" value="1" {if isset($data.disp_price_page) && $data.disp_price_page==1}checked='checked'{/if}> 下記の入力内容
+                    </label>
+                    <label class="radio">
+                        <input type="radio" name="disp_price_page" value="2" {if !isset($data.disp_price_page) || $data.disp_price_page == '' || $data.disp_price_page==2}checked='checked'{/if}> 代金設定ページの入力内容
+                    </label>
+                </div>
+            </div>
+
+            <div id="disp_course_container" class="control sortable">
+                {section name=i start=0 loop=count($data.disp_course)}
+                    {assign var='index' value=$smarty.section.i.index}
+                    {if isset($data.disp_price_condition) && is_array($data.disp_price_condition) && array_key_exists($index, $data.disp_price_condition)}
+                        {assign var='condition' value=$data.disp_price_condition[$index]}            
+                    {else}
+                        {assign var='condition' value=array()}            
+                    {/if}
+                    {include file=$smarty.const.ADMIN_DIR|cat:'addparts/product_disp_course.tpl'
+                             course_number=$index
+                             disp_course=$data.disp_course[$index]
+                             disp_price_title=$data.disp_price_title[$index]
+                             disp_price_type=$data.disp_price_type[$index]
+                             disp_price_value=$data.disp_price_value[$index]
+                             disp_price_condition=$condition
+                             err_msg=$err_msg}
+                {/section}
+            </div>
+            <div class="control add-btn disp_course">
+                <a class="button is-primary">
+                    <span class="icon">
+                    <i class="fa fa-plus-circle"></i>
+                    </span>
+                    <span>コースを追加</span>
+                </a>
+            </div>
+            <div class="control save-point">
+                <p class="has-text-centered">
                     <a class="button is-success">
                         <span class="icon">
                             <i class="fa fa-save"></i>
@@ -592,12 +654,12 @@
             <div class="area">
                 <label class="label">エリア<span class="help">複数選択可能</span></label>
                 <div class="control area-group">
-                    {foreach from=ConstantMy::$aryArea key=key item=val}
+                    {foreach from=Constant::$aryArea key=key item=val}
                     <label class="checkbox"><input name="area[]" type="checkbox" value="{$key}" data-group="area{$key}" {if in_array($key, $data.area)}checked='checked'{/if}>{$val}</label>
                     {/foreach}
                 </div>
                 <div class="control area-detail">
-                    {foreach from=ConstantMy::$aryAreaDetail key=key item=val}
+                    {foreach from=Constant::$aryAreaDetail key=key item=val}
                     <div class="area{$key}">
                         {foreach from=$val key=detail_key item=detail_val}
                         {assign var='area_detail' value='area'|cat:$key}
@@ -613,11 +675,63 @@
             <div class="category">
                 <label class="label">カテゴリ<span class="help">複数選択可能</span></label>
                 <div class="control">
-                    {foreach from=ConstantMy::$aryCategory key=key item=val}
+                    {foreach from=Constant::$aryCategory key=key item=val}
                     <label class="checkbox"><input name="category[]" value="{$key}" type="checkbox" {if in_array($key, $data.category)}checked='checked'{/if}>{$val}</label>
                     {/foreach}
                 </div>
             </div>
+            <div class="control save-point">
+                <p class="has-text-centered">
+                    <a class="button is-success">
+                        <span class="icon">
+                            <i class="fa fa-save"></i>
+                        </span>
+                        <span>変更を保存</span>
+                    </a>
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <section  id="question" class="input-area survey message">
+        <h2 class="conts-ttl subtitle message-header">
+            質問事項
+            <span class="icon">
+            <i class="fa fa-plus-circle"></i>
+            </span>
+        </h2>
+        <div class="conts-body message-body">
+            <span class="control help">申込者への質問事項がある場合に設定してください</span>
+
+            <label class="label">
+                質問
+                <span class="help">最大5件まで追加可能</span>
+            </label>
+            <div id="question_container" class="control sortable">
+                {if isset($data.question)}
+                {foreach from=$data.question item=val}
+                {include file=$smarty.const.ADMIN_DIR|cat:'addparts/sortable_multi.tpl' placeholder='例：食物アレルギーをお持ちですか？' input_name='question[]' value=$val}
+                {/foreach}
+                {/if}
+            </div>
+            <div class="control add-btn">
+            <a class="button is-primary">
+                <span class="icon">
+                <i class="fa fa-plus-circle"></i>
+                </span>
+                <span>質問を追加</span>
+            </a>
+        </div>
+        <div class="control save-point">
+            <p class="has-text-centered">
+                <a class="button is-success">
+                    <span class="icon">
+                        <i class="fa fa-save"></i>
+                    </span>
+                    <span>変更を保存</span>
+                </a>
+            </p>
+        </div>
         </div>
     </section>
 
@@ -628,6 +742,38 @@
         <div class="conts-body message-body">
             <table class="table">
                 <tbody>
+                    <tr>
+                        <th>
+                            <span class="icon is-small"><i class="fa fa-object-group"></i></span>
+                            <span>記事グループ</span>
+                        </th>
+                        <td>
+                            <div class="field">
+                            <p class="control">
+                                <input class="input" name="group_slug" type="text" placeholder="例：masuzushi-taiken" value="{$data.group_slug|default:''}">
+                            </p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <span class="icon is-small"><i class="fa fa-language"></i></span>
+                            <span>表示言語</span>
+                        </th>
+                        <td>
+                            <p class="control">
+                                <label class="radio">
+                                    <input type="radio" name="lang" value="1" {if $data.lang=='' || $data.lang==1}checked="checked"{/if}> 日本語
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="lang" value="2" {if $data.lang==2}checked="checked"{/if}> 英語
+                                </label>
+                                <!-- <label class="radio">
+                                    <input type="radio" name="lang" value="tw"> 台湾語
+                                </label> -->
+                            </p>
+                        </td>
+                    </tr>
                     <tr>
                         <th>
                             <span class="icon is-small"><i class="fa fa-refresh"></i></span>
@@ -667,7 +813,7 @@
                         </th>
                         <td>
                             <a id="post_preview">
-                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH_ADMIN}preview/
+                                <span>{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH_ADMIN}preview/</span>
                                 <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
                             </a>
                         </td>
@@ -698,14 +844,12 @@
                     </a>
                 {/if}
                 {if $data.publish_status == 1}
-                    {if $is_admin}
-                        <a id="private" class="button is-danger is-pulled-right">
-                            <span class="icon is-small">
-                                <i class="fa fa-check"></i>
-                            </span>
-                            <span>非公開</span>
-                        </a>
-                    {/if}
+                    <a id="private" class="button is-danger is-pulled-right">
+                        <span class="icon is-small">
+                            <i class="fa fa-check"></i>
+                        </span>
+                        <span>非公開</span>
+                    </a>
                     <a id="publish" class="button is-info is-pulled-right">
                         <span class="icon is-small">
                             <i class="fa fa-check"></i>
@@ -924,19 +1068,6 @@
 </script>
 <script>
     /***************************
-    並び替え
-    ****************************/
-    $( function() {
-        $( ".sortable" ).sortable({
-            handle: ".sortable_button"
-        });
-        $( ".sortable" ).disableSelection();
-        // $( ".button.remove" ).click(function() {
-        //     $( this ).parent().remove();
-        // });
-    } );
-
-    /***************************
     アコーディオン
     ****************************/
     {/literal}
@@ -1046,7 +1177,7 @@
 var area = [];
 var area_select = [];
 {/literal}
-{foreach from=ConstantMy::$aryArea key=key item=val}
+{foreach from=Constant::$aryArea key=key item=val}
 
 area.push('{$key}');
 
@@ -1144,7 +1275,7 @@ $('.area-group').click(function() {
             $('form').submit();
         });
         $('#post_preview').click(function(){
-            $('form').attr('action', '{/literal}{$smarty.const.URL_ROOT_PATH_ADMIN}{literal}preview/');
+            $('form').attr('action', $('#post_preview span:first-child').html());
             $('form').attr('target', '_blank');
             $('form').submit();
         });
@@ -1200,19 +1331,17 @@ $('.area-group').click(function() {
         partsapi.js
         ****************************/
         var partsapi = new PartsApi();
-        /*
-        $('#price .add-btn.add-price a').click(function(){
-            partsapi.addParts('price', '#price_container', function(){
-                $('#price .add-btn.add-condition a').unbind('click');
-                $('#price .add-btn.add-condition a').click(function(){
-                    partsapi.addParts('price_condition', $(this).parent().prevAll('.price_condition_container'));
-                });
-            });
+
+        $('#disp_price .add-btn.disp_course a').click(function(){
+            addCourse();
         });
-        $('#price .add-btn.add-condition a').click(function(){
-            partsapi.addParts('price_condition', $(this).parent().prevAll('.price_condition_container'));
+        $('#disp_price .add-btn.add-price a').click(function(){
+            addPrice(this);
         });
-        */
+        $('#disp_price .add-btn.add-condition a').click(function(){
+            addPriceCondition(this);
+        });
+
         $('#plan_info .add-btn.plan-included a').click(function(){
             partsapi.addParts('plan_info_included', '#plan_included_container');
         });
@@ -1221,7 +1350,7 @@ $('.area-group').click(function() {
         });
         $('#location .add-btn a').click(function(){
             partsapi.addParts('location', '#location_container', function(){
-                $('#location_container > .box').each(function(){
+                $('#location_container .box').each(function(){
                     initMap($(this));
                 });
             });
@@ -1243,6 +1372,113 @@ $('.area-group').click(function() {
         $('#cancel .add-btn.cancel_note a').click(function(){
             partsapi.addParts('cancel_note', '#cancel_note_container');
         });
+        $('#question .add-btn a').click(function(){
+            partsapi.addParts('question', '#question_container');
+        });
+
+        /***************************
+        表示用代金処理
+        ****************************/
+        function addCourse() {
+            partsapi.addParts('disp_course', '#disp_course_container');
+            //イベント設定
+            $('#disp_price .add-btn.add-price a').unbind('click');
+            $('#disp_price .add-btn.add-price a').click(function(){
+                addPrice(this);
+            });
+
+            $('#disp_price .course:last-child .add-btn.add-price a').click();
+
+            setSortableEvent();
+        }
+        function addPrice(obj) {
+            var price_container = $(obj).parent().prevAll('.disp_price_container');
+
+            partsapi.addParts('price', price_container, function(){
+
+                //イベント設定
+                $('#disp_price .add-btn.add-condition a').unbind('click');
+                $('#disp_price .add-btn.add-condition a').click(function(){
+                    addPriceCondition(this)
+                });
+
+            });
+            setSortableEvent();
+        }
+        function addPriceCondition(obj) {
+            var price_container = $(obj).parents('.disp_price_container');
+            var price_condition_container = $(obj).parent().prevAll('.disp_price_condition_container');
+
+            //イベント設定
+            partsapi.addParts('price_condition', price_condition_container);
+        }
+        function setSortableEvent() {
+            $( ".sortable" ).sortable({
+                handle: ".sortable_button",
+                stop: function(event, ui) {
+                    setSortableStop(event, ui);
+                }
+            });
+            $( ".sortable" ).disableSelection();
+        }
+        function setSortableStop(event, ui) {
+            var course_container = $('#disp_course_container');
+            var course_cnt = 0;
+            course_container.children().each(function(){
+                var disp_price_container = $(this).find('.disp_price_container');
+                disp_price_container.attr('data-option', course_cnt);
+                disp_price_container.find('.price_type').attr('name', 'disp_price_type[' + course_cnt +'][]');
+                disp_price_container.find('.price_value').attr('name', 'disp_price_value[' + course_cnt +'][]');
+
+                var price_cnt = 0;
+                disp_price_container.children().each(function(){
+                    var disp_price_condition_container = $(this).find('.disp_price_condition_container');
+                    disp_price_condition_container.attr('data-option', course_cnt * 100 + price_cnt);
+                    disp_price_condition_container.find('input[type=text]').attr('name', 'disp_price_condition[' + course_cnt + '][' + price_cnt + '][]');
+                    price_cnt++;
+                });
+
+                course_cnt++;
+            });
+        }
+
+        /***************************
+        言語ごとの処理
+        ****************************/
+        //日本語でない場合は、カレンダー・代金リンク無効
+        function setRelationLink() {
+            if($('input[name=product_id]').val() != '') {
+                if($('input[name=lang]:checked').val() != '1') {
+                    $('.relation-link a').css("display", 'none');
+                } else {
+                    $('.relation-link a').css("display", '');
+                }
+            }
+        }
+        function setPreviewLink() {
+            var link = '';
+            link = $('#post_preview span:first-child').html();
+            link = link.replace(/\?lang\=.*/, '');
+            link = link + '?lang=' + $('input[name=lang]:checked').val();
+            $('#post_preview span:first-child').html(link);
+        }
+        $('input[name=lang]').change(function(){
+            setRelationLink();
+            setPreviewLink();
+        });
+        setRelationLink();
+        setPreviewLink();
+
+        /***************************
+        並び替え
+        ****************************/
+        $( ".sortable" ).sortable({
+            handle: ".sortable_button",
+            stop: function(event, ui) {
+                setSortableStop(event, ui);
+            }
+        });
+        $( ".sortable" ).disableSelection();
 
         /***************************
         プログレスバー処理

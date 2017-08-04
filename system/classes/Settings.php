@@ -196,12 +196,18 @@ class Settings extends Entity {
 
         $this->columns[] = 'APIurl';
         $this->columnsDef[] = '';
+
+        $this->columns[] = 'language';
+        $this->columnsDef[] = '';
+
+        $this->columns[] = 'group';
+        $this->columnsDef[] = '';
     }
 
     /******************************
     入力チェック
     *******************************/
-    function checkInputParam($data) {
+    function checkInputParam($data, $login) {
 
         $err_msg = array();
 
@@ -346,33 +352,126 @@ class Settings extends Entity {
         }
 
         //GMOペイメント
-        if( empty($data['siteID']) ) {
-            $err_msg['siteID'] = MESSAGE_ERROR_REQUIRE;
-        }
-        if( empty($data['shopID']) ) {
-            $err_msg['shopID'] = MESSAGE_ERROR_REQUIRE;
-        }
-        if( empty($data['pass2']) ) {
-            $err_msg['pass2'] = MESSAGE_ERROR_REQUIRE;
-        }
-        if( empty($data['APIurl']) ) {
-            $err_msg['APIurl'] = MESSAGE_ERROR_REQUIRE;
+        if($login->isAuthAdmin()) {
+            if( empty($data['siteID']) ) {
+                $err_msg['siteID'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['shopID']) ) {
+                $err_msg['shopID'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['pass2']) ) {
+                $err_msg['pass2'] = MESSAGE_ERROR_REQUIRE;
+            }
+            if( empty($data['APIurl']) ) {
+                $err_msg['APIurl'] = MESSAGE_ERROR_REQUIRE;
+            }
+
+            if( empty($data['PersonID']) ) {
+                if( empty($data['pass']) ) {
+                    $err_msg['pass'] = MESSAGE_ERROR_REQUIRE;
+                }
+            }
+
+            if($data['pass'] != $_POST['pass_confirm']) {
+                $err_msg['pass'] = MESSAGE_ERROR_PASS_MISMATCH;
+            }
+
         }
 
-        //if( empty($data['cancel_version']) ) {
-        //    $err_msg['cancel_version'] = MESSAGE_ERROR_REQUIRE;
-        //}
+        return $err_msg;
+    }
 
-        if( empty($data['PersonID']) ) {
-            if( empty($data['pass']) ) {
-                $err_msg['pass'] = MESSAGE_ERROR_REQUIRE;
+    /******************************
+    同事業者言語別データ取得
+    *******************************/
+    function getLangPersonID($person_id, $lang = null) {
+        $spiral = new SpiralApi('database/select', 'admin_DB');
+
+        $select_columns = array();
+        $select_columns[] = 'group';
+
+        $serch_condition = array();
+        $serch_condition[] = array('name' => 'PersonID', 'value' => $person_id);
+
+        $spiral->setSelectParam($select_columns, $serch_condition);
+
+        $err_msg = $spiral->exec();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $spiral->getSelectData();
+
+        if( count($selectData) == 0 ) {
+            return '';
+        }
+        if( $selectData[0]['group'] == '' ) {
+            return $person_id;
+        }
+
+        //同group取得
+        $group = $selectData[0]['group'];
+
+        $select_columns = array();
+        $select_columns[] = 'PersonID';
+
+        $serch_condition = array();
+        $serch_condition[] = array('name' => 'group', 'value' => $group);
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            global $global_lang;
+            if(!is_null($lang)) {
+                $serch_condition[] = array('name' => 'language', 'value' => htmlentities($lang), 'logical_connection' => 'or');
+                $serch_condition[] = array('name' => 'language', 'value' => '', 'logical_connection' => 'or');
+            } else if($global_lang == 2) {
+                $serch_condition[] = array('name' => 'language', 'value' => 2);
+            } else {
+                $serch_condition[] = array('name' => 'language', 'value' => 1, 'logical_connection' => 'or');
+                $serch_condition[] = array('name' => 'language', 'value' => '', 'logical_connection' => 'or');
+            }
+        } else {
+            if(!is_null($lang)) {
+                $serch_condition[] = array('name' => 'language', 'value' => htmlentities($lang), 'logical_connection' => 'or');
+                $serch_condition[] = array('name' => 'language', 'value' => '', 'logical_connection' => 'or');
             }
         }
 
-        if($data['pass'] != $_POST['pass_confirm']) {
-            $err_msg['pass'] = MESSAGE_ERROR_PASS_MISMATCH;
+        $spiral->setSelectParam($select_columns, $serch_condition);
+
+        $err_msg = $spiral->exec();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
         }
-        return $err_msg;
+
+        $selectData = $spiral->getSelectData();
+
+        if( count($selectData) == 0 ) {
+            return '';
+        }
+
+        return $selectData[0]['PersonID'];
+    }
+
+    /******************************
+    同事業者別言語データ取得
+    *******************************/
+    function getLangPerson($person_id, $new_lang = null) {
+        $base_person_id = $this->getLangPersonID($person_id, 1);
+        if(!is_null($new_lang)) {
+            $new_person_id = $this->getLangPersonID($person_id, $new_lang);
+        } else {
+            $new_person_id = $this->getLangPersonID($person_id);
+        }
+
+        $base_data = $this->getSettings($base_person_id, 1);
+        $new_data = $this->getSettings($new_person_id, 1);
+
+        $new_data['PersonID'] = $base_data['PersonID'];
+    
+        return $new_data;
     }
 
     /******************************
@@ -448,9 +547,9 @@ class Settings extends Entity {
                 if( $new_column == 'mt_cancel_ttl' || $new_column == 'MtCancelRatio' ) {
 
                     if($value != '' && $new_column == 'mt_cancel_ttl') {
-                        $resultData[$new_column . '_text'][] = ConstantMy::$aryMtCancelTtl[$value];
+                        $resultData[$new_column . '_text'][] = Constant::$aryMtCancelTtl[$value];
                     } elseif($value != '' && $new_column == 'MtCancelRatio') {
-                        $resultData[$new_column . '_text'][] = ConstantMy::$aryMtCancelRatio[$value];
+                        $resultData[$new_column . '_text'][] = Constant::$aryMtCancelRatio[$value];
                     } else {
                         $resultData[$new_column . '_text'][] = '';
                     }
@@ -466,17 +565,19 @@ class Settings extends Entity {
                     
                     $resultData[$column . '_text'] = array();
                     if( in_array('1', $resultData[$column]) ) {
-                        $resultData[$column . '_text'][] = 'クレジットカード';
+                        $resultData[$column . '_text'][] = Constant::$arySettlementType['0'];
                     }
                     if( in_array('2', $resultData[$column]) ) {
-                        $resultData[$column . '_text'][] = 'コンビニ';
+                        $resultData[$column . '_text'][] = Constant::$arySettlementType['3'];
                     }
                 } elseif( $column == 'Registered' ) {
                     $resultData[$column] = $value;
-                    $resultData[$column . '_text'] = ConstantMy::$aryGovernor[$value];
+                    $resultData[$column . '_text'] = $value != '' ? Constant::$aryGovernor[$value] : '';
+                    $resultData[$column . '_text_en'] = $value != '' ? Constant::$aryGovernorEn[$value] : '';
                 } elseif( $column == 'Travel' ) {
                     $resultData[$column] = $value;
-                    $resultData[$column . '_text'] = ConstantMy::$aryTravel[$value];
+                    $resultData[$column . '_text'] = $value != '' ? Constant::$aryTravel[$value] : '';
+                    $resultData[$column . '_text_en'] = $value != '' ? Constant::$aryTravelEn[$value] : '';
                 } else {
                     $resultData[$column] = $value;
                 }
@@ -491,7 +592,7 @@ class Settings extends Entity {
     $num：
       デフォルト５件
     *******************************/
-    function getSettingsListView($num = 5) {
+    function getSettingsListView($num = 5, $login) {
 
         $spiral = new SpiralApi('database/select', 'admin_DB');
 
@@ -501,8 +602,12 @@ class Settings extends Entity {
         $columns[] = 'company_name';
         $columns[] = 'PersonID';
         $columns[] = 'authority';
+        $columns[] = 'language';
 
         $serch_condition = array();
+        if(!$login->isAuthAdmin()) {
+            $serch_condition[] = array("name" => "PersonID", "value" => $login->getPersonID());
+        }
 
         $lines_per_page = $num;
 
@@ -522,6 +627,31 @@ class Settings extends Entity {
 
         $selectData = $spiral->getSelectData();
 
+        //事業者は同じグループスラッグのデータも取得
+        if(!$login->isAuthAdmin()) {
+            $serch_condition = array();
+            $serch_condition[] = array("name" => "group", "value" => $login->getGroup());
+            $serch_condition[] = array("name" => "authority", "value" => 1, 'operator' => '!=');
+
+            $spiral->setSelectParam($columns, $serch_condition, null, $lines_per_page, $page, $sort);
+
+            $err_msg = $spiral->exec();
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+
+            $selectGroupData = $spiral->getSelectData();
+            $selectDataIds = array_column($selectData, 'PersonID');
+
+            foreach($selectGroupData as $data) {
+                if(!in_array($data['PersonID'], $selectDataIds)) {
+                    $selectData[] = $data;
+                }
+            }
+        }
+
         //DB値調整
         foreach($selectData as &$data) {
             $data['authority'] = Constant::$aryAuthority[$data['authority']];
@@ -534,7 +664,7 @@ class Settings extends Entity {
     /******************************
     事業者登録
     *******************************/
-    function update($data) {
+    function update($data, $login) {
         $time_stamp = date("Y/m/d H:i:s");
 
         //==============
@@ -579,11 +709,23 @@ class Settings extends Entity {
                 }
             } elseif ($column == 'mt_cancel_ttl' ||
                       $column == 'MtCancelRatio' ||
-                      $column == 'mt_cancel_text' ||
                       $column == 'mt_cancel_note') {
                 for($i = 0; $i < count($data[$column]); $i++) {
                     $update_columns[] = $column . ($i + 1);
                     $update_data[$column . ($i + 1)] = $data[$column][$i];
+                }
+                for($j = $i; $j < 10; $j++) {
+                    $update_columns[] = $column . ($j + 1);
+                    $update_data[$column . ($j + 1)] = '';
+                }
+            } elseif ($column == 'mt_cancel_text') {
+                for($i = 0; $i < count($data[$column]); $i++) {
+                    $update_columns[] = $column . ($i + 1);
+                    $update_data[$column . ($i + 1)] = $data[$column][$i];
+                }
+                for($j = $i; $j < 5; $j++) {
+                    $update_columns[] = $column . ($j + 1);
+                    $update_data[$column . ($j + 1)] = '';
                 }
             } elseif($column == 'file' ||
                      $column == 'file2' ||
@@ -595,6 +737,17 @@ class Settings extends Entity {
                     }
                     $pdf_file[$column] = str_replace(URL_UPL_DIR, UPL_DIR, $data[$column]);
                 }
+            } elseif($column == 'siteID' ||
+                     $column == 'shopID' ||
+                     $column == 'pass2' ||
+                     $column == 'APIurl' ||
+                     $column == 'language' ||
+                     $column == 'group') {
+                if($login->isAuthAdmin()) {
+                    $update_columns[] = $column;
+                    $update_data[$column] = $data[$column];
+                }
+
             } elseif($column == 'settlement') {
                 $update_columns[] = $column;
                 $update_data[$column] = implode(',', $data[$column]);

@@ -1217,7 +1217,6 @@ img {
   -ms-transform: rotate(-45deg);
   -webkit-transform: rotate(-45deg);
   transform: rotate(-45deg);
-  -webkit-transition: all .2s ease;
   transition: all .2s ease;
   top: 50%;
   right: 20px;
@@ -1236,7 +1235,6 @@ img {
   -ms-transform: rotate(135deg);
   -webkit-transform: rotate(135deg);
   transform: rotate(135deg);
-  -webkit-transition: all .2s ease;
   transition: all .2s ease;
   margin-top: -8px;
 }
@@ -1611,14 +1609,12 @@ img {
 }
 
 .order-table-section .course-select .label {
-  position: absolute;
   width: 100%;
   z-index: 1;
   font: 400 17px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.7rem/160% "Noto Sans Japanese", sans-serif;
   line-height: 35px;
   margin: 0;
-  border: 1px solid #ddd;
   box-sizing: border-box;
   color: #fff;
   background-color: #4191ad;
@@ -1628,6 +1624,12 @@ img {
   .order-table-section .course-select .label {
     font: 400 16px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
+    line-height: 30px;
+  }
+}
+
+@media screen and (max-width: 479px) {
+  .order-table-section .course-select .label {
     line-height: 30px;
   }
 }
@@ -1647,11 +1649,11 @@ img {
   width: 100%;
   font: 400 17px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.7rem/160% "Noto Sans Japanese", sans-serif;
+  margin-top: -35px;
   padding: 0 1em;
-  color: #fff;
+  color: #000;
   background-color: #fff;
-  line-height: 35px;
-  border: 1px solid #ddd;
+  height: 35px;
   border-radius: 0;
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -1665,7 +1667,6 @@ img {
   .order-table-section .course-select select {
     font: 400 16px/160% "Noto Sans Japanese", sans-serif;
     font: 400 1.6rem/160% "Noto Sans Japanese", sans-serif;
-    line-height: 30px;
   }
 }
 
@@ -1673,6 +1674,8 @@ img {
   .order-table-section .course-select select {
     padding: 0 .5em;
     background-position: right .5em center;
+    height: 30px;
+    margin-top: -30px;
   }
 }
 
@@ -1892,6 +1895,10 @@ img {
   background-image: url(../img/post/icon_ask.png);
 }
 
+.order-table-section.en .notes li {
+  display: block;
+}
+
 .recommend {
   background-color: #f0f0eb;
   margin-bottom: 50px;
@@ -1989,7 +1996,6 @@ img {
   text-decoration: none;
   font: 400 14px/160% "Noto Sans Japanese", sans-serif;
   font: 400 1.4rem/160% "Noto Sans Japanese", sans-serif;
-  -webkit-transition: all .2s ease;
   transition: all .2s ease;
   border-radius: 3px;
 }
@@ -2055,7 +2061,6 @@ img {
   -ms-transform: rotate(45deg);
   -webkit-transform: rotate(45deg);
   transform: rotate(45deg);
-  -webkit-transition: all .2s ease;
   transition: all .2s ease;
   top: 50%;
   right: -20px;

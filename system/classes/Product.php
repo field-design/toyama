@@ -3,125 +3,246 @@
 システム名： 
 　旅行商品予約システム
 クラス名：
-　商品管理
+　商品管理（MySQL）
 機能名：
-　商品管理
+　商品管理（MySQL）
 *******************************************/
 class Product extends Entity {
 
     private $log;
+    private $t_product_name = 't_product';
+    private $t_product_meta_name = 't_product_meta';
+    private $t_product_course_name = 't_product_course';
+    private $person_id = null;
 
-    function __construct() {
+    function __construct($login = null) {
+
+        if( !is_null($login) && !$login->isAuthAdmin() ) {
+            $this->person_id = $login->getPersonID();
+        }
 
         $this->log = new Log();
 
         $this->columns = array();
         $this->columnsDef = array();
+        $this->tableName = array();
 
-        $this->columns[] = 'ProductID';
+        $this->columns[] = 'regist_date';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'PersonID';
+        $this->columns[] = 'update_date';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'registDate';
+        $this->columns[] = 'product_id';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'lastupdate';
+        $this->columns[] = 'person_id';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'display_order';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
         $this->columns[] = 'title';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'SubTitle';
+        $this->columns[] = 'sub_title';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'ExplanatoryText';
+        $this->columns[] = 'description';
         $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'main_photo';
-        $this->columnsDef[] = array();
-
-        $this->columns[] = 'photo';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'CourseTitle';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'CourseDetail';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'CourseRink';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'StartDate';
+        $this->columns[] = 'price_title';
         $this->columnsDef[] = '';
-
-        $this->columns[] = 'EndDate';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'WhetExclusion';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'plan_included';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'minimumMember';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'minimumDeparts';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'largestMember';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'Operation';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'contractDead';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'locationname';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'Coordinate';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'importantPoints';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'Other';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'plan_type';
-        $this->columnsDef[] = 1;
-
-        $this->columns[] = 'plan_title';
-        $this->columnsDef[] = array(1);
-
-        $this->columns[] = 'plan_Fee';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'plan_Kind';
-        $this->columnsDef[] = array('');
-
-        $this->columns[] = 'ClosingOut_date';
-        $this->columnsDef[] = '';
-
-        $this->columns[] = 'ClosingOut_time';
-        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
 
         $this->columns[] = 'area';
-        $this->columnsDef[] = array();
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'Category';
-        $this->columnsDef[] = array();
+        $this->columns[] = 'category';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'mt_disp';
-        $this->columnsDef[] = 3;//下書き
+        $this->columns[] = 'publish_status';
+        $this->columnsDef[] = 3;
+        $this->tableName[] = $this->t_product_name;
 
-        $this->columns[] = 'date';
+        $this->columns[] = 'publish_date';
         $this->columnsDef[] = array(date('Y/m/d'), date('H:i'));
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'period_from';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'period_to';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'period_note';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'period_exclusion';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'min_member';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'min_depart';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'max_order';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'operator';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'conductor_flg';
+        $this->columnsDef[] = 0;
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'start_time';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'tour_time';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'order_deadline';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'disp_price_page';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'lang';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'group_slug';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        //商品管理メタ情報
+        $this->columns[] = 'main_photo';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        /*
+        $this->columns[] = 'price_type';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'price_value';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'price_condition';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+        */
+
+        $this->columns[] = 'price_include';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'meeting_place';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'meeting_place_address';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'coordinate';
+        $this->columnsDef[] = array(ADMIN_INIT_LAT . ',' . ADMIN_INIT_LNG);
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'notes';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'others';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'detail_photo';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'detail_title';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'detail_description';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'detail_link';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'cancel_charge_text';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'cancel_charge_rate';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'cancel_notes';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'disp_course';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'disp_price_title';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'disp_price_type';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'disp_price_value';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'disp_price_condition';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_meta_name;
+
+        $this->columns[] = 'question';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_meta_name;
+
+        //商品コース
+        $this->columns[] = 'course_id';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_course_name;
+
+        $this->columns[] = 'course_name';
+        $this->columnsDef[] = array('');
+        $this->tableName[] = $this->t_product_course_name;
+
     }
 
     /******************************
@@ -131,131 +252,138 @@ class Product extends Entity {
         $err_msg = array();
 
         //公開日
-        if( empty($data['date'][0]) || empty($data['date'][1]) ) {
-            $err_msg['date'] = MESSAGE_ERROR_REQUIRE;
-            $err_msg['nextsection'] = 7;
+        $err_section = 10;
+        if( empty($data['publish_date'][0]) || empty($data['publish_date'][1]) ) {
+            $err_msg['publish_date'] = MESSAGE_ERROR_REQUIRE;
+            $err_msg['nextsection'] = $err_section;
         }
-        if( !array_key_exists('date', $err_msg) ) {
-            $date_ymdhis = $data['date'][0] . ' ' . $data['date'][1];
+        if( !array_key_exists('publish_date', $err_msg) ) {
+            $date_ymdhis = $data['publish_date'][0] . ' ' . $data['publish_date'][1];
             if(!strptime($date_ymdhis, '%Y/%m/%d %H:%M')) {
-                $err_msg['date'] = MESSAGE_ERROR_DATE;
-                $err_msg['nextsection'] = 7;
+                $err_msg['publish_date'] = MESSAGE_ERROR_DATE;
+                $err_msg['nextsection'] = $err_section;
             }
         }
-        if( !array_key_exists('date', $err_msg) ) {
-            $date_ymd = explode('/', $data['date'][0]);
-            $date_hi = explode(':', $data['date'][1]);
+        if( !array_key_exists('publish_date', $err_msg) ) {
+            $date_ymd = explode('/', $data['publish_date'][0]);
+            $date_hi = explode(':', $data['publish_date'][1]);
             if(!checkdate($date_ymd[1], $date_ymd[2], $date_ymd[0])) {
-                $err_msg['date'] = MESSAGE_ERROR_DATE;
-                $err_msg['nextsection'] = 7;
+                $err_msg['publish_date'] = MESSAGE_ERROR_DATE;
+                $err_msg['nextsection'] = $err_section;
             }
         }
 
-
-        //集合場所
-        if($nextsection == 0 || $nextsection == 6) {
-            if( empty($data['locationname']) ) {
-                $err_msg['locationname'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 5;
-            }
-        }
-
-        //プラン情報
-        if($nextsection == 0 || $nextsection == 5) {
-            if( empty($data['StartDate']) ) {
-                $err_msg['StartDate'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-            if( empty($data['EndDate']) ) {
-                $err_msg['EndDate'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-            if( empty($data['minimumMember']) ) {
-                $err_msg['minimumMember'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-            if( empty($data['minimumDeparts']) ) {
-                $err_msg['minimumDeparts'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-            if( empty($data['largestMember']) ) {
-                $err_msg['largestMember'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-            //if( empty($data['Operation']) ) {
-            //    $err_msg['Operation'] = MESSAGE_ERROR_REQUIRE;
-            //    $err_msg['nextsection'] = 4;
-            //}
-            if( empty($data['contractDead']) ) {
-                $err_msg['contractDead'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 4;
-            }
-        }
-
-        //コースの内容
-        if($nextsection == 0 || $nextsection == 4) {
-            for($i = 0; $i < count($data['CourseTitle']); $i++) {
-                if( empty($data['CourseTitle'][$i]) ) {
-                    $err_msg['CourseTitle' . $i] = MESSAGE_ERROR_REQUIRE;
-                    $err_msg['nextsection'] = 3;
+        //プラン内容
+        $err_section = 7;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
+            for($i = 0; $i < count($data['detail_title']); $i++) {
+                if( empty($data['detail_title'][$i]) ) {
+                    $err_msg['detail_title' . $i] = MESSAGE_ERROR_REQUIRE;
+                    $err_msg['nextsection'] = $err_section;
                 } else {
-                    $err_msg['CourseTitle' . $i] = '';
+                    $err_msg['detail_title' . $i] = '';
                 }
             }
         }
-    
-        //カレンダー
-        if($nextsection == 0 || $nextsection == 3) {
-            if( $data['ClosingOut_date'] == '' ) {
-                $err_msg['ClosingOut_date'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 2;
+
+        //お申込み（コース）
+        $err_section = 6;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
+            if(count($data['course_name']) == 0) {
+                $err_msg['course_name'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            } else {
+                if( empty($data['course_name'][0]) ) {
+                    $err_msg['course_name'] = MESSAGE_ERROR_REQUIRE;
+                    $err_msg['nextsection'] = $err_section;
+                }
             }
         }
 
-        //料金
-        if($nextsection == 0 || $nextsection == 2) {
-            if( empty( implode('', $data['plan_Fee'])) ) {
-                $err_msg['plan_Fee'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 1;
+        //集合場所
+        $err_section = 3;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
+            for($i = 0; $i < count($data['meeting_place']); $i++) {
+                if( empty($data['meeting_place'][$i]) ) {
+                    $err_msg['meeting_place' . $i] = MESSAGE_ERROR_REQUIRE;
+                    $err_msg['nextsection'] = $err_section;
+                } else {
+                    $err_msg['meeting_place' . $i] = '';
+                }
+            }
+        }
+
+        //プラン詳細
+        $err_section = 2;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
+            if( $data['period_from'] == '' ) {
+                $err_msg['period_from'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['period_to'] == '' ) {
+                $err_msg['period_to'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['period_note'] == '' ) {
+                $err_msg['period_note'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['min_member'] == '' ) {
+                $err_msg['min_member'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['min_depart'] == '' ) {
+                $err_msg['min_depart'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['max_order'] == '' ) {
+                $err_msg['max_order'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+            if( $data['order_deadline'] == '' ) {
+                $err_msg['order_deadline'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }
+        }
+
+        //代金
+        $err_section = 1;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
+
+            for($i = 0; $i < count($data['disp_course']); $i++) {
+                if( empty($data['disp_price_title'][$i]) ) {
+                    $err_msg['disp_price_title' . $i] = MESSAGE_ERROR_REQUIRE;
+                    $err_msg['nextsection'] = $err_section;
+                } else {
+                    $err_msg['disp_price_title' . $i] = '';                    
+                }
+
+                for($j = 0; $j < count($data['disp_price_type'][$i]); $j++) {
+                    if( empty($data['disp_price_value'][$i][$j]) ) {
+                        $err_msg['disp_price_value' . $i . $j] = MESSAGE_ERROR_REQUIRE;
+                        $err_msg['nextsection'] = $err_section;
+                    } else {
+                        $err_msg['disp_price_value' . $i . $j] = '';
+                    }
+                }
             }
         }
 
         //基本情報
-        if($nextsection == 0 || $nextsection == 1) {
+        $err_section = 0;
+        if($nextsection == 0 || $nextsection == $err_section + 1) {
             if( empty($data['title']) ) {
                 $err_msg['title'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 0;
+                $err_msg['nextsection'] = $err_section;
             }
-            if( empty($data['ExplanatoryText']) ) {
-                $err_msg['ExplanatoryText'] = MESSAGE_ERROR_REQUIRE;
-                $err_msg['nextsection'] = 0;
+            if( empty($data['description']) ) {
+                $err_msg['description'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
             }
             if( empty( implode('', $data['main_photo'])) ) {
                 $err_msg['main_photo'] = MESSAGE_ERROR_REQUIRE_IMAGE;
-                $err_msg['nextsection'] = 0;
+                $err_msg['nextsection'] = $err_section;
             }
-        }
-
-        return $err_msg;
-    }
-
-    /******************************
-    手じまい日チェック
-    *******************************/
-    function checkClosingOut($data, $order_date) {
-        $err_msg = '';
-
-        $now = time();
-        $now_plus_closingout = strtotime('+' . intval($data['ClosingOut_date']) . ' day', $now);
-        $closingout_time = '0000';
-        if( isset($data['ClosingOut_time']) && $data['ClosingOut_time'] != '' ) {
-            $closingout_time = str_replace(':', '', $data['ClosingOut_time']);
-        }
-
-        if( date('Ymd', $order_date) < date('Ymd', $now_plus_closingout) ) {
-            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
-        } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_closingout) && date('Hi', $now) >= $closingout_time ) {
-            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
         }
 
         return $err_msg;
@@ -293,175 +421,360 @@ class Product extends Entity {
     }
 
     /******************************
-    商品取得
+    同商品言語別データ取得
     *******************************/
-    function getProduct($productID, $mt_disp = null) {
+    function getLangProductID($product_id, $lang = null) {
+    
+        $sql = '';
+        $sql .= 'select ifnull(group_slug, "") group_slug ';
+        $sql .= 'from   ' . $this->t_product_name . ' ';
+        $sql .= 'where  product_id = :product_id ';
 
-        //=============
-        //商品情報取得
-        //=============
-        $spiral = new SpiralApi('database/select', 'ProductmanageDB');
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':product_id', $product_id);
+    
+        $err_msg = $db->execute();
+    
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
 
-        $multi_value_columns = array('main_photo' => 5, 
-                                     'photo' => 10,
-                                     'CourseTitle' => 10,
-                                     'CourseDetail' => 10,
-                                     'CourseRink' => 10,
-                                     'plan_included' => 10,
-                                     'importantPoints' => 5,
-                                     'Other' => 5,
-                                     'plan_title' => 5,
-                                     'plan_Fee' => 5,
-                                     'plan_Kind' => 5);
+        $selectData = $db->getResponse();
 
-        $select_columns = array();
-        foreach($this->columns as $column) {
+        if( count($selectData) == 0 ) {
+            return '';
+        }
+        if( $selectData[0]['group_slug'] == '' ) {
+            return $product_id;
+        }
 
-            if(array_key_exists($column, $multi_value_columns)) {
-                //複数値列を分解 ・・・ main_photo --> main_photo1, main_photo2, ・・・
-                $field_num = $multi_value_columns[$column];
-                for($i = 1; $i <=$field_num; $i++) {
-                    $select_columns[] = $column . $i;
-                }
+        $sql = '';
+        $sql .= 'select product_id ';
+        $sql .= 'from   ' . $this->t_product_name . ' ';
+        $sql .= 'where  group_slug = :group_slug ';
+
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            global $global_lang;
+            if(!is_null($lang)) {
+                $sql .= 'and (lang = ' . htmlspecialchars($lang) . ' or lang is null) ';                
+            } else if($global_lang == 2) {
+                $sql .= 'and lang = 2 ';
+            } else if($global_lang == 3) {
+                $sql .= 'and lang = 3 ';
             } else {
-                $select_columns[] = $column;
+                $sql .= 'and (lang = 1 or lang is null) ';
             }
-
+        } else {
+            if(!is_null($lang)) {
+                $sql .= 'and (lang = ' . htmlspecialchars($lang) . ' or lang is null) ';                
+            }
         }
 
-        $serch_condition = array();
-        $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
-        if( !is_null($mt_disp) ) {
-            $serch_condition[] = array('name' => 'mt_disp', 'value' => $mt_disp);
-            $serch_condition[] = array('name' => 'date', 'value' => date('Y/m/d H:i'), 'operator' => '<=');
-        }
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':group_slug', $selectData[0]['group_slug']);
 
-        $spiral->setSelectParam($select_columns, $serch_condition);
-
-        $err_msg = $spiral->exec();
+        $err_msg = $db->execute();
 
         if( !empty($err_msg) ) {
             //エラー処理
             return $err_msg;
         }
 
-        $selectData = $spiral->getSelectData();
+        $selectData = $db->getResponse();
+    
+        if( count($selectData) == 0 ) {
+            return '';
+        }
+
+        return $selectData[0]['product_id'];
+    }
+
+    /******************************
+    同商品別言語データ取得
+    *******************************/
+    function getLangProduct($product_id, $new_lang = null) {
+        $base_product_id = $this->getLangProductID($product_id, 1);
+        if(!is_null($new_lang)) {
+            $new_product_id = $this->getLangProductID($product_id, $new_lang);
+        } else {
+            $new_product_id = $this->getLangProductID($product_id);
+        }
+
+        $base_data = $this->getProduct($base_product_id, 1);
+        $new_data = $this->getProduct($new_product_id, 1);
+
+        //変更不要個所の設定
+        $new_data['product_id'] = $base_data['product_id'];
+        //$new_data['main_photo'] = $base_data['main_photo'];
+        //$new_data['detail_photo'] = $base_data['detail_photo'];
+        $new_data['area_id'] = $base_data['area_id'];
+        $new_data['area_text'] = $base_data['area_text'];
+        $new_data['category_id'] = $base_data['category_id'];
+        $new_data['category_text'] = $base_data['category_text'];
+        $new_data['course_id'] = $base_data['course_id'];
+
+        //日本語データ
+        $new_data['title_jp'] = $base_data['title'];
+        $new_data['meeting_place_jp'] = $base_data['meeting_place'];
+        $new_data['question_jp'] = $base_data['question'];
+        
+
+        return $new_data;
+    }
+
+    /******************************
+    商品取得
+    *******************************/
+    function getProduct($product_id, $publish_status = null) {
+
+        //=============
+        //商品管理取得
+        //=============
+        $sql = '';
+        $sql .= 'select * ';
+        $sql .= 'from   ' . $this->t_product_name . ' ';
+        $sql .= 'where publish_status != :publish_status_delete ';
+        $sql .= 'and   product_id = :product_id ';
+
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   person_id = :person_id ';
+        }
+
+        if( !is_null($publish_status) ) {
+            $sql .= 'and publish_status = :publish_status ';
+            $sql .= 'and publish_date <= now() ';
+        }
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':publish_status_delete', '0');
+        $db->setBindValueSTR(':product_id', $product_id);
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+        if( !is_null($publish_status) ) {
+            $db->setBindValueSTR(':publish_status', $publish_status);
+        }
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $db->getResponse();
 
         if( count($selectData) == 0 ) {
             return MESSAGE_ERROR_DB_NO_DATA;
         }
 
-        $resultData = array();
-
-        foreach( $multi_value_columns as $key => $value ) {
-            $resultData[$key] = array();
-        }
-
-        foreach( $selectData[0] as $column => $value) {
-
-            $new_column = '';
-
-            //複数値列をまとめる ・・・ main_photo1, main_photo2,  --> main_photo
-            foreach( $multi_value_columns as $multi_column => $field_num ) {
-                if(strpos($column, $multi_column) !== false) {
-                    $new_column = $multi_column;
-                    break;
-                }
-            }
-
-            if($new_column != '') {
-                if( ($new_column == 'main_photo' || $new_column == 'photo') && $value != '') {
-
-                    $resultData[$new_column][] = URL_UPL_DIR . $productID . '/' . $value;
-
-                } elseif( $new_column == 'plan_title' || $new_column == 'plan_Kind' ) {
-
-                    $resultData[$new_column][] = $value;
-                    if($value != '' && $new_column == 'plan_title') {
-                        $resultData[$new_column . '_text'][] = Constant::$aryPlanTitle[$value];
-                    } elseif($value != '' && $new_column == 'plan_Kind') {
-                        $resultData[$new_column . '_text'][] = Constant::$aryPlanKind[$value];
-                    } else {
-                        $resultData[$new_column . '_text'][] = '';
-                    }
-
-                } else {
-                    $resultData[$new_column][] = $value;
-                }
-            } else {
-                if( $column == 'area' || $column == 'Category') {
-                    $resultData[$column] = explode(',', $value);
-                } elseif( $column == 'mt_disp' ) {
-                    $resultData[$column] = $value;
-                    if($value != '') {
-                        $resultData[$column . '_text'] = Constant::$aryMtDisp[$value];
-                    }
-                } elseif( $column == 'ClosingOut_time' ) {
-                    if($value != '') {
-                        $date = DateTime::createFromFormat('H時i分', $value);
-                        $resultData[$column] = $date->format('H:i');
-                    }
-                } elseif( $column == 'date' ) {
-                    $resultData[$column] = array(date('Y/m/d'), date('H:i'));
-                    if($value != '') {
-                        $date = DateTime::createFromFormat('Y年m月d日 H時i分', $value);
-                        $resultData[$column][0] = $date->format('Y/m/d');
-                        $resultData[$column][1] = $date->format('H:i');
-                    }
-
-                } else {
-                    $resultData[$column] = $value;
-                }
-            }
-        }
-
         //=============
-        //在庫情報取得
+        //商品管理メタ情報取得
         //=============
-        unset($spiral);
-        $spiral = new SpiralApi('database/select', 'stockDB');
+        $sql = '';
+        $sql .= 'select * ';
+        $sql .= 'from   ' . $this->t_product_meta_name . ' ';
+        $sql .= 'where product_id = :product_id ';
+        $sql .= 'order by meta_type, meta_type_no ';
 
-        $columns = array();
-        $columns[] = 'productDate';
-        for($i = 1; $i <= 31; $i++) {
-            $columns[] = 'stock' . $i;
-        }
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':product_id', $product_id);
 
-        $serch_condition = array();
-        $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
-        $serch_condition[] = array('name' => 'productDate', 'value' => date('Y/m'), 'operator' => '>=');
-
-        $sort = array();
-        $sort[] = array('name' => 'productDate', 'order' => 'asc');
-
-        $spiral->setSelectParam($columns, $serch_condition, null, 10, 1, $sort);
-
-        $err_msg = $spiral->exec();
+        $err_msg = $db->execute();
 
         if( !empty($err_msg) ) {
             //エラー処理
             return $err_msg;
         }
 
-        $selectData = $spiral->getSelectData();
+        $selectMetaData = $db->getResponse();
 
-        $resultData['stock_calen_ym'] = array();
-        foreach( $selectData as $data) {
-            $productDate = DateTime::createFromFormat('Y年m月', $data['productDate']);
-            $ym = $productDate->format('Ym');
-            $resultData['stock_calen_ym'][] = $ym;
-            $resultData['stock_calen_data_' . $ym] = array();
-            for($i = 1; $i <= 31; $i++) {
-                $resultData['stock_calen_data_' . $ym][] = $data['stock' . $i];
+        //=============
+        //商品コース取得
+        //=============
+        $sql = '';
+        $sql .= 'select * ';
+        $sql .= 'from   ' . $this->t_product_course_name . ' ';
+        $sql .= 'where product_id = :product_id ';
+        $sql .= 'order by course_order ';
+
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':product_id', $product_id);
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectCourseData = $db->getResponse();
+
+        //=============
+        //表示調整
+        //=============
+        $resultData = $selectData[0];
+
+        //商品情報
+        $period_ymd = date(Constant::$formatYMD, strtotime($resultData['period_from']));
+        
+        $period_w = Constant::$aryWeekDay[date('w', strtotime($resultData['period_from']))];
+        $resultData['period_from_text'] = $period_ymd . '(' . $period_w . ')';
+
+        $period_ymd = date(Constant::$formatYMD, strtotime($resultData['period_to']));
+        $period_w = Constant::$aryWeekDay[date('w', strtotime($resultData['period_to']))];
+        $resultData['period_to_text'] = $period_ymd . '(' . $period_w . ')';
+
+        $area_data = unserialize($resultData['area']);
+        $resultData['area'] = array();
+        $resultData['area_id'] = array();
+        $resultData['area_text'] = array();
+        
+        foreach($area_data as $area => $area_detail) {
+            $resultData['area'][] = $area;
+            $resultData['area' . $area] = $area_detail;
+
+            if($area != '') {
+                $area_detail_map = Constant::$aryAreaDetail[$area];
+
+                foreach($area_detail as $value) {
+                    if($value != '') {
+                        $resultData['area_id'][] = $value;
+                        $resultData['area_text'][] = $area_detail_map[$value];
+                    }
+                }
             }
         }
-        if( count($resultData['stock_calen_ym']) == 0) {
-            $ym = date('Ym');
-            $resultData['stock_calen_ym'][] = $ym;
-            $resultData['stock_calen_data_' . $ym] = array();
+
+        $resultData['category'] = unserialize($resultData['category']);
+        $resultData['category_id'] = array();
+        $resultData['category_text'] = array();
+        foreach($resultData['category'] as $category) {
+            if($category != '') {
+                $resultData['category_id'][] = $category;
+                $resultData['category_text'][] = Constant::$aryCategory[$category];
+            }
+        }
+
+        $publish_date_time = strtotime($resultData['publish_date']);
+        $resultData['publish_date'] = array(date('Y/m/d', $publish_date_time), date('H:i', $publish_date_time));
+        $resultData['publish_status_text'] = Constant::$aryMtDisp[$resultData['publish_status']];
+
+        //商品メタ情報
+        foreach($selectMetaData as $meta_data) {
+            $meta_type = $meta_data['meta_type'];
+            $meta_value = $meta_data['meta_value'];
+
+            if(!array_key_exists($meta_type, $resultData)) {
+                $resultData[$meta_type] = array();
+            }
+
+            if($meta_type == 'main_photo' || $meta_type == 'detail_photo') {
+                //メイン画像・プラン内容画像
+                if(!is_null( $meta_value) && $meta_value != '') {
+                    $resultData[$meta_type][] = URL_UPL_DIR . $product_id . '/' . $meta_value;
+                } else {
+                    $resultData[$meta_type][] = '';
+                }
+
+            } elseif($meta_type == 'cancel_charge_rate') {
+                //取消料率
+                $resultData[$meta_type][] = $meta_value;
+                if($meta_value != '') {
+                    $resultData[$meta_type . '_text'][] = Constant::$aryCancelChargeRate[$meta_value];
+                }
+            } elseif($meta_type == 'disp_price_type'
+                     || $meta_type == 'disp_price_value'
+                     || $meta_type == 'disp_price_condition') {
+                $resultData[$meta_type][] = unserialize($meta_value);
+
+            } else {
+                $resultData[$meta_type][] = $meta_value;
+            }
+        }
+        //料金区分テキスト
+        if(array_key_exists('disp_price_type', $resultData)) {
+            for($i = 0; $i < count($resultData['disp_price_type']); $i++) {
+                $resultData['disp_price_type_text'][] = array();
+                foreach( $resultData['disp_price_type'][$i] as $value) {
+                    if($value != '') {
+                        $resultData['disp_price_type_text'][$i][] = Constant::$aryPriceType[$value];
+                    } else {
+                        $resultData['disp_price_type_text'][$i][] = '';
+                    }
+                }
+            }
+        }
+
+        //商品コース情報
+        foreach($selectCourseData as $course_data) {
+            if(!array_key_exists('course_id', $resultData)) {
+                $resultData['course_id'] = array();
+            }
+            if(!array_key_exists('course_name', $resultData)) {
+                $resultData['course_name'] = array();
+            }
+            $resultData['course_id'][] = $course_data['course_id'];
+            $resultData['course_name'][] = $course_data['course_name'];
         }
 
         return $resultData;
+    }
+
+    /******************************
+    商品件数取得
+    *******************************/
+    function getProductTotalCount($publish_status = null, $area = null, $category = null) {
+        global $global_lang;
+
+        $sql = '';
+        $sql .= 'select    count(product.product_id) count ';
+        $sql .= 'from      ' . $this->t_product_name . ' product ';
+
+        //英語
+        $sql .= 'left join ( ';
+        $sql .= '          select   * ';
+        $sql .= '          from     t_product ';
+        $sql .= '          where    lang = 2 ';
+        $sql .= ') product_en ';
+        $sql .= '       on product.group_slug = product_en.group_slug ';
+
+        $sql .= 'where     product.publish_status != :publish_status_delete ';
+        if( !is_null($publish_status) ) {
+            $sql .= 'and   product.publish_status = :publish_status ';
+        }
+
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            $sql .= 'and (';
+            $sql .= '  product.lang = 1 ';
+            $sql .= '  or product.lang is null ';
+            $sql .= ') ';
+
+            if($global_lang == 2) {
+                $sql .= ' and product_en.product_id is not null ';
+            }
+        }
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':publish_status_delete', '0');
+        if( !is_null($publish_status) ) {
+            $db->setBindValueSTR(':publish_status', $publish_status);
+        }
+
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $db->getResponse();
+
+        return intval($selectData[0]['count']);
     }
 
     /******************************
@@ -469,246 +782,237 @@ class Product extends Entity {
     $num：
       デフォルト５件
     *******************************/
-    function getProductListView($num = 5, $page = 1, $mt_disp = null, $area = null, $category = null) {
+    function getProductListView($num = 5, $page = 1, $publish_status = null, $area = null, $category = null, $page_id = null) {
 
-        $spiral = new SpiralApi('database/select', 'ProductmanageDB');
+        //=============
+        //商品管理取得
+        //=============
+        global $global_lang;
 
-        $columns = array();
-        $columns[] = 'main_photo1';
-        $columns[] = 'ProductID';
-        $columns[] = 'SubTitle';
-        $columns[] = 'title';
-        $columns[] = 'plan_title1';
-        $columns[] = 'plan_title2';
-        $columns[] = 'plan_title3';
-        $columns[] = 'plan_title4';
-        $columns[] = 'plan_title5';
-        $columns[] = 'plan_Fee1';
-        $columns[] = 'plan_Fee2';
-        $columns[] = 'plan_Fee3';
-        $columns[] = 'plan_Fee4';
-        $columns[] = 'plan_Fee5';
-        $columns[] = 'plan_Kind1';
-        $columns[] = 'plan_Kind2';
-        $columns[] = 'plan_Kind3';
-        $columns[] = 'plan_Kind4';
-        $columns[] = 'plan_Kind5';
-        $columns[] = 'area';
-        $columns[] = 'Category';
-        $columns[] = 'registDate';
-        $columns[] = 'mt_disp';
+        $product_table = 'product';
+        $product_price_title_table = 'meta_price_title';
 
-        $serch_condition = array();
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            if($global_lang == 2) {
+                $product_table = 'product_en';
+                $product_price_title_table = 'meta_price_title_en';
+            }
+        }
 
-        if( !is_null($mt_disp) ) {
-            $serch_condition[] = array('name' => 'mt_disp', 'value' => $mt_disp);
-            $serch_condition[] = array('name' => 'date', 'value' => date('Y/m/d H:i'), 'operator' => '<=');
+        $sql = '';
+        $sql .= 'select    product.regist_date ';
+        $sql .= '     ,    product.product_id ';
+        $sql .= '     ,    product_en.product_id product_id_en ';
+        $sql .= '     ,    case when ' . $product_table . '.title is null then product.title ';
+        $sql .= '               else ' . $product_table . '.title ';
+        $sql .= '          end title ';
+        $sql .= '     ,    case when ' . $product_table . '.sub_title is null then product.sub_title ';
+        $sql .= '               else ' . $product_table . '.sub_title ';
+        $sql .= '          end sub_title ';
+        $sql .= '     ,    product.area ';
+        $sql .= '     ,    product.category ';
+        $sql .= '     ,    product.publish_status ';
+        $sql .= '     ,    product.lang ';
+        $sql .= '     ,    case when ' . $product_price_title_table . '.price_title is null then meta_price_title.price_title ';
+        $sql .= '               else ' . $product_price_title_table . '.price_title ';
+        $sql .= '          end price_title ';
+        $sql .= '     ,    page_meta.meta_type_no ';
+        $sql .= '     ,    meta_price_value.price_value_min ';
+        $sql .= '     ,    meta_price_value.price_value_max ';
+        $sql .= '     ,    access.access_count ';
+        $sql .= 'from      ' . $this->t_product_name . ' product ';
+
+        $sql .= 'left join ( ';
+        $sql .= '          select   t_product_course.product_id ';
+        $sql .= '               ,   GROUP_CONCAT(t_product_course_meta.meta_value order by t_product_course_meta.course_id) price_title ';
+        $sql .= '          from     t_product_course ';
+        $sql .= '          left join t_product_course_meta ';
+        $sql .= '          on        t_product_course.course_id = t_product_course_meta.course_id ';
+        $sql .= '          and       t_product_course_meta.meta_type = "price_title" ';
+        $sql .= '          group by t_product_course.product_id ';
+        $sql .= ') meta_price_title ';
+        $sql .= '       on product.product_id = meta_price_title.product_id ';
+
+        $sql .= 'left join ( ';
+        $sql .= '          select   t_product_course.product_id ';
+        $sql .= '               ,   min(cast(t_product_course_meta.meta_value as SIGNED)) price_value_min ';
+        $sql .= '               ,   max(cast(t_product_course_meta.meta_value as SIGNED)) price_value_max ';
+        $sql .= '          from     t_product_course ';
+        $sql .= '          left join t_product_course_meta ';
+        $sql .= '          on        t_product_course.course_id = t_product_course_meta.course_id ';
+        $sql .= '          and       t_product_course_meta.meta_type = "price_value" ';
+        $sql .= '          group by t_product_course.product_id ';
+        $sql .= ') meta_price_value ';
+        $sql .= '       on product.product_id = meta_price_value.product_id ';
+
+        $sql .= 'left join ( ';
+        $sql .= '          select   meta_value ';
+        $sql .= '               ,   meta_type_no ';
+        $sql .= '          from     t_page_meta ';
+        $sql .= '          where    page_id = :page_id ';
+        $sql .= '          and      meta_type = "product_order" ';
+        $sql .= ') page_meta ';
+        $sql .= '       on product.product_id = page_meta.meta_value ';
+
+        $sql .= 'left join ( ';
+        $sql .= '          select   product_id ';
+        $sql .= '               ,   count(product_id) access_count ';
+        $sql .= '          from     t_product_access ';
+        $sql .= '          group by product_id ';
+        $sql .= ') access ';
+        $sql .= '       on product.product_id = access.product_id ';
+
+        //英語
+        $sql .= 'left join ( ';
+        $sql .= '          select   * ';
+        $sql .= '          from     t_product ';
+        $sql .= '          where    lang = 2 ';
+        $sql .= ') product_en ';
+        $sql .= '       on product.group_slug = product_en.group_slug ';
+
+        $sql .= 'left join ( ';
+        $sql .= '          select   t_product.product_id ';
+        $sql .= '               ,   t_product.group_slug ';
+        $sql .= '               ,   GROUP_CONCAT(t_product_meta.meta_value order by t_product_meta.product_id) price_title ';
+        $sql .= '          from     t_product ';
+        $sql .= '          left join t_product_meta ';
+        $sql .= '          on        t_product.product_id = t_product_meta.product_id ';
+        $sql .= '          and       t_product_meta.meta_type = "disp_price_title" ';
+        $sql .= '          where     t_product.lang = 2 ';
+        $sql .= '          group by t_product.product_id, t_product.group_slug ';
+        $sql .= ') meta_price_title_en ';
+        $sql .= '       on product.group_slug = meta_price_title_en.group_slug ';
+
+
+        $sql .= 'where     product.publish_status != :publish_status_delete ';
+
+        if( !is_null($this->person_id) ) {
+            $sql .= 'and   product.person_id = :person_id ';
+        }
+
+        if( !is_null($publish_status) ) {
+            $sql .= 'and   product.publish_status = :publish_status ';
+            $sql .= 'and   product.publish_date <= now() ';
         }
         if( !is_null($area) ) {
-            $serch_condition[] = array('name' => 'area', 'value' => '%' . $area . '%', 'operator' => 'like');
+            $sql .= 'and   product.area like "%' . $area . '%" ';
         }
         if( !is_null($category) ) {
-            $serch_condition[] = array('name' => 'Category', 'value' => '%' . $category . '%', 'operator' => 'like');
+            $sql .= 'and   product.category like "%' . $category . '%" ';
         }
 
-        $lines_per_page = $num;
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            $sql .= 'and (';
+            $sql .= '  product.lang = 1 ';
+            $sql .= '  or product.lang is null ';
+            $sql .= ') ';
 
-        $sort = array();
-        $sort[] = array('name' => 'author', 'order' => 'asc');
-        $sort[] = array('name' => 'registDate', 'order' => 'desc');
+            if($global_lang == 2) {
+                $sql .= ' and product_en.product_id is not null ';
+            }
+        }
 
-        $spiral->setSelectParam($columns, $serch_condition, null, $lines_per_page, $page, $sort);
+        $sql .= 'order by  page_meta.meta_type_no is null asc ';
+        $sql .= '     ,    page_meta.meta_type_no ';
+        if(!is_null($page_id)) {
+            $sql .= ' ,    access_count desc ';
+        }
+        $sql .= '     ,    product.regist_date desc ';
 
-        $err_msg = $spiral->exec();
+        $sql .= 'limit     ' . $num * ($page - 1) . ', ' . $num;
+
+        $db = new DB();
+        $db->setPrepare($sql);
+        $db->setBindValueSTR(':publish_status_delete', '0');
+        if( !is_null($this->person_id) ) {
+            $db->setBindValueSTR(':person_id', $this->person_id);
+        }
+        if( !is_null($publish_status) ) {
+            $db->setBindValueSTR(':publish_status', $publish_status);
+        }
+        $db->setBindValueINT(':page_id', $page_id);
+
+        $err_msg = $db->execute();
 
         if( !empty($err_msg) ) {
             //エラー処理
+            $log = new Log();
+            $log->setErrorLog($err_msg);
             return $err_msg;
         }
 
-        $selectData = $spiral->getSelectData();
+        $selectData = $db->getResponse();
 
-        //DB値調整
+        //表示調整
         foreach($selectData as &$data) {
+            $data_id = $data['product_id'];
 
-            if( $data['main_photo1'] != '') {
-
-                $main_photo_thumb = UPL_DIR . $data['ProductID'] . '/thumb_' . $data['main_photo1'];
-
-                if (!file_exists($main_photo_thumb)) {
-                    $data['main_photo1'] = URL_UPL_DIR . $data['ProductID'] . '/' . $data['main_photo1'];
-                } else {
-                    $data['main_photo1'] = URL_UPL_DIR . $data['ProductID'] . '/thumb_' . $data['main_photo1'];
+            if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+                if($global_lang == 2 && isset($data['product_id_en']) && $data['product_id_en'] != '') {
+                    $data_id = $data['product_id_en'];
                 }
             }
 
-            if( $data['area'] != '' ) {
-                $areas = explode(',', $data['area']);
-                foreach( $areas as &$area ) {
-                    $area = Constant::$aryArea[$area];
-                }
-                $data['area'] = $areas;
+            $main_photo_thumb = UPL_DIR . $data_id . '/thumb_' . PRODUCT_MAIN_PHOTO1_NAME;
+
+            if (!file_exists($main_photo_thumb)) {
+                $data['main_photo1'] = URL_UPL_DIR . $data_id . '/' . PRODUCT_MAIN_PHOTO1_NAME;
             } else {
-                $data['area'] = array();
+                $data['main_photo1'] = URL_UPL_DIR . $data_id . '/thumb_' . PRODUCT_MAIN_PHOTO1_NAME;
             }
 
-            if( $data['Category'] != '' ) {
-                $categories = explode(',', $data['Category']);
-                foreach( $categories as &$category ) {
-                    $category = Constant::$aryCategory[$category];
-                }
-                $data['Category'] = $categories;
-            } else {
-                $data['Category'] = array();
-            }
+            $data['area'] = unserialize($data['area']);
+            $data['area_text'] = array();
+            foreach($data['area'] as $areas => $area_details) {
+                if($areas != '') {
+                    $area_detail_map = Constant::$aryAreaDetail[$areas];
 
-            for($i = 1; $i <= 5; $i++) {
-                if( $data['plan_title' . $i] != '' ) {
-                    $data['plan_title' . $i] = Constant::$aryPlanTitle[$data['plan_title' . $i]];
-                }
-                if( $data['plan_Kind' . $i] != '' ) {
-                    $data['plan_Kind' . $i] = Constant::$aryPlanKind[$data['plan_Kind' . $i]];
+                    foreach($area_details as $value) {
+                        if($value != '') {
+                            $data['area_text'][] = $area_detail_map[$value];
+                        }
+                    }
                 }
             }
 
-            $oderDate = DateTime::createFromFormat('Y年m月d日 H時i分s秒', $data['registDate']);
-            $data['registDate'] = $oderDate->format('Y/m/d H:i:s');
+            $data['category'] = unserialize($data['category']);
+            $data['category_text'] = array();
+            foreach($data['category'] as $category) {
+                if($category != '') {
+                    $data['category_text'][] = Constant::$aryCategory[$category];
+                }
+            }
 
+            $data['regist_date'] = date('Y/m/d H:i', strtotime($data['regist_date']));
+
+            $data['price_title'] = explode(',', $data['price_title'])[0];
         }
 
         return $selectData;
     }
 
     /******************************
-    商品在庫取得
-    *******************************/
-    function getProductStock($productID, $ym, $orderID = null) {
-
-        //============
-        //在庫取得
-        //============
-        $spiral = new SpiralApi('database/select', 'stockDB');
-
-        $columns = array();
-        $columns[] = 'productDate';
-        for($i = 1; $i <= 31; $i++) {
-            $columns[] = 'stock' . $i;
-        }
-
-        $serch_condition = array();
-        $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
-        $serch_condition[] = array('name' => 'productDate', 'value' => $ym);
-
-        $spiral->setSelectParam($columns, $serch_condition);
-
-        $err_msg = $spiral->exec();
-
-        if( !empty($err_msg) ) {
-            //エラー処理
-            return $err_msg;
-        }
-
-        $stockData = $spiral->getSelectData();
-
-        if( count($stockData) == 0 ) {
-            $stockData = array();
-            $stockData[] = array();
-            $stockData[0]['productDate'] = substr($ym, 0, 4) . '年' . substr($ym, 4, 2) . '月';
-            for($i = 1; $i <= 31; $i++) {
-                $stockData[0]['stock' . $i] = 0;
-            }
-        }
-
-        //============
-        //申込取得
-        //============
-        unset($spiral);
-        $start_date = date('Y/m/d', strtotime($ym . '/01'));
-        $end_date = date('Y/m/d', strtotime('+1 month', strtotime($ym . '/01')));
-        $spiral = new SpiralApi('database/select', 'oderDB');
-
-        $columns = array();
-        $columns[] = 'OderID';
-        $columns[] = 'oderDate';
-        $columns[] = 'volume1';
-        $columns[] = 'volume2';
-        $columns[] = 'volume3';
-        $columns[] = 'volume4';
-        $columns[] = 'volume5';
-
-        $serch_condition = array();
-        $serch_condition[] = array('name' => 'ProductID', 'value' => $productID);
-        $serch_condition[] = array('name' => 'Correspondence', 'value' => 3, 'operator' => '!=');
-        $serch_condition[] = array('name' => 'oderDate', 'value' => $start_date . ' 00:00:00', 'operator' => '>=');
-        $serch_condition[] = array('name' => 'oderDate', 'value' => $end_date . ' 00:00:00', 'operator' => '<');
-        if( !is_null($orderID) ) {
-            $serch_condition[] = array('name' => 'OderID', 'value' => $orderID, 'operator' => '<=');
-        }
-
-        $spiral->setSelectParam($columns, $serch_condition);
-
-        $err_msg = $spiral->exec();
-
-        if( !empty($err_msg) ) {
-            //エラー処理
-            return $err_msg;
-        }
-
-        $orderData = $spiral->getSelectData();
-
-        $orderSumData = array();
-        foreach( $orderData as $order ) {
-            $date = DateTime::createFromFormat('Y年m月d日 H時i分', $order['oderDate']);
-            $date = $date->format('Y/m/j'); //日付0なし
-            $volume = intval($order['volume1']) + intval($order['volume2']) + intval($order['volume3']) + intval($order['volume4']) + intval($order['volume5']);
-            if( !array_key_exists($date, $orderSumData) ) {
-                $orderSumData[$date] = $volume;
-            } else {
-                $orderSumData[$date] += $volume;
-            }
-        }
-
-        //============
-        //在庫計算
-        //============
-        for($i = 1; $i <= 31; $i++) {
-            if( array_key_exists($ym . '/' . $i, $orderSumData) ) {
-                $stockData[0]['stock' . $i] = intval($stockData[0]['stock' . $i]) - intval($orderSumData[$ym . '/' . $i]);
-            } else {
-                $stockData[0]['stock' . $i] = intval($stockData[0]['stock' . $i]);
-            }
-        }
-
-        //============
-        //前後月追加
-        //============
-        $stockData[0]['prevMonth'] = date('Y/m', strtotime('-1 month', strtotime($ym . '/01')));
-        $stockData[0]['nextMonth'] = date('Y/m', strtotime('+1 month', strtotime($ym . '/01')));
-
-        return $stockData[0];
-    }
-
-    /******************************
     商品登録
     *******************************/
-    function update($data, $personID) {
+    function update($data, $person_id) {
 
         $time_stamp = date("Y/m/d H:i:s");
 
         //==========================================
-        //◆ 商品管理DB
+        //◆ Spiral商品管理DB
         //==========================================
 
         //==============
         //対象データ検索
         //==============
+
         $spiral = new SpiralApi('database/select', 'ProductmanageDB');
 
         $columns = array();
         $columns[] = 'ProductID';
 
         $serch_condition = array();
-        $serch_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
+        $serch_condition[] = array('name' => 'ProductID', 'value' => $data['product_id']);
 
         $spiral->setSelectParam($columns, $serch_condition);
 
@@ -722,94 +1026,32 @@ class Product extends Entity {
         $selectData = $spiral->getSelectData();
 
         //==============
-        //処理
+        //SpiralDB処理
         //==============
         unset($spiral);
         $update_columns = array();
         $update_data = array();
         $serch_condition = array();        
 
-        foreach($this->columns as $column) {
-
-            if($column == 'main_photo') {
-                for($i = 0; $i < 5; $i++) {
-                    $update_columns[] = $column . ($i + 1);
-                    if(count($data[$column]) > $i) {
-                        if($i == 0) {
-                            //メイン画像１はファイル名を固定
-                            $update_data[$column . ($i + 1)] = PRODUCT_MAIN_PHOTO1_NAME;
-                        } else {
-                            $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
-                        }
-                    } else {
-                        $update_data[$column . ($i + 1)] = '';
-                    }
-                }
-            } elseif ($column == 'photo') {
-                for($i = 0; $i < 10; $i++) {
-                    $update_columns[] = $column . ($i + 1);
-                    if(count($data[$column]) > $i) {
-                        $update_data[$column . ($i + 1)] = end(explode("/", $data[$column][$i]));
-                    } else {
-                        $update_data[$column . ($i + 1)] = '';
-                    }
-                }
-            } elseif ($column == 'plan_title' ||
-                      $column == 'plan_Fee' ||
-                      $column == 'plan_Kind' ||
-                      $column == 'importantPoints' ||
-                      $column == 'Other') {
-                for($i = 0; $i < 5; $i++) {
-                    $update_columns[] = $column . ($i + 1);
-                    if(count($data[$column]) > $i) {
-                        $update_data[$column . ($i + 1)] = $data[$column][$i];
-                    } else {
-                        $update_data[$column . ($i + 1)] = '';
-                    }
-                }
-            } elseif ($column == 'CourseTitle' ||
-                      $column == 'CourseDetail' ||
-                      $column == 'CourseRink' ||
-                      $column == 'plan_included') {
-                for($i = 0; $i < 10; $i++) {
-                    $update_columns[] = $column . ($i + 1);
-                    if(count($data[$column]) > $i) {
-                        $update_data[$column . ($i + 1)] = $data[$column][$i];
-                    } else {
-                        $update_data[$column . ($i + 1)] = '';
-                    }
-                }
-            } elseif($column == 'area' ||
-                     $column == 'Category') {
-                $update_columns[] = $column;
-                $update_data[$column] = implode(",", $data[$column]);
-            } elseif($column == 'date') {
-                $update_columns[] = $column;
-                $update_data[$column] = $data[$column][0] . ' ' . $data[$column][1];
-            } elseif($column == 'mt_disp') {
-                $update_columns[] = $column;
-                $update_data[$column] = htmlspecialchars($_POST[$column . '_pre']);
-            } else {
-                $update_columns[] = $column;
-                $update_data[$column] = $data[$column];
-            }
-        }
-
         if( count($selectData) > 0 ) {
             //更新
             $spiral = new SpiralApi('database/update', 'ProductmanageDB');
 
+            $update_columns[] ='lastupdate';
             $update_data['lastupdate'] = $time_stamp;
-            $serch_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
+            $serch_condition[] = array('name' => 'ProductID', 'value' => $data['product_id']);
             $spiral->setUpdateParam($update_columns, $update_data, $serch_condition);
 
         } else {
             //登録
             $spiral = new SpiralApi('database/insert', 'ProductmanageDB');
 
+            $update_columns[] ='registDate';
+            $update_columns[] ='lastupdate';
+            $update_columns[] ='PersonID';
             $update_data['registDate'] = $time_stamp;
             $update_data['lastupdate'] = $time_stamp;
-            $update_data['PersonID'] = $personID;
+            $update_data['PersonID'] = $person_id;
             $spiral->setInsertParam($update_columns, $update_data);
 
         }
@@ -825,15 +1067,255 @@ class Product extends Entity {
 
         //productID設定
         if( isset($response['id']) ) {
-            $data['ProductID'] = 'plan' . sprintf('%06d', $response['id']);
+            $data['product_id'] = 'plan' . sprintf('%06d', $response['id']);
         }
         //personID設定
-        if( $data['PersonID'] == '' ) {
-            $data['PersonID'] = $personID;
+        if( $data['person_id'] == '' ) {
+            $data['person_id'] = $person_id;
         }
 
+        //==========================================
+        //◆ MySQL商品管理DB
+        //==========================================
+
+        //==============
+        //商品管理登録
+        //==============
+        $db = new DB();
+        $db->setPrepare('select * from t_product where product_id = :product_id');
+        $db->setBindValueSTR(':product_id', $data['product_id']);
+        
+        $err_msg = $db->execute();
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $selectData = $db->getResponse();
+
+        $params = array();
+        for($i = 0; $i < count($this->columns); $i++) {
+            $table = $this->tableName[$i];
+            $column = $this->columns[$i];
+
+            if($table == $this->t_product_name) {
+                if($column == 'area') {
+                    $areas = array();
+                    for($j = 0; $j < count($data[$column]); $j++) {
+                        $areas[$data[$column][$j]] = $data['area' . $data[$column][$j]];
+                    }
+                    $params[$column] = serialize($areas);
+
+                } elseif($column == 'category') {
+                    $params[$column] = serialize($data[$column]);
+                } elseif($column == 'publish_date') {
+                    $params[$column] = $data[$column][0] . ' ' . $data[$column][1];
+                } elseif($column == 'publish_status') {
+                    $params[$column] = htmlspecialchars($_POST[$column . '_pre']);
+                } else {
+                    $params[$column] = $data[$column];
+                }
+            }
+        }
+
+        //トランザクション開始
+        $db->beginTransaction();
+
+        if( count($selectData) > 0 ) {
+            //更新
+            unset($params['regist_date']);
+            $params['update_date'] = $time_stamp;
+
+            $where_params = array();
+            $where_params['product_id'] = $data['product_id'];
+
+            $err_msg = $db->execUpdate($this->t_product_name, $params, $where_params, false);
+        } else {
+            //登録
+
+            $params['regist_date'] = $time_stamp;
+            $params['update_date'] = $time_stamp;
+            $params['product_id'] = $data['product_id'];
+            $params['person_id'] = $person_id;
+
+            $err_msg = $db->execInsert($this->t_product_name, $params, false);
+        }
+
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        //==============
+        //商品管理メタ情報登録
+        //==============
+        for($i = 0; $i < count($this->columns); $i++) {
+            $table = $this->tableName[$i];
+            $column = $this->columns[$i];
+            
+            $params = array();
+            $params['product_id'] = $data['product_id'];
+            
+            $where_params = array();
+            $where_params['product_id'] = $data['product_id'];
+
+            if($table == $this->t_product_meta_name) {
+                //削除
+                $where_params['meta_type'] = $column;
+                $err_msg = $db->execDelete($table, $where_params, false);
+                if( !empty($err_msg) ) {
+                    //エラー処理
+                    return $err_msg;
+                }
+
+                //登録
+                $params['meta_type'] = $column;
+                for($j = 0; $j < count($data[$column]); $j++) {
+                    $params['meta_type_no'] = $j + 1;
+
+                    if($column == 'main_photo') {
+
+                        if($j == 0) {
+                            //メイン画像１はファイル名を固定
+                            $params['meta_value'] = PRODUCT_MAIN_PHOTO1_NAME;
+                        } else {
+                            $params['meta_value'] = end(explode("/", $data[$column][$j]));
+                        }
+
+                    } elseif($column == 'detail_photo') {
+
+                        $params['meta_value'] = end(explode("/", $data[$column][$j]));                        
+
+                    } elseif($column == 'disp_price_type'
+                            || $column == 'disp_price_value'
+                            || $column == 'disp_price_condition') {
+
+                        $params['meta_value'] = serialize($data[$column][$j]);
+
+                    } else {
+
+                        $params['meta_value'] = $data[$column][$j];
+
+                    }
+
+                    $err_msg = $db->execInsert($table, $params, false);
+
+                    if( !empty($err_msg) ) {
+                        //エラー処理
+                        return $err_msg;
+                    }
+                }
+
+            }
+        }
+
+        //==============
+        //商品コース登録
+        //==============
+        $insert_course_id = array();
+        for($i = 0; $i < count($data['course_id']); $i++) {
+            $sql = '';
+            $sql .= 'select course_id ';
+            $sql .= 'from ' . $this->t_product_course_name . ' ';
+            $sql .= 'where course_id = :course_id ';
+
+            $db->setPrepare($sql);
+            $db->setBindValueSTR(':course_id', $data['course_id'][$i]);
+            
+            $err_msg = $db->execute();
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+
+            $selectData = $db->getResponse();
+
+            $params = array();
+            $params['course_name'] = $data['course_name'][$i];
+            $params['course_order'] = $i + 1;
+
+            if( count($selectData) > 0 ) {
+                $where_params = array();
+                $where_params['course_id'] = $data['course_id'][$i];
+
+                if($params['course_name'] == '') {
+                    //削除
+                    $err_msg = $db->execDelete($this->t_product_course_name, $where_params, false);                    
+                    $err_msg = $db->execDelete('t_product_course_stock', $where_params, false);                                        
+                } else {
+                    //更新
+                    $err_msg = $db->execUpdate($this->t_product_course_name, $params, $where_params, false);
+                }
+            } else {
+                //登録
+                $params['product_id'] = $data['product_id'];
+
+                if(count($data['course_id']) == 1 && $params['course_name'] == '') {
+                    //コース未入力時はデフォルトコース作成
+                    $params['course_name'] = $data['title'];
+                    $data['course_name'][$i] = $data['title'];
+                }
+
+                if($params['course_name'] == '') {
+                    //コース名がなければ登録しない
+                    continue;
+                }
+                $params['close_date'] = Constant::$init_course['close_date'];
+                $params['close_time'] = Constant::$init_course['close_time'];
+
+                $err_msg = $db->execInsert($this->t_product_course_name, $params, false);
+
+                $data['course_id'][$i] = $db->getLastInsertId();
+                $insert_course_id[] = $data['course_id'][$i];
+            }
+
+            if( !empty($err_msg) ) {
+                //エラー処理
+                return $err_msg;
+            }
+
+        }
+
+        //==============
+        //登録時、商品コース在庫登録
+        //==============
+        $timestamp = time();
+        $start_day = 1;
+        $end_day = intval(date('t', $timestamp));
+
+        foreach($insert_course_id as $course_id) {
+            $params = array();
+            $params['course_id'] = $course_id;
+            $params['stock_date'] = date('Y-m-01', $timestamp);
+
+            for($i = $start_day; $i <= $end_day; $i++) {
+                $params['stock_day'] = $i;
+
+                $stock_value = Constant::$init_course['stock_value'];
+                if(intval($stock_value) < 0) {
+                    $params['stock_type'] = intval($stock_value) * -1;
+                    $params['stock_value'] = "0";
+                } elseif(intval($stock_value) == 0) {
+                    $params['stock_type'] = null;
+                    $params['stock_value'] = null;
+                } else {
+                    $params['stock_type'] = "0";
+                    $params['stock_value'] = intval($stock_value);
+                }
+
+                $params['stock_option'] = Constant::$init_course['stock_option'];
+
+                $err_msg = $db->execInsert('t_product_course_stock', $params, false);
+            }
+        }
+
+        $db->commit();
+
         //画像設定
-        $img_dir = UPL_DIR . $data['ProductID'] . '/';
+        $img_dir = UPL_DIR . $data['product_id'] . '/';
         if( !file_exists($img_dir) ) {
            mkdir($img_dir, 0755);
            chmod($img_dir, 0755);
@@ -864,7 +1346,7 @@ class Product extends Entity {
             }
             $cnt++;
         }
-        foreach( $data['photo'] as &$url) {
+        foreach( $data['detail_photo'] as &$url) {
             if($url == '') {
                 continue;
             }
@@ -875,148 +1357,132 @@ class Product extends Entity {
             }
         }
 
-        $data['mt_disp'] = htmlspecialchars($_POST['mt_disp_pre']);
-        $data['mt_disp_text'] = Constant::$aryMtDisp[$data['mt_disp']];
-
-        //==========================================
-        //◆ 在庫管理DB
-        //==========================================
-
-        //==============
-        //対象データ検索
-        //==============
-
-        $spiral_select = new SpiralApi('database/select', 'stockDB');
-
-        foreach( $data['stock_calen_ym'] as $ym) {
-            $select_columns = array();
-            $select_columns[] = 'ProductID';
-            $select_condition = array();
-            $select_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
-
-            //入力のない月は登録しない
-            if(array_sum($data['stock_calen_data_' . $ym]) == 0) {
-                continue;
-            }
-
-            $select_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 2));
-
-            $spiral_select->setSelectParam($select_columns, $select_condition);
-
-            $err_msg = $spiral_select->exec();
-
-            if( !empty($err_msg) ) {
-                //エラー処理
-                return $err_msg;
-            }
-
-            $selectData = $spiral_select->getSelectData();
-
-            unset($spiral_update);
-            unset($update_columns);
-            unset($update_data);
-            unset($update_condition);
-            $update_columns = array();
-            $update_data = array();
-            $update_condition = array();
-
-            for($i = 0; $i < count($data['stock_calen_data_' . $ym]); $i++) {
-                $update_columns[] = 'stock' . ($i + 1);
-                $update_data['stock' . ($i + 1)] = $data['stock_calen_data_' . $ym][$i];
-            }
-
-            if( count($selectData) > 0 ) {
-                //更新
-                $spiral_update = new SpiralApi('database/update', 'stockDB');
-
-                $update_columns[] = 'lastupdate';
-                
-                $update_data['lastupdate'] = $time_stamp;
-
-                $update_condition[] = array('name' => 'ProductID', 'value' => $data['ProductID']);
-                $update_condition[] = array('name' => 'productDate', 'value' => substr($ym, 0, 4) . '/' . substr($ym, 4, 2));
-  
-                $spiral_update->setUpdateParam($update_columns, $update_data, $update_condition);
-            } else {
-                //登録
-                $spiral_update = new SpiralApi('database/insert', 'stockDB');
-
-                $update_columns[] = 'registDate';
-                $update_columns[] = 'lastupdate';
-                $update_columns[] = 'ProductID';
-                $update_columns[] = 'productDate';
-
-                $update_data['registDate'] = $time_stamp;
-                $update_data['lastupdate'] = $time_stamp;
-                $update_data['ProductID'] = $data['ProductID'];
-                $update_data['productDate'] = substr($ym, 0, 4) . '/' . substr($ym, 4, 2);
-
-                $spiral_update->setInsertParam($update_columns, $update_data);
-            }
-
-            $err_msg = $spiral_update->exec();
-
-            if( !empty($err_msg) ) {
-                //エラー処理
-                return $err_msg;
-            }
-
-            $response = $spiral_update->getResponse();
-        }
+        $data['publish_status'] = htmlspecialchars($_POST['publish_status_pre']);
+        $data['publish_status_text'] = Constant::$aryMtDisp[$data['publish_status']];
 
         return $data;
+    }
+
+    /******************************
+    商品削除（論理削除）
+    *******************************/
+    function delete($product_id) {
+        $db = new DB();
+
+        $params = array();
+        $params['publish_status'] = '0';
+        $params['update_date'] = date('Y-m-d H:i:s');
+        
+        $where_params = array();
+        $where_params['product_id'] = $product_id;
+
+        $err_msg = $db->execUpdate($this->t_product_name, $params, $where_params);
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        return '';
+    }
+
+    /******************************
+    商品複製
+    *******************************/
+    function copy($product_id, $person_id) {
+        $data = $this->getProduct($product_id);
+        $data['product_id'] = '';
+        for($i = 0; $i < count($data['course_id']); $i++) {
+            $data['course_id'][$i] = '';
+        }
+
+        $data = $this->update($data, $person_id);
+
+        if( !is_array($data) ) {
+            //エラー処理
+            return $data;
+        }
+
+        return '';
     }
 
     /*******************
     POSTデータ取得(override)
     ********************/
-    function getPostData() {
+    function getPostData($preview = false) {
         $data = parent::getPostData();
 
-        $data['plan_title_text'] = array();
-        foreach( $data['plan_title'] as $value) {
-            if($value != '') {
-                $data['plan_title_text'][] = Constant::$aryPlanTitle[$value];
-            } else {
-                $data['plan_title_text'][] = '';
+        //エリア詳細
+        foreach($data['area'] as $value) {
+            if( isset($_POST['area' . $value]) ) {
+                $data['area' . $value] = $_POST['area' . $value];
             }
         }
 
-        $data['plan_Kind_text'] = array();
-        foreach( $data['plan_Kind'] as $value) {
-            if($value != '') {
-                $data['plan_Kind_text'][] = Constant::$aryPlanKind[$value];
-            } else {
-                $data['plan_Kind_text'][] = '';
+        //代金
+        if(count(array_keys($data['disp_price_condition'])) > 0) {
+            for($i = 0; $i < max(array_keys($data['disp_price_condition'])) ; $i++) {
+                if(!array_key_exists($i, $data['disp_price_condition'])) {
+                    $data['disp_price_condition'][$i] = array();
+                }
             }
         }
 
-        $data['mt_disp_text'] = Constant::$aryMtDisp[$data['mt_disp']];
+        //公開状態テキスト
+        $data['publish_status_text'] = Constant::$aryMtDisp[$data['publish_status']];
 
-        //カレンダー月取得
-        $data['stock_calen_ym'] = isset($_POST['stock_calen_ym']) ? $_POST['stock_calen_ym'] : array(date('Ym'));
+        if($preview) {
+            //商品情報
+            $period_ymd = date(Constant::$formatYMD, strtotime($data['period_from']));
+            $period_w = Constant::$aryWeekDay[date('w', strtotime($data['period_from']))];
+            $data['period_from_text'] = $period_ymd . '(' . $period_w . ')';
 
-        $no_input_index = array();
-        $cnt = 0;
-        foreach( $data['stock_calen_ym'] as $ym ) {
-            //カレンダー入力取得
-            $data['stock_calen_data_' . $ym] = isset($_POST['stock_calen_data_' . $ym]) ? $_POST['stock_calen_data_' . $ym] : array();
+            $period_ymd = date(Constant::$formatYMD, strtotime($data['period_to']));
+            $period_w = Constant::$aryWeekDay[date('w', strtotime($data['period_to']))];
+            $data['period_to_text'] = $period_ymd . '(' . $period_w . ')';
 
-            //入力のないカレンダーを取得
-            if(array_sum($data['stock_calen_data_' . $ym]) == 0) {
-                $no_input_index[] = $cnt;
+            $data['area_id'] = array();
+            $data['area_text'] = array();
+            foreach($data['area'] as $area) {
+                if($area != '') {
+                    $area_detail_map = Constant::$aryAreaDetail[$area];
+
+                    foreach($data['area' . $area] as $value) {
+                        if($value != '') {
+                            $data['area_id'][] = $value;
+                            $data['area_text'][] = $area_detail_map[$value];
+                        }
+                    }
+                }
             }
 
-            $cnt++;
-        }
+            $data['category_id'] = array();
+            $data['category_text'] = array();
+            foreach($data['category'] as $category) {
+                if($category != '') {
+                    $data['category_id'][] = $category;
+                    $data['category_text'][] = Constant::$aryCategory[$category];
+                }
+            }
 
-        //入力のないカレンダーは削除
-        foreach( $no_input_index as $i ) {
-            unset($data['stock_calen_ym'][$i]);
-        }
-        $data['stock_calen_ym'] = array_values($data['stock_calen_ym']);
-        if(count($data['stock_calen_ym']) == 0) {
-            $data['stock_calen_ym'][] = date('Ym');
+            $data['cancel_charge_rate_text'] = array();
+            foreach($data['cancel_charge_rate'] as $value) {
+                if($value != '') {
+                    $data['cancel_charge_rate_text'][] = Constant::$aryCancelChargeRate[$value];
+                }
+            }
+
+            for($i = 0; $i < count($data['disp_price_type']); $i++) {
+                $data['disp_price_type_text'][] = array();
+                foreach( $data['disp_price_type'][$i] as $value) {
+                    if($value != '') {
+                        $data['disp_price_type_text'][$i][] = Constant::$aryPriceType[$value];
+                    } else {
+                        $data['disp_price_type_text'][$i][] = '';
+                    }
+                }
+            }
+
         }
 
         return $data;
@@ -1028,12 +1494,7 @@ class Product extends Entity {
     function getNewData() {
         $data = parent::getNewData();
 
-        $data['mt_disp_text'] = Constant::$aryMtDisp[$data['mt_disp']];
-
-        $data['stock_calen_ym'] = array(date('Ym'));
-        foreach( $data['stock_calen_ym'] as $ym ) {
-            $data['stock_calen_data_' . $ym] = array();
-        }
+        $data['publish_status_text'] = Constant::$aryMtDisp[$data['publish_status']];
 
         return $data;
     }

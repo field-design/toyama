@@ -11,8 +11,8 @@
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
 require_once(CLS_DIR . 'FileUploader.php');
-require_once(CLS_DIR . 'ProductMy.php');
-require_once(CLS_DIR . 'Contact.php');
+require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'jp/Contact.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -66,16 +66,34 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'main
 }
 
 //=============
-// 料金
+// 表示用料金
 //=============
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'disp_course' ) {
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('course_number', intval($_POST['count']));
+    $smarty->assign('disp_course', '');
+    $smarty->assign('disp_price_title', '');
+    $smarty->assign('disp_price_type', array());
+    $smarty->assign('disp_price_value', array());
+    $smarty->assign('disp_price_condition', array());
+    $smarty->assign('err_msg', array());
+    $smarty->display(ADMIN_DIR . 'addparts/product_disp_course.tpl');
+    exit;
+}
 
 //料金追加
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'price' ) {
-    $smarty->assign('price_type', 0);
-    $smarty->assign('price_value', '');
-    $smarty->assign('price_condition', array(''));
-    $smarty->assign('number', intval($_POST['count']) + 1);
-    $smarty->display(ADMIN_DIR . 'addparts/product_price.tpl');
+    if(intval($_POST['count']) >= 10) {
+        exit;
+    }
+    $smarty->assign('disp_price_type', 0);
+    $smarty->assign('disp_price_value', '');
+    $smarty->assign('disp_price_condition', array());
+    $smarty->assign('course_number', intval($_POST['container_option']));
+    $smarty->assign('price_number', intval($_POST['container_option']) * 100 + intval($_POST['count']));
+    $smarty->display(ADMIN_DIR . 'addparts/product_disp_price.tpl');
     exit;
 }
 //料金条件
@@ -83,8 +101,10 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'price_condition' ) {
     if(intval($_POST['count']) >= 5) {
         exit;
     }
+    $course_number = intval(intval($_POST['container_option']) / 100);
+    $price_number = substr($_POST['container_option'], -1, 2);   
     $smarty->assign('placeholder', '例：6歳以上');
-    $smarty->assign('input_name', 'price_condition' . intval($_POST['container_option']) . '[]');
+    $smarty->assign('input_name', 'disp_price_condition[' . $course_number . '][' . $price_number . '][]');
     $smarty->assign('value', '');
     $smarty->display(ADMIN_DIR . 'addparts/sortable_single.tpl');
     exit;
@@ -211,10 +231,24 @@ if( isset($_POST['fileapi_uploadtype']) && $_POST['fileapi_uploadtype'] == 'cour
     exit;
 }
 
+//=============
+// 質問事項
+//=============
+if( isset($_POST['addtype']) && $_POST['addtype'] == 'question' ) {
+    if(intval($_POST['count']) >= 5) {
+        exit;
+    }
+    $smarty->assign('placeholder', '例：食物アレルギーをお持ちですか？');
+    $smarty->assign('input_name', 'question[]');
+    $smarty->assign('value', '');
+    $smarty->display(ADMIN_DIR . 'addparts/sortable_multi.tpl');
+    exit;
+}
+
 /**********************************************
 ◆ メイン処理
 ***********************************************/
-$product = new ProductMy($login);
+$product = new Product($login);
 
 //サイドバーメニューに商品編集リストを表示
 $smarty->assign('menu_product', true);
@@ -282,7 +316,7 @@ if( !$err_flg ) {
 if( !$err_flg ) {
     if(isset($_POST['request']) && $_POST['request'] != '' && $data['publish_status'] == 3) {
         $contact = new Contact();
-        $msg = $contact->publishRequest($data['title']);
+        $msg = $contact->publishRequest($data['title'], $login->getPersonID());
         if(!empty($msg)) {
             $smarty->assign('global_message', $msg);
             $err_flg = true;
