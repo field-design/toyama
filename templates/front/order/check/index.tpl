@@ -232,10 +232,15 @@
             </p>
         </section>
 
+        {if $settings_data.agency == 1}
         <div class="conditions">
             <h5>旅行条件書</h5>
             <ul>
-                <li>お申込み前に必ず <a href="https://www.kanko-pro.co.jp/agreement/agreement23.php" target="_blank">旅行条件書</a> をお読みください。</li>
+                {if $settings_data.file_select == 1}
+                    <li>お申込み前に必ず <a href="{$settings_data.file|default:''}" target="_blank">旅行条件書</a> をお読みください。</li>
+                {else}
+                    <li>お申込み前に必ず <a href="{$settings_data.condition_url|default:''}" target="_blank">旅行条件書</a> をお読みください。</li>
+                {/if}
                 <li>旅行条件書を保存するには（画面上部）ブラウザメニューの「ファイル」を選択、次に「名前をつけて保存」を選択します。</li>
                 <li>保存する場所、ファイル名を指定し、ファイルの種類を「WEBページ、HTMLのみ」もしくは「テキストファイル」にして「保存」を選択します。</li>
             </ul>
@@ -250,17 +255,18 @@
             </div>
             <p class="note">※上部チェックボックスに同意いただいた方のみお申し込みが可能です。</p>
         </div>
+        {/if}
 
         <div class="pagenation">
             <div class="back">
                 <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">戻る</button>
             </div>
             {if $request_flg}
-            <div class="next mod_form_btn">
+            <div class="next {if $settings_data.agency == 1}mod_form_btn{/if}">
                 <button type="button" id="submit">リクエスト依頼</button>
             </div>
             {else}
-            <div class="next mod_form_btn">
+            <div class="next {if $settings_data.agency == 1}mod_form_btn{/if}">
                 <button type="button" id="submit">決済画面へ移動</button>
             </div>
             {/if}

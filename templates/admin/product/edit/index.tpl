@@ -291,7 +291,7 @@
                 <div class="column">
                     <label class="label">最少受付人員<span class="must">必須</span></label>
                     <p class="control has-icon has-icon-right">
-                        <input name="min_member" class="input {if $data.min_member == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_member|default:''}">
+                        <input name="min_member" type="number" min="1" class="input {if $data.min_member == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_member|default:''}">
                         <span class="icon is-small">
                         名
                         </span>
@@ -303,7 +303,7 @@
                 <div class="column">
                     <label class="label">最少催行人員<span class="must">必須</span></label>
                     <p class="control has-icon has-icon-right">
-                        <input name="min_depart" class="input {if $data.min_depart == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_depart|default:''}">
+                        <input name="min_depart" type="number" min="1" class="input {if $data.min_depart == ''}is-danger{/if}" type="text" placeholder="例：2" value="{$data.min_depart|default:''}">
                         <span class="icon is-small">
                         名
                         </span>
@@ -315,7 +315,7 @@
                 <div class="column">
                     <label class="label">最大申込人員<span class="must">必須</span></label>
                     <p class="control has-icon has-icon-right">
-                        <input name="max_order" class="input {if $data.max_order == ''}is-danger{/if}" type="text" placeholder="例：9" value="{$data.max_order|default:''}">
+                        <input name="max_order" type="number" min="1" class="input {if $data.max_order == ''}is-danger{/if}" type="text" placeholder="例：9" value="{$data.max_order|default:''}">
                         <span class="icon is-small">
                         名
                         </span>

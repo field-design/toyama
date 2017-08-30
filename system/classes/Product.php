@@ -331,13 +331,22 @@ class Product extends Entity {
             if( $data['min_member'] == '' ) {
                 $err_msg['min_member'] = MESSAGE_ERROR_REQUIRE;
                 $err_msg['nextsection'] = $err_section;
+            } else if($data['min_member'] < 1) {
+                $err_msg['min_member'] = MESSAGE_ERROR_INPUT;
+                $err_msg['nextsection'] = $err_section;
             }
             if( $data['min_depart'] == '' ) {
                 $err_msg['min_depart'] = MESSAGE_ERROR_REQUIRE;
                 $err_msg['nextsection'] = $err_section;
+            }  else if($data['min_depart'] < 1) {
+                $err_msg['min_depart'] = MESSAGE_ERROR_INPUT;
+                $err_msg['nextsection'] = $err_section;
             }
             if( $data['max_order'] == '' ) {
                 $err_msg['max_order'] = MESSAGE_ERROR_REQUIRE;
+                $err_msg['nextsection'] = $err_section;
+            }  else if($data['max_order'] < 1) {
+                $err_msg['max_order'] = MESSAGE_ERROR_INPUT;
                 $err_msg['nextsection'] = $err_section;
             }
             if( $data['order_deadline'] == '' ) {

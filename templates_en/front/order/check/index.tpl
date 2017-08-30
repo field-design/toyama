@@ -233,10 +233,15 @@
             </p>
         </section>
 
+        {if $settings_data.agency == 1}
         <div class="conditions">
             <h5>Travel Conditions</h5>
             <ul>
-                <li>Please make sure to read <a href="https://www.kanko-pro.co.jp/agreement/agreement23.php" target="_blank">the travel conditions document</a> before applying.</li>
+                {if $settings_data.file_select == 1}
+                    <li>Please make sure to read <a href="{$settings_data.file|default:''}" target="_blank">the travel conditions document</a> before applying.</li>
+                {else}
+                    <li>Please make sure to read <a href="{$settings_data.condition_url|default:''}" target="_blank">the travel conditions document</a> before applying.</li>
+                {/if}
                 <li>To save the travel conditions document, select "File" in the web browser (at the top of the screen) and select "Save As...".</li>
                 <li>Specify the folder and name of the file to save the document, select the document type as "Web Page, HTML Only" or "Text File" and click "Save".</li>
             </ul>
@@ -251,17 +256,18 @@
             </div>
             <p class="note">Only those who click the check box above will be able to make a reservation.</p>
         </div>
+        {/if}
 
         <div class="pagenation">
             <div class="back">
                 <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}order/input/'">Back</button>
             </div>
             {if $request_flg}
-            <div class="next mod_form_btn">
+            <div class="next {if $settings_data.agency == 1}mod_form_btn{/if}">
                 <button type="button" id="submit">Send a request</button>
             </div>
             {else}
-            <div class="next mod_form_btn">
+            <div class="next {if $settings_data.agency == 1}mod_form_btn{/if}">
                 <button type="button" id="submit">Go to the payment page</button>
             </div>
             {/if}
