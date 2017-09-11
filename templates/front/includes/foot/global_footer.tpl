@@ -5,7 +5,7 @@
                 <tbody>
                     <tr>
                         <td><a href="/">トップページ</a></td>
-                        <td colspan="2"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">ツアーの一覧</a></td>
+                        <td colspan="2"><a href="{$smarty.const.URL_ROOT_PATH}list/">ツアーの一覧</a></td>
                     </tr>
                     <tr>
                         <td><a href="{$smarty.const.URL_ROOT_PATH}guide/">サイトのご利用案内</a></td>

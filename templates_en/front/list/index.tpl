@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>List of Tours | {Constant::$siteNameNiikawa}</title>
+<title>List of Tours | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -26,7 +26,7 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{Constant::$siteNameNiikawa}">
+<meta property="og:site_name" content="{Constant::$siteName}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="List of Tours">
 <meta property="og:description" content="">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 
@@ -109,15 +109,15 @@
             <ul>
                 {foreach from=$pager item=value}
                     {if $value == ($current_page - 2) && $current_page != count($pager) || ($current_page == count($pager) && $value == $current_page - 3)}
-                        <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}{$area|default:''}{$category|default:''}">Prev</a></li>
+                        <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page - 1}">Prev</a></li>
                     {elseif $value == $current_page - 1 || $value == $current_page + 1 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $current_page == 1 && $value == $current_page + 2 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $current_page == count($pager) && $value == $current_page - 2 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $value == ($current_page + 2) && $current_page != 1 || ($current_page == 1 && $value == $current_page + 3) }
-                        <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }{$area|default:''}{$category|default:''}">Next</a></li>
+                        <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page + 1 }">Next</a></li>
                     {elseif $value == $current_page}
                         <li><span class='current'>{$value}</span></li>
                     {/if}
@@ -132,7 +132,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->
 
 

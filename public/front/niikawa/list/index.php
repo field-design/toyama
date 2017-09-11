@@ -20,7 +20,7 @@ $page = new Page();
 
 $page_data = $page->getLangPage(2, 4);
 
-$area_detail = null;
+$area_detail = 'area1';
 $area_text = '';
 $category = null;
 $category_text = '';
@@ -79,5 +79,13 @@ $smarty->assign('current_page', $current_page);
 $smarty->assign('productlist', $productlist);
 $smarty->assign('area_text', $area_text);
 $smarty->assign('category_text', $category_text);
+
+if( isset($_GET['area']) ) {
+    $smarty->assign('area', '&area=' . $area_detail);
+}
+if( isset($_GET['Category']) ) {
+    $smarty->assign('category', '&Category=' . $category);
+}
+
 $smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'niikawa/list/index.tpl');

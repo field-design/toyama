@@ -754,6 +754,13 @@ class Product extends Entity {
         $sql .= 'where     product.publish_status != :publish_status_delete ';
         if( !is_null($publish_status) ) {
             $sql .= 'and   product.publish_status = :publish_status ';
+            $sql .= 'and   product.publish_date <= now() ';
+        }
+        if( !is_null($area) ) {
+            $sql .= 'and   product.area like "%' . $area . '%" ';
+        }
+        if( !is_null($category) ) {
+            $sql .= 'and   product.category like "%' . $category . '%" ';
         }
 
         if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){

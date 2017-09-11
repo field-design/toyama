@@ -19,7 +19,7 @@
                         <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                     </li> -->
                     <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}">トップページ</a></li>
-                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">ツアーを購入する</a></li>
+                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}list/">ツアーを購入する</a></li>
                     <li class="inquiry"><a href="{$smarty.const.URL_ROOT_PATH}contact/"><i class="fa fa-envelope-o" aria-hidden="true"></i>お問い合わせ</a></li>
                     <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}guide/">サイトのご利用案内</a></li>
                     <li class="sub"><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">プライバシーポリシー</a></li>

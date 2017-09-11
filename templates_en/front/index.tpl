@@ -84,7 +84,7 @@
 
 <div class="btn-wrap cf">
     <div class="purchase">
-        <a href="{$smarty.const.URL_ROOT_PATH}niikawa/list">Buy a tour</a>
+        <a href="{$smarty.const.URL_ROOT_PATH}list">Buy a tour</a>
     </div>
     <!-- <div class="choice">
         <div class="area">
@@ -96,18 +96,18 @@
     </div> -->
     <div class="area-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="魚津市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="黒部市"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="入善町"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area=4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="朝日町"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?area=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_uodu.svg" alt="魚津市"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?area=2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_kurobe.svg" alt="黒部市"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?area=3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_nyuzen.svg" alt="入善町"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?area=4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_asahi.svg" alt="朝日町"></a></li>
         </ul>
     </div>
     <div class="genre-accordion">
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="体験する"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="見る"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="食べる"></a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category=4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="買う"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?Category=1"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_experience.svg" alt="体験する"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?Category=2"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_see.svg" alt="見る"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?Category=3"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_eat.svg" alt="食べる"></a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/?Category=4"><img src="{$smarty.const.URL_ROOT_PATH}assets/img/index/icon_buy.svg" alt="買う"></a></li>
         </ul>
     </div>
 </div>
@@ -156,15 +156,15 @@
         <ul>
             {foreach from=$pager item=value}
                 {if $value == ($current_page - 2) && $current_page != count($pager) || ($current_page == count($pager) && $value == $current_page - 3)}
-                    <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}">Prev</a></li>
+                    <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page - 1}">Prev</a></li>
                 {elseif $value == $current_page - 1 || $value == $current_page + 1 }
-                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                 {elseif $current_page == 1 && $value == $current_page + 2 }
-                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                 {elseif $current_page == count($pager) && $value == $current_page - 2 }
-                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
+                    <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                 {elseif $value == ($current_page + 2) && $current_page != 1 || ($current_page == 1 && $value == $current_page + 3) }
-                    <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }">Next</a></li>
+                    <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page + 1 }">Next</a></li>
                 {elseif $value == $current_page}
                     <li><span class='current'>{$value}</span></li>
                 {/if}

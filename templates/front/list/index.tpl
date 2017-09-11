@@ -7,11 +7,11 @@
 　listページ
 ******************************************************}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>List of Tours | {Constant::$siteNameNiikawa}</title>
+<title>ツアーの一覧 |  {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -26,9 +26,9 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{Constant::$siteNameNiikawa}">
+<meta property="og:site_name" content=" {Constant::$siteName}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="List of Tours">
+<meta property="og:title" content="ツアーの一覧">
 <meta property="og:description" content="">
 <meta property="og:url" content="">
 <meta property="og:image" content="">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$page_data.h1_tag}
 <!-- END global-header -->
 
 
@@ -58,18 +58,18 @@
 <div class="breadcrumb">
     <div data-lg>
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}">Home</a></li>
-            <li>List of Tours</li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}">トップページ</a></li>
+            <li>ツアーの一覧</li>
         </ul>
     </div>
 </div>
 
 <article>
     <div class="cf" data-lg>
-        <h2><span>{if $area_text != ''}{$area_text}{elseif $category_text != ''}{$category_text}{else}List of Tours{/if}</span></h2>
+        <h2><span>{if $area_text != ''}{$area_text}{elseif $category_text != ''}{$category_text}{else}ツアーの一覧{/if}</span></h2>
         <div class="tour cf">
             {if count($productlist) == 0}
-                <p>There is no tour.</p>
+                <p>現在ツアーはありません。</p>
             {else}
                 {foreach from=$productlist item=product}
                 <div class="tours">
@@ -82,9 +82,9 @@
                                 <ul class="cost">
                                     {if $product.price_value_min != '' || $product.price_value_max != ''}
                                         {if $product.price_value_min == $product.price_value_max}
-                                        <li>{$product.price_title} <span class="num3">{$product.price_value_max}</span>Yen</li>
+                                        <li>{$product.price_title} <span class="num3">{$product.price_value_max}</span>円</li>
                                         {else}
-                                        <li>{$product.price_title} <span class="num3">{$product.price_value_min}</span>〜<span class="num3">{$product.price_value_max}</span>Yen</li>
+                                        <li>{$product.price_title} <span class="num3">{$product.price_value_min}</span>〜<span class="num3">{$product.price_value_max}</span>円</li>
                                         {/if}
                                     {/if}
                                 </ul>
@@ -109,15 +109,15 @@
             <ul>
                 {foreach from=$pager item=value}
                     {if $value == ($current_page - 2) && $current_page != count($pager) || ($current_page == count($pager) && $value == $current_page - 3)}
-                        <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}{$area|default:''}{$category|default:''}">Prev</a></li>
+                        <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page - 1}">前へ</a></li>
                     {elseif $value == $current_page - 1 || $value == $current_page + 1 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $current_page == 1 && $value == $current_page + 2 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $current_page == count($pager) && $value == $current_page - 2 }
-                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}{$area|default:''}{$category|default:''}">{$value}</a></li>
+                        <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}list/?page={$value}">{$value}</a></li>
                     {elseif $value == ($current_page + 2) && $current_page != 1 || ($current_page == 1 && $value == $current_page + 3) }
-                        <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }{$area|default:''}{$category|default:''}">Next</a></li>
+                        <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}list/?page={$current_page + 1 }">次へ</a></li>
                     {elseif $value == $current_page}
                         <li><span class='current'>{$value}</span></li>
                     {/if}
@@ -132,7 +132,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->
 
 

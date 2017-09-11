@@ -19,7 +19,7 @@
                         <a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a>
                     </li> -->
                     <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}">Home</a></li>
-                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">Buy a tour</a></li>
+                    <li class="nav-main"><a href="{$smarty.const.URL_ROOT_PATH}list/">Buy a tour</a></li>
                     <li class="inquiry"><a href="{$smarty.const.URL_ROOT_PATH}contact/"><i class="fa fa-envelope-o" aria-hidden="true"></i>Inquiries</a></li>
                     <li class="sub"><a href="{$smarty.const.URL_ROOT_PATH}guide/">Site Guide</a></li>
                     <li class="sub"><a href="https://www.kanko-pro.co.jp/privacy/" target="_blank">Privacy Policy</a></li>

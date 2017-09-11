@@ -5,7 +5,7 @@
                 <tbody>
                     <tr>
                         <td><a href="/">Home</a></td>
-                        <td colspan="2"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">List of Tours</a></td>
+                        <td colspan="2"><a href="{$smarty.const.URL_ROOT_PATH}list/">List of Tours</a></td>
                     </tr>
                     <tr>
                         <td><a href="{$smarty.const.URL_ROOT_PATH}guide/">Site Guide</a></td>

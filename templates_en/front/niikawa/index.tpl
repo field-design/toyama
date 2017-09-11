@@ -151,7 +151,7 @@
         <ul>
             {foreach from=$pager item=value}
                 {if $value == ($current_page - 2) && $current_page != count($pager) || ($current_page == count($pager) && $value == $current_page - 3)}
-                    <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}">前へ</a></li>
+                    <li class="prev"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page - 1}">Prev</a></li>
                 {elseif $value == $current_page - 1 || $value == $current_page + 1 }
                     <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
                 {elseif $current_page == 1 && $value == $current_page + 2 }
@@ -159,7 +159,7 @@
                 {elseif $current_page == count($pager) && $value == $current_page - 2 }
                     <li><a class="page" href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$value}">{$value}</a></li>
                 {elseif $value == ($current_page + 2) && $current_page != 1 || ($current_page == 1 && $value == $current_page + 3) }
-                    <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }">次へ</a></li>
+                    <li class="next"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?page={$current_page + 1 }">Next</a></li>
                 {elseif $value == $current_page}
                     <li><span class='current'>{$value}</span></li>
                 {/if}
