@@ -140,7 +140,10 @@
               </div>
               <div class="card-content">
                 <div class="content">
-                  <div>
+                  <div class="editor">
+                      <small>{$settings_list[$data.person_id]['company_name']}</small>
+                  </div>
+                  <div class="plan-ttl">
                   {$data.sub_title}<br />
                   <span class="product_title">{$data.title}</span>
                   </div>

@@ -12,6 +12,89 @@ require_once(CLS_DIR . 'ContactBase.php');
 class Contact extends ContactBase {
 
     /*******************
+    お問い合わせ
+    ********************/
+    function sendContact($post) {
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        //============
+        //お客様宛
+        //============
+        $to      = htmlspecialchars($post['email']);
+        $subject = 'I received your inquiry';
+        
+        $message = 'Dear ' . htmlspecialchars($post['simei']) . "\r\n";
+        $message .= "\r\n";
+        $message .= "We received your inquiries on this site," . "\r\n";
+        $message .= "Thank you very much." . "\r\n";
+        $message .= "\r\n";
+        $message .= "The content of the inquiry is as follows." . "\r\n";
+        $message .= "Since we will contact you again," . "\r\n";
+        $message .= "Please wait for a while." . "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "Content of inquiry" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= 'Your name：' . htmlspecialchars($post['simei']) . "\r\n";
+        $message .= 'Email address：' .  htmlspecialchars($post['email']) . "\r\n";
+        $message .= 'Telephone number：' .  htmlspecialchars($post['tel']) . "\r\n";
+        $message .= 'Content of inquiry：' . "\r\n" .  htmlspecialchars($post['naiyo']) . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "Publisher information" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "Nagano Sales Office Co., Ltd. Tourism Sales Corporation" . "\r\n";
+        $message .= "〒380-0823 Nagano City, Nagano-shi," . "\r\n";
+        $message .= "Minami-Chitose 1-7-1 Second Arai Building 4F" . "\r\n";
+        $message .= "TEL：026-224-3501" . "\r\n";
+        $message .= "FAX：026-224-3555" . "\r\n";
+        $message .= "Email：admin@just-toyama.visit-town.com" . "\r\n";
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            return MESSAGE_ERROR_MAIL_SEND;
+        }
+
+        //============
+        //管理者宛
+        //============
+        $to      = OWNER_MAIL;
+        $subject = '【いまからえらべるTRAVEL】問い合わせが入りました';
+        
+        $message = '以下の内容で問い合わせが入りました。' . "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "お問い合わせ内容" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= 'お名前：' . htmlspecialchars($post['simei']) . "\r\n";
+        $message .= 'メールアドレス：' .  htmlspecialchars($post['email']) . "\r\n";
+        $message .= '電話番号：' .  htmlspecialchars($post['tel']) . "\r\n";
+        $message .= 'お問い合わせ内容：' . "\r\n" .  htmlspecialchars($post['naiyo']) . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "サイト運営者情報" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "株式会社観光販売システムズ　長野営業所" . "\r\n";
+        $message .= "〒380-0823　長野県長野市南千歳1-7-1　第2荒井ビル4Ｆ" . "\r\n";
+        $message .= "TEL：026-224-3501" . "\r\n";
+        $message .= "FAX：026-224-3555" . "\r\n";
+        $message .= "メール：admin@just-toyama.visit-town.com" . "\r\n";
+
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            return MESSAGE_ERROR_MAIL_SEND;
+        }
+
+        return '';
+    }
+
+    /*******************
     申し込み完了（カード）
     ********************/
     function sendCardOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
@@ -45,7 +128,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -70,7 +153,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -121,7 +204,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -152,7 +235,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -190,7 +273,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -216,7 +299,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -256,7 +339,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
     }
@@ -292,7 +375,7 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
     }
@@ -390,11 +473,13 @@ class Contact extends ContactBase {
     ********************/
     function getProductQuestionEn($order_data, $product_data) {
         $message = '';
-        $message .= "*********************\r\n";
-        $message .= "Questions\r\n";
-        $message .= "*********************\r\n";
-        for($i = 0; $i < count($product_data['question']); $i++) {
-            $message .= "・" . $product_data['question'][$i] . "：" . $order_data['question'][$i] . "\r\n";
+        if(isset($product_data['question']) && implode('', $product_data['question']) != '') {            
+            $message .= "*********************\r\n";
+            $message .= "Questions\r\n";
+            $message .= "*********************\r\n";
+            for($i = 0; $i < count($product_data['question']); $i++) {
+                $message .= "・" . $product_data['question'][$i] . "：" . $order_data['question'][$i] . "\r\n";
+            }
         }
         $message .= "\r\n";
 

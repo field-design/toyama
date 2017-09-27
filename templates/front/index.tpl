@@ -120,7 +120,11 @@
             {else}
                 {foreach from=$productlist item=product}
                 <div class="tours">
-                    <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.product_id|default:''}">
+                    {if isset($product.area['area1'])}
+                        <a class="cf" href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product.product_id|default:''}">
+                    {else}
+                        <a class="cf" href="{$smarty.const.URL_ROOT_PATH}plan/?plan={$product.product_id|default:''}">
+                    {/if}
                         <div class="image" style="background-image: url({$product.main_photo1|default:''});"></div>
                         <div class="overview">
                             <div class="inner">

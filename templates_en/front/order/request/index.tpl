@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>Application | {Constant::$siteNameNiikawa}</title>
+<title>Application | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -39,7 +39,11 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
+{if in_array('area1', $product_data.area)}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{/if}
 <!-- END global-header -->
 
 
@@ -164,7 +168,11 @@
 
 
 <!-- START global-footer -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{/if}
 <!-- END global-footer -->
 
 

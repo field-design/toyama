@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>お申し込み | {$smarty.const.SITE_TITLE_FRONT}</title>
+<title>お申し込み | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -39,7 +39,11 @@
 
 
 <!-- START global-header -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{/if}
 <!-- END global-header -->
 
 
@@ -113,6 +117,7 @@
 
                     <div class="input-area">
                         <label class="label">メールアドレス<span class="must">※必須入力</span></label>
+                        <div><span class="must">※モバイルでお申し込みの場合、株式会社観光販売システムズからのメール(@kanko-pro.co.jp)が受信できるように設定のうえ、お手続きください。</span></div>
                         <div class="input-field">
                             <input name="mail" class="input long" type="email" placeholder="例：sample@example.com" value="{$order_data.mail|default:''}">
                         </div>
@@ -314,6 +319,13 @@
                     </div>
 
                 </div>
+                <div class="input-area">
+                    <label class="label">当サイトからお得な情報等をお知らせするメールを配信してもよろしいですか？</label>
+                    <div class="input-field">
+                        <input type="radio" id="mail-yes" name="mail_send_flg" value="1" {if $order_data.mail_send_flg==1}checked{/if}> <label for="mail-yes" class="radio">はい</label>
+                        <input type="radio" id="mail-no" name="mail_send_flg" value="0" {if $order_data.mail_send_flg==0}checked{/if}> <label for="mail-no" class="radio">いいえ</label>
+                    </div>
+                </div>
             </section>
 
             <div class="pagenation">
@@ -334,7 +346,11 @@
 
 
 <!-- START global-footer -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{/if}
 <!-- END global-footer -->
 
 

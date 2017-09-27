@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>お申し込み | {$smarty.const.SITE_TITLE_FRONT}</title>
+<title>お申し込み | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -39,7 +39,11 @@
 
 
 <!-- START global-header -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{/if}
 <!-- END global-header -->
 
 
@@ -149,6 +153,7 @@
             </section>
 
             {if isset($product_data.question)}
+            {if ""|implode:$product_data.question != ""}
             <section class="order-input">
                 <h3 class="product-ttl">ご質問事項</h3>
                 <div class="input-wrap">
@@ -164,10 +169,15 @@
                 </div>
             </section>
             {/if}
+            {/if}
 
             <div class="pagenation">
                 <div class="back">
+                    {if in_array('area1', $product_data.area)}
                     <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$product_data.product_id}'">戻る</button>
+                    {else}
+                    <button type="button" onclick="javascript:location.href='{$smarty.const.URL_ROOT_PATH}plan/?plan={$product_data.product_id}'">戻る</button>                    
+                    {/if}
                 </div>
                 <div class="next">
                     <button name="next" type="submit" id="submit">次へ</button>
@@ -185,7 +195,11 @@
 
 
 <!-- START global-footer -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{/if}
 <!-- END global-footer -->
 
 

@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>Application | {Constant::$siteNameNiikawa}</title>
+<title>Application | {Constant::$siteName}</title>
 <meta name="description" content="">
 <meta name="keywords" content="">
 <!-- icons -->
@@ -39,7 +39,11 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$page_data.h1_tag}
+{if in_array('area1', $product_data.area)}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl'}
+{/if}
 <!-- END global-header -->
 
 
@@ -314,6 +318,13 @@
                     </div>
 
                 </div>
+                <div class="input-area">
+                    <label class="label">Are you sure you want to deliver an e-mail notifying you of useful information etc. from this site?</label>
+                    <div class="input-field">
+                        <input type="radio" id="mail-yes" name="mail_send_flg" value="1" {if $order_data.mail_send_flg==1}checked{/if}> <label for="mail-yes" class="radio">Yes</label>
+                        <input type="radio" id="mail-no" name="mail_send_flg" value="0" {if $order_data.mail_send_flg==0}checked{/if}> <label for="mail-no" class="radio">No</label>
+                    </div>
+                </div>
             </section>
 
             <div class="pagenation">
@@ -334,7 +345,11 @@
 
 
 <!-- START global-footer -->
+{if in_array('area1', $product_data.area)}
 {include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{else}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
+{/if}
 <!-- END global-footer -->
 
 

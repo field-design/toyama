@@ -11,7 +11,7 @@
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>{$data.title|default:''} | {Constant::$siteNameNiikawa}</title>
+<title>{$data.title|default:''} | {Constant::$siteName}</title>
 <meta name="description" content="{$page_data.description_tag|default:''}">
 <meta name="keywords" content="{$page_data.keyword_tag|default:''}">
 <!-- icons -->
@@ -26,7 +26,7 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{Constant::$siteNameNiikawa}">
+<meta property="og:site_name" content="{Constant::$siteName}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{$data.title|default:''}">
 <meta property="og:description" content="{$data.ExplanatoryText|default:''}">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$data.title|default:''|cat:'　|　'|cat:{Constant::$siteNameNiikawa}}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$data.title|default:''|cat:'　|　'|cat:{Constant::$siteName}}
 <!-- END global-header -->
 
 
@@ -59,7 +59,7 @@
     <div data-lg>
         <ul>
             <li><a href="{$smarty.const.URL_ROOT_PATH}">Home</a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">Buy a tour</a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/">Buy a tour</a></li>
             <li>{$data.title}</li>
         </ul>
     </div>
@@ -90,11 +90,11 @@
             <ul class="keyword">
                 {section name=i start=0 loop=count($data.area_id)}
                     {assign var='index' value=$smarty.section.i.index}
-                    <li class="area"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={$data.area_id[$index]|default:''}">{$data.area_text[$index]|default:''}</a></li>
+                    <li class="area"><a href="{$smarty.const.URL_ROOT_PATH}list/?area={$data.area_id[$index]|default:''}">{$data.area_text[$index]|default:''}</a></li>
                 {/section}
                 {section name=i start=0 loop=count($data.category_id)}
                     {assign var='index' value=$smarty.section.i.index}
-                    <li class="genre"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={$data.category_id[$index]|default:''}">{$data.category_text[$index]|default:''}</a></li>
+                    <li class="genre"><a href="{$smarty.const.URL_ROOT_PATH}list/?Category={$data.category_id[$index]|default:''}">{$data.category_text[$index]|default:''}</a></li>
                 {/section}
             </ul>
         </div>
@@ -419,7 +419,7 @@
                         <h5>{$item.title|default:''}</h5>
                         <p>{$item.description|default:''}</p>
                         <div class="more">
-                            <a href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$item.product_id|default:''}"><span>See details about this plan</span></a>
+                            <a href="{$smarty.const.URL_ROOT_PATH}plan/?plan={$item.product_id|default:''}"><span>See details about this plan</span></a>
                         </div>
                     </div>
                 </div>
@@ -436,7 +436,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->
 
 

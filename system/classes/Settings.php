@@ -347,7 +347,12 @@ class Settings extends Entity {
             }
             if( empty($data['informationTime']) ) {
                 $err_msg['informationTime'] = MESSAGE_ERROR_REQUIRE;
+            } else {
+                if( !preg_match("/\d{2}:\d{2}-\d{2}:\d{2}/", $data['informationTime']) ) {
+                    $err_msg['informationTime'] = MESSAGE_ERROR_INFORMATION_TIME;
+                }
             }
+
 
         }
 

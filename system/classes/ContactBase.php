@@ -97,7 +97,7 @@ class ContactBase {
         $message .= '事業者ID：' . $person_id;
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             return MESSAGE_ERROR_MAIL_SEND;
         }
 
@@ -111,15 +111,75 @@ class ContactBase {
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
-        $to      = OWNER_MAIL;
-        $subject = 'お問い合わせ';
-        $message = 'お名前：' . "\r\n" . htmlspecialchars($post['simei']) . "\r\n";
-        $message .= 'メールアドレス：' . "\r\n" .  htmlspecialchars($post['email']) . "\r\n";
-        $message .= '電話番号：' . "\r\n" .  htmlspecialchars($post['tel']) . "\r\n";
+        //============
+        //お客様宛
+        //============
+        $to      = htmlspecialchars($post['email']);
+        $subject = 'お問い合わせを受け付けました';
+        
+        $message = htmlspecialchars($post['simei']) . '様' . "\r\n";
+        $message .= "\r\n";
+        $message .= "この度は、当サイトにお問い合わせをいただき、" . "\r\n";
+        $message .= "誠にありがとうございます。" . "\r\n";
+        $message .= "\r\n";
+        $message .= "お問合せいただい内容は次の通りです。" . "\r\n";
+        $message .= "あらためて担当者より連絡させていただきますので、" . "\r\n";
+        $message .= "今しばらくお待ちください。" . "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "お問い合わせ内容" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= 'お名前：' . htmlspecialchars($post['simei']) . "\r\n";
+        $message .= 'メールアドレス：' .  htmlspecialchars($post['email']) . "\r\n";
+        $message .= '電話番号：' .  htmlspecialchars($post['tel']) . "\r\n";
         $message .= 'お問い合わせ内容：' . "\r\n" .  htmlspecialchars($post['naiyo']) . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "サイト運営者情報" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "株式会社観光販売システムズ　長野営業所" . "\r\n";
+        $message .= "〒380-0823　長野県長野市南千歳1-7-1　第2荒井ビル4Ｆ" . "\r\n";
+        $message .= "TEL：026-224-3501" . "\r\n";
+        $message .= "FAX：026-224-3555" . "\r\n";
+        $message .= "メール：admin@just-toyama.visit-town.com" . "\r\n";
+
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            return MESSAGE_ERROR_MAIL_SEND;
+        }
+
+        //============
+        //管理者宛
+        //============
+        $to      = OWNER_MAIL;
+        $subject = '【いまからえらべるTRAVEL】問い合わせが入りました';
+        
+        $message = '以下の内容で問い合わせが入りました。' . "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "お問い合わせ内容" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= 'お名前：' . htmlspecialchars($post['simei']) . "\r\n";
+        $message .= 'メールアドレス：' .  htmlspecialchars($post['email']) . "\r\n";
+        $message .= '電話番号：' .  htmlspecialchars($post['tel']) . "\r\n";
+        $message .= 'お問い合わせ内容：' . "\r\n" .  htmlspecialchars($post['naiyo']) . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "サイト運営者情報" . "\r\n";
+        $message .= "*********************" . "\r\n";
+        $message .= "株式会社観光販売システムズ　長野営業所" . "\r\n";
+        $message .= "〒380-0823　長野県長野市南千歳1-7-1　第2荒井ビル4Ｆ" . "\r\n";
+        $message .= "TEL：026-224-3501" . "\r\n";
+        $message .= "FAX：026-224-3555" . "\r\n";
+        $message .= "メール：admin@just-toyama.visit-town.com" . "\r\n";
+
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             return MESSAGE_ERROR_MAIL_SEND;
         }
 
@@ -160,7 +220,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -185,7 +245,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -236,7 +296,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -267,7 +327,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -305,7 +365,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -331,7 +391,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 
@@ -371,7 +431,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
     }
@@ -407,7 +467,7 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !mb_send_mail($to, $subject, $message, $headers) ){
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
     }
@@ -502,12 +562,16 @@ class ContactBase {
     質問事項取得
     ********************/
     function getProductQuestion($order_data, $product_data) {
+
         $message = '';
-        $message .= "*********************\r\n";
-        $message .= "ご質問事項\r\n";
-        $message .= "*********************\r\n";
-        for($i = 0; $i < count($product_data['question_jp']); $i++) {
-            $message .= "・" . $product_data['question_jp'][$i] . "：" . $order_data['question'][$i] . "\r\n";
+
+        if(isset($product_data['question_jp']) && implode('', $product_data['question_jp']) != '') {
+            $message .= "*********************\r\n";
+            $message .= "ご質問事項\r\n";
+            $message .= "*********************\r\n";
+            for($i = 0; $i < count($product_data['question_jp']); $i++) {
+                $message .= "・" . $product_data['question_jp'][$i] . "：" . $order_data['question'][$i] . "\r\n";
+            }
         }
         $message .= "\r\n";
 
@@ -533,5 +597,61 @@ class ContactBase {
         $message .= "※ご予約のお取消・変更につきましては、上記連絡先までご連絡をお願い致します。\r\n";
 
         return $message;
+    }
+
+    /*******************
+    メール送信処理
+    ********************/
+    function send_mail($to, $subject, $message, $headers) {
+        //to設定
+        $send_to = array ();
+        $send_to['name'] = '';
+        $send_to['address'] = $to;
+
+        //from設定
+        $send_from = array ();
+        $send_from['name'] = '';
+        $send_from['address'] = SYS_MAIL_FROM;
+        
+        //POSTデータ
+        $data = array(
+            'api_user' => EMAIL_SENDING_API_USER,
+            'api_key' => EMAIL_SENDING_API_KEY,
+            'to' => json_encode($send_to),
+            'from' => json_encode($send_from),
+            'subject' => $subject,
+            'text' => $message,
+        );
+
+        $data = http_build_query($data);
+        
+        //Request Header
+        $header = array(
+            "Content-Type: application/x-www-form-urlencoded",
+            "Content-Length: ".strlen($data)
+        );
+        $header = implode("\r\n", $header);
+        
+        //context生成
+        $context = array(
+            "http" => array(
+                "method"  => "POST",
+                "header"  => $header,
+                "content" => $data,
+                "ignore_errors" => true,
+            )
+        );
+
+        $response_body = file_get_contents(EMAIL_SENDING_API_URL, false, stream_context_create($context));
+        $response_header = $http_response_header;
+    
+        if(strpos($response_header[0], '200') === false ) {
+            $log = new Log();
+            $log->setErrorLog($http_response_header);
+            $log->setErrorLog($response_body);
+            return false;
+        }
+
+        return true;
     }
 }

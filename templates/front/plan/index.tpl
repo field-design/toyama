@@ -7,11 +7,11 @@
 　postページ
 ******************************************************}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <head>
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/meta.tpl'}
 
-<title>{$data.title|default:''} | {Constant::$siteNameNiikawa}</title>
+<title>{$data.title|default:''} | {Constant::$siteName}</title>
 <meta name="description" content="{$page_data.description_tag|default:''}">
 <meta name="keywords" content="{$page_data.keyword_tag|default:''}">
 <!-- icons -->
@@ -26,7 +26,7 @@
 <!-- DNS prefetch -->
 {include file=$smarty.const.FRONT_DIR|cat:'includes/head/dns_prefetch.tpl'}
 <!-- OGP -->
-<meta property="og:site_name" content="{Constant::$siteNameNiikawa}">
+<meta property="og:site_name" content="{Constant::$siteName}">
 <meta property="og:type" content="website">
 <meta property="og:title" content="{$data.title|default:''}">
 <meta property="og:description" content="{$data.ExplanatoryText|default:''}">
@@ -47,7 +47,7 @@
 
 
 <!-- START global-header -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header_niikawa.tpl' h1_tag=$data.title|default:''|cat:'　|　'|cat:{Constant::$siteNameNiikawa}}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/head/global_header.tpl' h1_tag=$data.title|default:''|cat:'　|　'|cat:Constant::$siteName}
 <!-- END global-header -->
 
 
@@ -58,8 +58,8 @@
 <div class="breadcrumb">
     <div data-lg>
         <ul>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}">Home</a></li>
-            <li><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/">Buy a tour</a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}">トップページ</a></li>
+            <li><a href="{$smarty.const.URL_ROOT_PATH}list/">ツアーを購入する</a></li>
             <li>{$data.title}</li>
         </ul>
     </div>
@@ -90,16 +90,16 @@
             <ul class="keyword">
                 {section name=i start=0 loop=count($data.area_id)}
                     {assign var='index' value=$smarty.section.i.index}
-                    <li class="area"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?area={$data.area_id[$index]|default:''}">{$data.area_text[$index]|default:''}</a></li>
+                    <li class="area"><a href="{$smarty.const.URL_ROOT_PATH}list/?area={$data.area_id[$index]|default:''}">{$data.area_text[$index]|default:''}</a></li>
                 {/section}
                 {section name=i start=0 loop=count($data.category_id)}
                     {assign var='index' value=$smarty.section.i.index}
-                    <li class="genre"><a href="{$smarty.const.URL_ROOT_PATH}niikawa/list/?Category={$data.category_id[$index]|default:''}">{$data.category_text[$index]|default:''}</a></li>
+                    <li class="genre"><a href="{$smarty.const.URL_ROOT_PATH}list/?Category={$data.category_id[$index]|default:''}">{$data.category_text[$index]|default:''}</a></li>
                 {/section}
             </ul>
         </div>
         <div class="cost caption">
-            <h3>Price</h3>
+            <h3>代 金</h3>
             {if $data.disp_price_page == 1}
                 {section name=i start=0 loop=count($data.disp_course)}
                     {assign var='index' value=$smarty.section.i.index}
@@ -118,7 +118,7 @@
                                     <tr>
                                         <th>{$data.disp_price_type_text[$index][$j_index]}</th>
                                         <td>
-                                            <span class="price"><span class="num3">{$data.disp_price_value[$index][$j_index]}</span>Yen</span>
+                                            <span class="price"><span class="num3">{$data.disp_price_value[$index][$j_index]}</span>円</span>
                                             {foreach from=$condition item=value}
                                             {if $value != ''}<span class="remarks">{$value}</span>{/if}
                                             {/foreach}
@@ -142,7 +142,7 @@
                                     <tr>
                                         <th>{$price_list[$index].price_type_text[$j_index]}</th>
                                         <td>
-                                            <span class="price"><span class="num3">{$price_list[$index].price_value[$j_index]}</span>Yen</span>
+                                            <span class="price"><span class="num3">{$price_list[$index].price_value[$j_index]}</span>円</span>
                                             {foreach from=$price_list[$index].price_condition[$j_index] item=value}
                                             {if $value != ''}<span class="remarks">{$value}</span>{/if}
                                             {/foreach}
@@ -156,11 +156,11 @@
             {/if}
         </div>
         <div class="information caption">
-            <h3>Plan Details</h3>
+            <h3>プラン詳細</h3>
             <table>
                 <tbody>
                     <tr>
-                        <th>Duration</th>
+                        <th>期間</th>
                         <td>
                             {$data.period_from_text|default:''}～{$data.period_to_text|default:''}<br />
                             {$data.period_note|default:''}
@@ -168,13 +168,13 @@
                     </tr>
                     {if $data.period_exclusion != ''}
                     <tr>
-                        <th>Excluded Dates</th>
+                        <th>除外日</th>
                         <td>{$data.period_exclusion|default:''|nl2br}</td>
                     </tr>
                     {/if}
                     {if count($data.price_include) > 0}
                     <tr>
-                        <th>What is included in the travel/plan price</th>
+                        <th>ご旅行・プラン代金に含まれるもの</th>
                         <td>
                             {foreach from=$data.price_include item=value}
                             {if $value != ''}
@@ -185,45 +185,45 @@
                     </tr>
                     {/if}
                     <tr>
-                        <th>Minimum number of people for reservation</th>
-                        <td>{$data.min_member|default:''} person/people</td>
+                        <th>最少受付人員</th>
+                        <td>{$data.min_member|default:''}名</td>
                     </tr>
                     <tr>
-                        <th>Minimum number of travelers</th>
-                        <td>{$data.min_depart|default:''} person/people</td>
+                        <th>最少催行人員</th>
+                        <td>{$data.min_depart|default:''}名</td>
                     </tr>
                     <tr>
-                        <th>Maximum number of applicants</th>
-                        <td>{$data.max_order|default:''} person/people</td>
+                        <th>最大申込人員</th>
+                        <td>{$data.max_order|default:''}名</td>
                     </tr>
                     {if $data.operator != ''}
                     <tr>
-                        <th>Operating Company</th>
+                        <th>運行会社</th>
                         <td>{$data.operator|default:''}</td>
                     </tr>
                     {/if}
                     <tr>
-                        <th>Tour Conductor</th>
-                        <td>{if $data.conductor_flg == 1}Yes{else}No{/if}</td>
+                        <th>添乗員の有無</th>
+                        <td>{if $data.conductor_flg == 1}あり{else}なし{/if}</td>
                     </tr>
                     {if $data.start_time != ''}
                     <tr>
-                        <th>Start Time</th>
+                        <th>スタート時間</th>
                         <td>{$data.start_time|default:''}</td>
                     </tr>
                     {/if}
                     {if $data.tour_time != ''}
                     <tr>
-                        <th>Tour Time</th>
+                        <th>所要時間</th>
                         <td>{$data.tour_time|default:''}</td>
                     </tr>
                     {/if}
                     <tr>
-                        <th>Reservation Deadline</th>
+                        <th>予約締切</th>
                         <td>{$data.order_deadline|default:''}</td>
                     </tr>
                     <tr>
-                        <th>Payment Method</th>
+                        <th>決済方法</th>
                         <td>{$person.settlement_text|implode:','}</td>
                     </tr>
                 </tbody>
@@ -231,8 +231,8 @@
         </div>
     </div>
     <div class="map caption">
-        <h5>- Meeting Place -</h5>
-        <p>Address is displayed when location is selected.</p>
+        <h5>ー集合場所ー</h5>
+        <p>場所を選択すると住所が表示されます。</p>
         <div id="contenido">
             <div id="lado" data-lg><div id="side_bar"></div></div>
             <div id="cuerpo"><div id="map_canvas"></div></div>
@@ -241,7 +241,7 @@
     <div data-lg>
         {if $data.notes|implode:'' != ''}
         <div class="caution caption">
-            <h5>- Important Points -</h5>
+            <h5>ー注意事項ー</h5>
             <ul>
                 {foreach from=$data.notes item=value}
                 {if $value != ''}
@@ -253,7 +253,7 @@
         {/if}
         {if $data.others|implode:'' != ''}
         <div class="other caption">
-            <h5>- Other -</h5>
+            <h5>ーその他ー</h5>
             <ul>
                 {foreach from=$data.others item=value}
                 {if $value != ''}
@@ -264,11 +264,11 @@
         </div>
         {/if}
         <div class="cancel caption">
-            <h5>- Cancellation Fee -</h5>
+            <h5>ー取消料ー</h5>
             {if $data.cancel_description != ''}
             <p>{$data.cancel_description|default:''}</p>
             {else}
-            <p>In cases where the customer cancels the contract after the contract has been completed, 1 customer will be charged a cancellation fee from their travel fee at the following rates. In cases where multiple people are participating and a portion of the customers cancel their contracts, we will charge the remaining customers a fee based on the difference according to the change in the number of people (around 1 vehicle/1 room per person) using transport and accommodation facilities.</p>
+            <p>契約成立後、お客様のご都合で契約を解除する場合、旅行代金に対してお客様1名につき下記の料率で取消料をいただきます。なお、複数人数のご参加で、一部のお客様が契約を解除される場合は、ご参加のお客様から運送・宿泊機関等の（1台・1室あたりの）ご利用人数の変更に対する差額代金をそれぞれいただきます。</p>
             {/if}
             <table>
                 <thead>
@@ -327,50 +327,50 @@
         </div>
 
         <div class="planning caption">
-            <h5>- Plan Provider Company -</h5>
+            <h5>ー企画実施会社ー</h5>
             {if $person.agency == 1}
-                <p>{$person.marketer_type|default:''}<br>{$person.projectAddress|default:''}<br>Registration of Travel Services：{$person.Registered_text|default:''}{$person.Travel_text|default:''} {$person.projectNumber|default:''}<br>Certified General Travel Services Manager：{$person.TravelAdmin|default:''}</p>
+                <p>{$person.marketer_type|default:''}<br>{$person.projectAddress|default:''}<br>旅行業登録：{$person.Registered_text|default:''}{$person.Travel_text|default:''}第{$person.projectNumber|default:''}号<br>総合旅行業務取扱管理者：{$person.TravelAdmin|default:''}</p>
                 <ul>
                     {if $person.Clause == 2}
-                        <li><a href="{$person.file2|default:''}" target="_blank">Contract</a></li>
+                        <li><a href="{$person.file2|default:''}" target="_blank">約款</a></li>
                     {else if $person.Clause == 3}
-                        <li><a href="{$person.ClauseURL|default:''}" target="_blank">Contract</a></li>
+                        <li><a href="{$person.ClauseURL|default:''}" target="_blank">約款</a></li>
                     {else}
-                        <li><a href="{$smarty.const.DEFAULT_CLAUSE}" target="_blank">Contract</a></li>
+                        <li><a href="{$smarty.const.DEFAULT_CLAUSE}" target="_blank">約款</a></li>
                     {/if}
 
                     {if $person.file_select == 1}
-                        <li><a href="{$person.file|default:''}" target="_blank">Travel Conditions</a></li>
+                        <li><a href="{$person.file|default:''}" target="_blank">旅行条件書</a></li>
                     {else}
-                        <li><a href="{$person.condition_url|default:''}" target="_blank">Travel Conditions</a></li>
+                        <li><a href="{$person.condition_url|default:''}" target="_blank">旅行条件書</a></li>
                     {/if}
 
                     {if $person.privacypolicy == 1}
-                        <li><a href="{$person.file3|default:''}" target="_blank">Privacy Protection Policy</a></li>
+                        <li><a href="{$person.file3|default:''}" target="_blank">個人情報保護方針</a></li>
                     {else}
-                        <li><a href="{$person.PrivacyURL|default:''}" target="_blank">Privacy Protection Policy</a></li>
+                        <li><a href="{$person.PrivacyURL|default:''}" target="_blank">個人情報保護方針</a></li>
                     {/if}
 
                     {if $person.TravelPriceList == 1}
-                        <li><a href="{$person.file4|default:''}" target="_blank">Price List of Travel Services</a></li>
+                        <li><a href="{$person.file4|default:''}" target="_blank">旅行業務取扱料金表</a></li>
                     {else}
-                        <li><a href="{$person.PricelistURL|default:''}" target="_blank">Price List of Travel Services</a></li>
+                        <li><a href="{$person.PricelistURL|default:''}" target="_blank">旅行業務取扱料金表</a></li>
                     {/if}
 
                 </ul>
             {else}
-                <p>{$person.display_name|default:''}<br>〒{$person.zipcode|implode:'-'|default:''} {Constant::$aryPrefEn[$person.pref]|default:''} {$person.address|default:''}</p>                
+                <p>{$person.display_name|default:''}<br>〒{$person.zipcode|implode:'-'|default:''} {Constant::$aryPref[$person.pref]|default:''}{$person.address|default:''}</p>                
             {/if} 
-            <p>Contact Phone Number：<a href="tel:{$person.tel_|implode:''|default:''}">{$person.tel_|implode:'-'|default:''}</a></p>
+            <p>お問い合わせ先TEL：<a href="tel:{$person.tel_|implode:''|default:''}">{$person.tel_|implode:'-'|default:''}</a></p>
         </div>
 
         <div class="calendar caption" id="entry">
-            <h3>Application</h3>
-            <div class="order-table-section en">
+            <h3>お申し込み</h3>
+            <div class="order-table-section">
                 <div class="course-select">
-                    <p class="label"><span>Please select a course</span></p>
+                    <p class="label"><span>コースを選択してください</span></p>
                     <select name="select" id="course_select">
-                		<option value="" selected="selected">Please select a course</option>
+                		<option value="" selected="selected">コースを選択してください</option>
                         {section name=i start=0 loop=count($data.course_id)}
                             {assign var='index' value=$smarty.section.i.index}
                             <option value="{$data.course_id[$index]}">{$data.course_name[$index]}</option>
@@ -382,7 +382,7 @@
             </div>
         </div>
         <div class="details caption">
-            <h3>Plan Contents</h3>
+            <h3>プラン内容</h3>
             <div class="accordion">
                 {section name=i start=0 loop=count($data.detail_title)}
                     {assign var='index' value=$smarty.section.i.index}
@@ -398,7 +398,7 @@
                         {/if}
                         {if $data.detail_link[$index] != ''}
                         <div class="more">
-                            <a href="{$data.detail_link[$index]}" target="_blank">Click here for details<i class="fa fa-fw fa-external-link"></i></a>
+                            <a href="{$data.detail_link[$index]}" target="_blank">詳しくはこちらへ<i class="fa fa-fw fa-external-link"></i></a>
                         </div>
                         {/if}
                     </div>
@@ -409,7 +409,7 @@
     {if isset($recommend_data) && count($recommend_data) > 1}
     <div class="recommend">
         <div data-lg>
-            <h4>People looking at this plan also looked at these plans</h4>
+            <h4>このプランを見た人はこんなプランも見ています</h4>
             <div class="wrap cf">
                 {foreach from=$recommend_data item=item}
                 {if $item.product_id != $data.product_id}
@@ -419,7 +419,7 @@
                         <h5>{$item.title|default:''}</h5>
                         <p>{$item.description|default:''}</p>
                         <div class="more">
-                            <a href="{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$item.product_id|default:''}"><span>See details about this plan</span></a>
+                            <a href="{$smarty.const.URL_ROOT_PATH}plan/?plan={$item.product_id|default:''}"><span>このプランを詳しく見る</span></a>
                         </div>
                     </div>
                 </div>
@@ -436,7 +436,7 @@
 
 
 <!-- START global-footer -->
-{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer_niikawa.tpl'}
+{include file=$smarty.const.FRONT_DIR|cat:'includes/foot/global_footer.tpl'}
 <!-- END global-footer -->
 
 
@@ -582,7 +582,6 @@
         var plan = '{$data.product_id}';
         var now_ym = '{$smarty.now|date_format:'%Y-%m-01'}';
         var url_root = '{$smarty.const.URL_ROOT_PATH}';
-        var lang = {$lang};
         {literal}
         function setStockCalendar(ym, cls){
             $.ajax({
@@ -596,7 +595,6 @@
                         'few':few,
                         'url_root':url_root,
                         'plan':plan,
-                        'lang':lang,
                         'course':$('#course_select').val()
                     });
                     $('#calendar a.button.prev').click(function() {

@@ -164,6 +164,7 @@ class Order extends Entity {
     
         $this->columns[] = 'withGender';
         $this->columnsDef[] = array();
+
     }
 
     /******************************
@@ -287,7 +288,7 @@ class Order extends Entity {
 
         foreach($session_data as $key => $value) {
             if( array_key_exists($key, $data)) {
-                if ( is_null($data[$key]) || $data[$key] == '' || (is_array($data[$key]) && count($data[$key]) == 0))  {
+                if(isset($_POST) && !array_key_exists($key, $_POST)){
                     $data[$key] = $session_data[$key];
                 }
             } else {
@@ -821,6 +822,7 @@ class Order extends Entity {
         $params['order_status'] = $request_flg ? 1 : 5; // 1:承認待ち 5:決済処理中;
         $params['request_flg'] = $request_flg ? 1 : 0;
         $params['note'] = $data['note'];
+        $params['mail_send_flg'] = $data['mail_send_flg'];
         $params['lang'] = $global_lang;
         $params['regist_date'] = $time_stamp;
         $params['update_date'] = $time_stamp;
@@ -1068,6 +1070,10 @@ class Order extends Entity {
             $data['note'] = htmlspecialchars($_POST['note']);
         }
 
+        if(isset($_POST['mail_send_flg'])) {
+            $data['mail_send_flg'] = htmlspecialchars($_POST['mail_send_flg']);
+        }
+
         return $data;
     }
 
@@ -1078,6 +1084,7 @@ class Order extends Entity {
         $data = parent::getNewData();
 
         $data['amount'] = array();
+        $data['mail_send_flg'] = 1;
 
         return $data;
     }

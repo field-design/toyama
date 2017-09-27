@@ -19,6 +19,7 @@ define('MESSAGE_ERROR_REQUIRE_TEL', '電話番号または携帯電話番号を�
 define('MESSAGE_ERROR_TEL', '電話番号が不正です。');
 define('MESSAGE_ERROR_DATE', '日付が不正です。');
 define('MESSAGE_ERROR_NUMBER', '数値を入力してください。');
+define('MESSAGE_ERROR_INFORMATION_TIME', '受付時間は「hh:mm-hh:mm」形式で入力してください。');
 
 define('MESSAGE_ERROR_NO_AUTH', '権限がありません。');
 

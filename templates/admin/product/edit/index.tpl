@@ -500,7 +500,14 @@
             </span>
         </h2>
         <div class="conts-body message-body">
-
+            <div class="control">
+                <label class="label">説明文</label>
+                <div class="control">
+                    <div class="help counter">残り<span class="count">256</span>文字</strong></div>
+                    <textarea name="cancel_description" class="textarea limited" placeholder="例：契約成立後、お客様のご都合で契約を解除する場合、旅行代金に対してお客様1名につき下記の料率で取消料をいただきます。" maxlength="256">{$data.cancel_description|default:''}</textarea>
+                </div>
+            </div>
+            <span class="control help">未入力の場合は、プロフィールで設定した取消料が表示されます。</span>
             <label class="label">
                 料率
                 <span class="help">最大10件まで追加可能</span>
@@ -744,38 +751,6 @@
                 <tbody>
                     <tr>
                         <th>
-                            <span class="icon is-small"><i class="fa fa-object-group"></i></span>
-                            <span>記事グループ</span>
-                        </th>
-                        <td>
-                            <div class="field">
-                            <p class="control">
-                                <input class="input" name="group_slug" type="text" placeholder="例：masuzushi-taiken" value="{$data.group_slug|default:''}">
-                            </p>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            <span class="icon is-small"><i class="fa fa-language"></i></span>
-                            <span>表示言語</span>
-                        </th>
-                        <td>
-                            <p class="control">
-                                <label class="radio">
-                                    <input type="radio" name="lang" value="1" {if $data.lang=='' || $data.lang==1}checked="checked"{/if}> 日本語
-                                </label>
-                                <label class="radio">
-                                    <input type="radio" name="lang" value="2" {if $data.lang==2}checked="checked"{/if}> 英語
-                                </label>
-                                <!-- <label class="radio">
-                                    <input type="radio" name="lang" value="tw"> 台湾語
-                                </label> -->
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             <span class="icon is-small"><i class="fa fa-refresh"></i></span>
                             <span>ステータス</span>
                         </th>
@@ -825,11 +800,91 @@
                         </th>
                         <td>
                             {if $data.publish_status == 1}
-                            <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
-                                {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}
-                                <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
-                            </a>
+                                {if in_array('area1', $data.area)}
+                                    <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
+                                        {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}
+                                        <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
+                                    </a>
+                                {else}
+                                    <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}plan/?plan={$data.product_id}" target="_blank">
+                                        {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}plan/?plan={$data.product_id}
+                                        <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
+                                    </a>
+                                {/if}
+                            
                             {/if}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <span class="icon is-small"><i class="fa fa-lock"></i></span>
+                            <span>限定公開機能</span>
+                        </th>
+                        <td>
+                            <p class="control">
+                                <label class="radio">
+                                    <input type="radio" name="limited_link" value="0" {if $data.limited_link=='' || $data.limited_link==0}checked="checked"{/if}> 利用しない
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="limited_link" value="1" {if $data.limited_link==1}checked="checked"{/if}> 利用する
+                                </label>
+                            </p>
+                            <div class="limited-link-url">
+                                <label class="label">
+                                    <span class="icon is-small"><i class="fa fa-link"></i></span>
+                                    <span>限定公開URL</span>
+                                </label>
+                                <div class="control">
+                                    {if $enc_id != ''}
+                                    <a href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}plan/?plan={$enc_id}" target="_blank">
+                                        {$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}plan/?plan={$enc_id}
+                                        <span class="icon is-small"><i class="fa fa-fw fa-external-link"></i></span>
+                                    </a>
+                                    {else}
+                                        商品登録後、作成されます。
+                                    {/if}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            <span class="icon is-small"><i class="fa fa-language"></i></span>
+                            <span>多言語機能</span>
+                        </th>
+                        <td>
+                            <p class="control">
+                                <label class="radio">
+                                    <input type="radio" name="multilanguage" value="0" {if $data.multilanguage=='' || $data.multilanguage==0}checked="checked"{/if}> 利用しない
+                                </label>
+                                <label class="radio">
+                                    <input type="radio" name="multilanguage" value="1" {if $data.multilanguage==1}checked="checked"{/if}> 利用する
+                                </label>
+                            </p>
+                            <div class="multilanguage-on">
+                                <label class="label">
+                                    <span class="icon is-small"><i class="fa fa-object-group"></i></span>
+                                    <span>記事グループ</span>
+                                </label>
+                                <div class="control">
+                                    <input class="input" name="group_slug" type="text" placeholder="例：masuzushi-taiken" value="{$data.group_slug|default:''}">
+                                </div>
+                                <label class="label">
+                                    <span class="icon is-small"><i class="fa fa-language"></i></span>
+                                    <span>表示言語</span>
+                                </label>
+                                <div class="control">
+                                    <label class="radio">
+                                        <input type="radio" name="lang" value="1" {if $data.lang=='' || $data.lang==1}checked="checked"{/if}> 日本語
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="lang" value="2" {if $data.lang==2}checked="checked"{/if}> 英語
+                                    </label>
+                                    <!-- <label class="radio">
+                                        <input type="radio" name="lang" value="tw"> 台湾語
+                                    </label> -->
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -1203,6 +1258,41 @@ $('.area-group').click(function() {
         }
     }
 });
+
+/***************************
+限定公開URL
+****************************/
+$('.limited-link-url').hide();
+$('[name=limited_link]').click(function() {
+    if ($('input[name=limited_link]:eq(1)').prop('checked')) {
+        $('.limited-link-url').fadeIn();
+    } else {
+        $('.limited-link-url').fadeOut();
+    }
+});
+if ($('input[name=limited_link]:eq(1)').prop('checked')) {
+    $('.limited-link-url').fadeIn();
+} else {
+    $('.limited-link-url').fadeOut();
+}
+
+/***************************
+多言語機能
+****************************/
+$('.multilanguage-on').hide();
+$('[name=multilanguage]').click(function() {
+    if ($('input[name=multilanguage]:eq(1)').prop('checked')) {
+        $('.multilanguage-on').fadeIn();
+    } else {
+        $('.multilanguage-on').fadeOut();
+    }
+});
+if ($('input[name=multilanguage]:eq(1)').prop('checked')) {
+    $('.multilanguage-on').fadeIn();
+} else {
+    $('.multilanguage-on').fadeOut();
+}
+
 </script>
 <script>
     /***************************

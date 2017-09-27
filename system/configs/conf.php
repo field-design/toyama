@@ -8,11 +8,16 @@ PHP用　コンフィグ
 define('SITE_TITLE_FRONT', 'いまからえらべるTRAVELinにいかわ');
 define('SITE_TITLE_ADMIN', 'いまからえらべるTRAVEL');
 
+//メール送信API
+define('EMAIL_SENDING_API_URL', 'https://sandbox.smtps.jp/api/v2/emails/send.json');
+define('EMAIL_SENDING_API_USER', 'admin@just-toyama.visit-town.com');
+define('EMAIL_SENDING_API_KEY', 'CVX7bQhPeh');
+
 //オーナーメールアドレス
 define('OWNER_MAIL', 'support@nanala-it.com');
 
 //システムメールFrom
-define('SYS_MAIL_FROM', 'khs.nagano@kanko-pro.co.jp');
+define('SYS_MAIL_FROM', 'admin@toyama-dev.field-design.jp');
 
 // Spiral用
 define('SPIRAL_API_TOKEN', '00011KE6YZ1G4779f129548fef07f6c5e51399a31df6d90682cd');
@@ -34,6 +39,8 @@ define('ADMIN_INIT_LNG', 137.213263);
 
 // 承認メール用ソルト
 define('ORDER_ID_SALT', 'fd_sys_salt');
+// 限定公開URL用ソルト
+define('LIMITED_LINK_SALT', 'fd_sys_link_salt');
 
 // ベースディレクトリ定義（環境変数より取得）
 define('BASE_DIR', $_SERVER['FD_SYS_DIR']);

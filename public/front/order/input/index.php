@@ -74,6 +74,8 @@ if( !$err_flg ) {
 
 //商品データチェック
 if( !$err_flg ) {
+$log = new Log();
+$log->setErrorLog($order_data);
     $product_data = $product->getLangProduct($order_data['ProductID']);
     $course_data = $stock->getCourse($order_data['ProductID'], $order_data['course_id']);
     $order_date = strtotime($order_data['oderDate']);

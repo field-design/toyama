@@ -139,6 +139,18 @@ class Product extends Entity {
         $this->columnsDef[] = '';
         $this->tableName[] = $this->t_product_name;
 
+        $this->columns[] = 'multilanguage';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
+        $this->columns[] = 'limited_link';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+    
+        $this->columns[] = 'cancel_description';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
         //商品管理メタ情報
         $this->columns[] = 'main_photo';
         $this->columnsDef[] = array('');
@@ -435,9 +447,16 @@ class Product extends Entity {
     function getLangProductID($product_id, $lang = null) {
     
         $sql = '';
-        $sql .= 'select ifnull(group_slug, "") group_slug ';
+        $sql .= 'select ifnull(group_slug, "") group_slug, product_id, limited_link ';
         $sql .= 'from   ' . $this->t_product_name . ' ';
-        $sql .= 'where  product_id = :product_id ';
+
+        if(strlen($product_id) > 10) {
+            $sql .= 'where   SHA1(CONCAT("' . LIMITED_LINK_SALT . '", product_id)) = :product_id ';
+            $sql .= 'and     ifnull(limited_link, 0) = 1 ';
+        } else {
+            $sql .= 'where   product_id = :product_id ';
+            $sql .= 'and     ifnull(limited_link, 0) = 0 ';           
+        }
 
         $db = new DB();
         $db->setPrepare($sql);
@@ -456,7 +475,7 @@ class Product extends Entity {
             return '';
         }
         if( $selectData[0]['group_slug'] == '' ) {
-            return $product_id;
+            return $selectData[0]['product_id'];
         }
 
         $sql = '';
@@ -552,8 +571,8 @@ class Product extends Entity {
         }
 
         if( !is_null($publish_status) ) {
-            $sql .= 'and publish_status = :publish_status ';
-            $sql .= 'and publish_date <= now() ';
+            $sql .= 'and (limited_link = 1 or publish_status = :publish_status) ';
+            $sql .= 'and (limited_link = 1 or publish_date <= now()) ';
         }
 
         $db = new DB();
@@ -668,6 +687,11 @@ class Product extends Entity {
             }
         }
 
+        if( (is_null($resultData['multilanguage']) || $resultData['multilanguage'] == '')
+            && (!is_null($resultData['group_slug']) && $resultData['group_slug'] != '')) {
+                $resultData['multilanguage'] = 1;
+        }
+
         $publish_date_time = strtotime($resultData['publish_date']);
         $resultData['publish_date'] = array(date('Y/m/d', $publish_date_time), date('H:i', $publish_date_time));
         $resultData['publish_status_text'] = Constant::$aryMtDisp[$resultData['publish_status']];
@@ -752,6 +776,8 @@ class Product extends Entity {
         $sql .= '       on product.group_slug = product_en.group_slug ';
 
         $sql .= 'where     product.publish_status != :publish_status_delete ';
+        $sql .= 'and       ifnull(product.limited_link, 0) != 1 ';
+
         if( !is_null($publish_status) ) {
             $sql .= 'and   product.publish_status = :publish_status ';
             $sql .= 'and   product.publish_date <= now() ';
@@ -818,6 +844,7 @@ class Product extends Entity {
         $sql = '';
         $sql .= 'select    product.regist_date ';
         $sql .= '     ,    product.product_id ';
+        $sql .= '     ,    product.person_id ';
         $sql .= '     ,    product_en.product_id product_id_en ';
         $sql .= '     ,    case when ' . $product_table . '.title is null then product.title ';
         $sql .= '               else ' . $product_table . '.title ';
@@ -901,7 +928,8 @@ class Product extends Entity {
 
 
         $sql .= 'where     product.publish_status != :publish_status_delete ';
-
+        $sql .= 'and       ifnull(product.limited_link, 0) != 1 ';
+        
         if( !is_null($this->person_id) ) {
             $sql .= 'and   product.person_id = :person_id ';
         }
@@ -1013,6 +1041,12 @@ class Product extends Entity {
     function update($data, $person_id) {
 
         $time_stamp = date("Y/m/d H:i:s");
+
+        //データ調整
+        if($data['multilanguage'] == '0') {
+            $data['lang'] = 1;
+            $data['group_slug'] = '';
+        }
 
         //==========================================
         //◆ Spiral商品管理DB

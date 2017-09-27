@@ -10,6 +10,7 @@
 require_once($_SERVER['FD_SYS_DIR'] . 'system/includes/init.php');
 require_once(CLS_DIR . 'Login.php');
 require_once(CLS_DIR . 'Product.php');
+require_once(CLS_DIR . 'Settings.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -23,6 +24,7 @@ $smarty->assign('is_admin', $login->isAuthAdmin());
 $smarty->assign('menu_person_id', $login->getPersonID());
 
 $product = new Product($login);
+$settings = new Settings();
 
 $err_flg = false;
 
@@ -49,6 +51,15 @@ if(!is_array($data_list)) {
     $err_flg = true;
 }
 
+//事業者情報取得
+$settings_list = $settings->getSettingsListView(999, $login);
+
+if( !is_array($settings_list) ) {
+    $smarty->assign('global_message', $settings_list);
+}
+$settings_list = array_column($settings_list, null, 'PersonID');
+
 $smarty->assign('data_list', $data_list);
+$smarty->assign('settings_list', $settings_list);
 $smarty->assign('protocol', empty($_SERVER["HTTPS"]) ? "http://" : "https://");
 $smarty->display(ADMIN_DIR . 'product/index.tpl');

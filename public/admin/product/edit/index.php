@@ -341,12 +341,19 @@ $data['nextsection'] = $nextsection;
 
 if($data['product_id'] == '') {
     $edit_type = 'new';
+
+    $enc_id = '';
+
 } else {
     $edit_type = 'edit';
+
+    //限定公開URL取得
+    $enc_id = sha1(LIMITED_LINK_SALT . $data['product_id']);
 }
 
 $smarty->assign('data', $data);
 $smarty->assign('err_msg', $err_msg);
 $smarty->assign('edit_type', $edit_type);
+$smarty->assign('enc_id', $enc_id);
 $smarty->assign('protocol', empty($_SERVER["HTTPS"]) ? "http://" : "https://");
 $smarty->display(ADMIN_DIR . 'product/edit/index.tpl');
