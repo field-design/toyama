@@ -151,6 +151,10 @@ class Product extends Entity {
         $this->columnsDef[] = '';
         $this->tableName[] = $this->t_product_name;
 
+        $this->columns[] = 'publish_request_date';
+        $this->columnsDef[] = '';
+        $this->tableName[] = $this->t_product_name;
+
         //商品管理メタ情報
         $this->columns[] = 'main_photo';
         $this->columnsDef[] = array('');
@@ -928,7 +932,10 @@ class Product extends Entity {
 
 
         $sql .= 'where     product.publish_status != :publish_status_delete ';
-        $sql .= 'and       ifnull(product.limited_link, 0) != 1 ';
+
+        if(strpos($_SERVER["REQUEST_URI"], URL_ROOT_PATH_ADMIN) === false){
+            $sql .= 'and       ifnull(product.limited_link, 0) != 1 ';
+        }
         
         if( !is_null($this->person_id) ) {
             $sql .= 'and   product.person_id = :person_id ';
@@ -1163,6 +1170,10 @@ class Product extends Entity {
                     $params[$column] = $data[$column][0] . ' ' . $data[$column][1];
                 } elseif($column == 'publish_status') {
                     $params[$column] = htmlspecialchars($_POST[$column . '_pre']);
+                } elseif($column == 'publish_request_date') {
+                    if(isset($_POST['request']) && $_POST['request'] != '') {
+                        $params[$column] = date('Y/m/d H:i:s');
+                    }
                 } else {
                     $params[$column] = $data[$column];
                 }

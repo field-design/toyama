@@ -13,6 +13,7 @@ require_once(CLS_DIR . 'Login.php');
 require_once(CLS_DIR . 'FileUploader.php');
 require_once(CLS_DIR . 'Product.php');
 require_once(CLS_DIR . 'jp/Contact.php');
+require_once(CLS_DIR . 'Settings.php');
 
 $login = new Login();
 $smarty = new SmartyExtends();
@@ -311,25 +312,71 @@ if( !$err_flg ) {
     }
 }
 
-
-//公開リクエスト送信
-if( !$err_flg ) {
-    if(isset($_POST['request']) && $_POST['request'] != '' && $data['publish_status'] == 3) {
-        $contact = new Contact();
-        $msg = $contact->publishRequest($data['title'], $login->getPersonID());
-        if(!empty($msg)) {
-            $smarty->assign('global_message', $msg);
-            $err_flg = true;
-        }
-    }
-}
-
+$alert_msg = '';
 
 if( !$err_flg ) {
     //登録
     if(isset($_POST['nextsection']) && $_POST['nextsection'] != '') {
         $data = $product->update($data, $login->getPersonID());
+
+        if( is_array($data) ) {
+            //処理メッセージ、メール設定
+            $settings = new Settings();
+            $contact = new Contact();
+
+            $settings_data = $settings->getLangPerson($data['person_id'], 1);
+            
+            if (isset($_POST['publish_status_pre'])) {
+                if($_POST['publish_status_pre'] == 3) {
+                    if($_POST['publish_status'] == 1) {
+                        //非公開
+                        $alert_msg = '記事を非公開にしました';
+                    } elseif($_POST['publish_status'] == 31) {
+                        //非承認
+                        $alert_msg = '記事の公開リクエストを非承認しました。';    
+                        
+                        $msg = $contact->publishRequestApprovalCancel($data, $settings_data);
+                        if(!empty($msg)) {
+                            $smarty->assign('global_message', $msg);
+                            $err_flg = true;
+                        }
+                    } else {
+                        //下書き
+                        $alert_msg = '記事を下書き保存しました';
+                    }
+                } elseif($_POST['publish_status_pre'] == 31) {
+                    if(isset($_POST['request']) && $_POST['request'] != '') {
+                        //リクエスト
+                        $alert_msg = '記事の公開リクエストを送信しました';
+        
+                        $msg = $contact->publishRequest($data, $settings_data);
+                        if(!empty($msg)) {
+                            $smarty->assign('global_message', $msg);
+                            $err_flg = true;
+                        }
+                    } else {
+                        //下書き
+                        $alert_msg = '記事を下書き保存しました';
+                    }
+                } elseif($_POST['nextsection'] == 0 && $_POST['publish_status_pre'] == 1) {
+                    //公開
+                    $alert_msg = '記事を公開しました';
+        
+                    if($_POST['publish_status'] == 31) {
+                        //承認
+                        $alert_msg = '記事を公開（公開リクエスト承認）しました';
+
+                        $msg = $contact->publishRequestApproval($data, $settings_data);
+                        if(!empty($msg)) {
+                            $smarty->assign('global_message', $msg);
+                            $err_flg = true;
+                        }
+                    }
+                }
+            }
+        }
     }
+
 }
 
 if(!is_array($data)) {
@@ -355,5 +402,6 @@ $smarty->assign('data', $data);
 $smarty->assign('err_msg', $err_msg);
 $smarty->assign('edit_type', $edit_type);
 $smarty->assign('enc_id', $enc_id);
+$smarty->assign('alert_msg', $alert_msg);
 $smarty->assign('protocol', empty($_SERVER["HTTPS"]) ? "http://" : "https://");
 $smarty->display(ADMIN_DIR . 'product/edit/index.tpl');

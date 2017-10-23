@@ -162,10 +162,14 @@
               </div>
               <footer class="card-footer">
                 {if $data.publish_status == 1}
-                <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
-                    <span class="icon is-small"><i class="fa fa-external-link"></i></span>
-                    表示
-                </a>
+                    {if array_key_exists('area1', $data.area)}
+                    <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}niikawa/plan/?plan={$data.product_id}" target="_blank">
+                    {else}
+                    <a class="card-footer-item" href="{$protocol}{$smarty.server.SERVER_NAME}{$smarty.const.URL_ROOT_PATH}plan/?plan={$data.product_id}" target="_blank">
+                    {/if}
+                        <span class="icon is-small"><i class="fa fa-external-link"></i></span>
+                        表示
+                    </a>
                 {else}
                 <span class="card-footer-item">
                     非公開

@@ -21,6 +21,9 @@
 .breadcrumbs span {
   vertical-align: middle; }
 
+.mb-30 {
+  margin-bottom: 30px; }
+
 /* =====================
   products styles
 ===================== */
@@ -160,6 +163,9 @@
 .release table td span {
   vertical-align: middle; }
 
+.release .button {
+  margin: 2px; }
+
 /* =====================
   login styles
 ===================== */
@@ -267,7 +273,8 @@ select.is-danger {
   text-align: center;
   background: white;
   margin: 0 0 10px 0;
-  box-shadow: 0px 0px 1px 1px #aaa; }
+  -webkit-box-shadow: 0px 0px 1px 1px #aaa;
+          box-shadow: 0px 0px 1px 1px #aaa; }
 
 .ui-datepicker a {
   color: #333;
@@ -304,6 +311,8 @@ select.is-danger {
   color: #333;
   display: block;
   padding: 10px;
+  -webkit-transition: all .2s ease;
+  -o-transition: all .2s ease;
   transition: all .2s ease; }
 
 .ui-datepicker-calendar td a:hover {

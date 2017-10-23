@@ -40,9 +40,11 @@ class Sales extends Entity {
         $this->columns[] = 'OrderNumber';
         $this->columnsDef[] = '';
 
+        /*
         //商品タイトル
         $this->columns[] = 'title';
         $this->columnsDef[] = '';
+        */
 
         //姓
         $this->columns[] = 'nameSei';
@@ -56,6 +58,7 @@ class Sales extends Entity {
         $this->columns[] = 'Payment';
         $this->columnsDef[] = '';
 
+        /*
         //料金
         for($i = 1; $i <=5; $i++) {
             $this->columns[] = 'plan_Fee' . $i;
@@ -67,6 +70,7 @@ class Sales extends Entity {
             $this->columns[] = 'volume' . $i;
             $this->columnsDef[] = 0;
         }
+        */
 
         //対応状況
         $this->columns[] = 'Correspondence';

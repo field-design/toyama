@@ -66,6 +66,17 @@
 
     {if isset($global_message)}{include file=$smarty.const.ADMIN_DIR|cat:'includes/head/global_message.tpl' global_message=$global_message}{/if}
 
+    {if $alert_msg != ''}
+    <div class="alert mb-30">
+        <div class="message is-success">
+            <div class="message-header">
+                <p>{$alert_msg}</p>
+                <button class="delete" aria-label="delete" onclick="((this).parentNode.parentNode.parentNode.remove())"></button>
+            </div>
+        </div>
+    </div>
+    {/if}
+
     <div class="columns section">
         <div class="column is-3 is-hidden-mobile">
             {include file=$smarty.const.ADMIN_DIR|cat:'includes/aside/menu.tpl' is_admin=$is_admin}
@@ -913,12 +924,27 @@
                     </a>
                 {else}
                     {if $is_admin}
-                        <a id="publish" class="button is-info is-pulled-right">
-                            <span class="icon is-small">
-                                <i class="fa fa-check"></i>
-                            </span>
-                            <span>公開</span>
-                        </a>
+                        {if $data.publish_status == 31}
+                            <a id="cancel_approval" class="button is-danger is-pulled-right">
+                                <span class="icon is-small">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                <span>非承認</span>
+                            </a>
+                            <a id="approval" class="button is-info is-pulled-right">
+                                <span class="icon is-small">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                <span>承認</span>
+                            </a>
+                        {else}
+                            <a id="publish" class="button is-info is-pulled-right">
+                                <span class="icon is-small">
+                                    <i class="fa fa-check"></i>
+                                </span>
+                                <span>公開</span>
+                            </a>
+                        {/if}
                     {else}
                         <a id="request" class="button is-success is-pulled-right">
                             <span class="icon is-small">
@@ -939,6 +965,7 @@
         </div>
         <input type="hidden" name="nextsection" />
         <input type="hidden" name="request" />
+        <input type="hidden" name="publish_request_date" value="{$data.publish_request_date|default:''}" />
         <input type="hidden" name="publish_status" value="{$data.publish_status|default:'3'}" />
         <input type="hidden" name="publish_status_pre" value="{$data.publish_status|default:'3'}"/>
 
@@ -1340,17 +1367,25 @@ if ($('input[name=multilanguage]:eq(1)').prop('checked')) {
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');
-            $('input[name=publish_status_pre]').val('3');
+            //$('input[name=publish_status_pre]').val('3');
             $('form').submit();
         });
         $('#request').click(function(){
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');
+            $('input[name=publish_status_pre]').val('31');
             $('input[name=request]').val('1');
             $('form').submit();
         });
-        $('#publish').click(function(){
+        $('#cancel_approval').click(function(){
+            $('form').attr('action', location.pathname);
+            $('form').attr('target', '');
+            $('input[name=nextsection]').val('0');
+            $('input[name=publish_status_pre]').val('3');
+            $('form').submit();
+        });
+        $('#publish, #approval').click(function(){
             $('form').attr('action', location.pathname);
             $('form').attr('target', '');
             $('input[name=nextsection]').val('0');

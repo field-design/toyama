@@ -85,16 +85,99 @@ class ContactBase {
     /*******************
     商品公開リクエスト
     ********************/
-    function publishRequest($title, $person_id) {
+    function publishRequest($product_data, $settings_data) {
 
         mb_language("Japanese");
         mb_internal_encoding("UTF-8");
 
         $to      = OWNER_MAIL;
-        $subject = '公開リクエストがあります。';
+        $subject = '【いまからえらべるTRAVEL】商品公開リクエストが入りました';
         $message = '';
-        $message .= '商品：' . $title. "\r\n";
-        $message .= '事業者ID：' . $person_id;
+        $message .= '以下の商品に対して、公開リクエストが入りました。' . "\r\n";
+        $message .= "\r\n";
+        $message .= '商品名：' . $product_data['title'] . "\r\n";
+        $message .= '事業者名：' . $settings_data['company_name'] . '（' . $settings_data['PersonID'] . '）' . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= '管理画面より商品を確認の上、公開処理を行ってください。' . "\r\n";
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            return MESSAGE_ERROR_MAIL_SEND;
+        }
+
+        return '';
+    }
+
+    /*******************
+    商品公開リクエスト承認
+    ********************/
+    function publishRequestApproval($product_data, $settings_data) {
+        
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        $to      = $settings_data['email'];
+        $subject = '【いまからえらべるTRAVEL】商品公開リクエストが承認されました';
+        $message = '';
+        $message .= $settings_data['company_name'] . ' 様' . "\r\n";
+        $message .= "\r\n";
+        $message .= '平素より「いまからえらべるTRAVEL」をご利用いただきありがとうございます。' . "\r\n";
+        $message .= "\r\n";
+        $message .= '以下の商品に対して、公開リクエストが承認され、商品が公開状態となりました。' . "\r\n";
+        $message .= "\r\n";
+        $message .= '公開リクエスト送信日時：' . date('Y/m/d H:i:s', strtotime($product_data['publish_request_date'])) . "\r\n";
+        
+        $setting_publish_date = strtotime($product_data['publish_date'][0] . ' ' . $product_data['publish_date'][1]);
+        $publish_date = strtotime('now');
+        if($setting_publish_date > $publish_date) {
+            $publish_date = date('Y/m/d H:i:s', $setting_publish_date);
+        } else {
+            $publish_date = date('Y/m/d H:i:s', $publish_date);
+        }
+
+        $message .= '公開日時：' . $publish_date . "\r\n";
+        $message .= '商品名：' . $product_data['title'] . "\r\n";
+
+        if(in_array('area1', $product_data['area'])) {
+            $message .= '公開URL：' . URL_ROOT_PATH_HOST . URL_ROOT_PATH. 'niikawa/plan/?plan=' . $product_data['product_id'] . "\r\n";
+        } else {
+            $message .= '公開URL：' . URL_ROOT_PATH_HOST . URL_ROOT_PATH. 'plan/?plan=' . $product_data['product_id'] . "\r\n";            
+        }
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= '今後とも、いまからえらべるTRAVELをよろしくお願いいたします。' . "\r\n";
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            return MESSAGE_ERROR_MAIL_SEND;
+        }
+
+        return '';
+    }
+
+    /*******************
+    商品公開リクエスト非承認
+    ********************/
+    function publishRequestApprovalCancel($product_data, $settings_data) {
+        
+        mb_language("Japanese");
+        mb_internal_encoding("UTF-8");
+
+        $to      = $settings_data['email'];
+        $subject = '【いまからえらべるTRAVEL】商品公開リクエストが非承認となりました';
+        $message = '';
+        $message .= $settings_data['company_name'] . ' 様' . "\r\n";
+        $message .= "\r\n";
+        $message .= '平素より「いまからえらべるTRAVEL」をご利用いただきありがとうございます。' . "\r\n";
+        $message .= "\r\n";
+        $message .= '以下の商品に対しての公開リクエストは非承認となりました。' . "\r\n";
+        $message .= "\r\n";
+        $message .= '公開リクエスト送信日時：' . date('Y/m/d H:i:s', strtotime($product_data['publish_request_date'])) . "\r\n";
+        $message .= '商品名：' . $product_data['title'] . "\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= '今後とも、いまからえらべるTRAVELをよろしくお願いいたします。' . "\r\n";
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
         if( !$this->send_mail($to, $subject, $message, $headers) ){

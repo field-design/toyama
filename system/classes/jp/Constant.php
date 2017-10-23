@@ -153,7 +153,8 @@ class Constant extends ConstantBase {
         '0' => '削除',
         '1' => '公開',
         '2' => '非公開',
-        '3' => '下書き'
+        '3' => '下書き',
+        '31' => '公開リクエスト中'
     );
 
     public static $aryGender = array(
