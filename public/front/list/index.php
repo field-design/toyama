@@ -34,6 +34,8 @@ if( isset($_GET['area']) ) {
 
         if(  array_key_exists($area_detail, $ary_area) ) {
             $area_text = $ary_area[$area_detail];
+        } else {
+            $area_text = Constant::$aryArea[$area];
         }
     } else {
         $area_detail = null;
@@ -77,7 +79,9 @@ $productlist = $product->getProductListView($count_per_page, $current_page, 1, $
 $smarty->assign('pager', $pager);
 $smarty->assign('current_page', $current_page);
 $smarty->assign('productlist', $productlist);
+$smarty->assign('area_detail', $area_detail);
 $smarty->assign('area_text', $area_text);
+$smarty->assign('category', $category);
 $smarty->assign('category_text', $category_text);
 $smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'list/index.tpl');

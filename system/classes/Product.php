@@ -670,13 +670,18 @@ class Product extends Entity {
             $resultData['area' . $area] = $area_detail;
 
             if($area != '') {
-                $area_detail_map = Constant::$aryAreaDetail[$area];
+                if(is_array($area_detail)) {
+                    $area_detail_map = Constant::$aryAreaDetail[$area];
 
-                foreach($area_detail as $value) {
-                    if($value != '') {
-                        $resultData['area_id'][] = $value;
-                        $resultData['area_text'][] = $area_detail_map[$value];
+                    foreach($area_detail as $value) {
+                        if($value != '') {
+                            $resultData['area_id'][] = $value;
+                            $resultData['area_text'][] = $area_detail_map[$value];
+                        }
                     }
+                } else {
+                    $resultData['area_id'][] = $area;
+                    $resultData['area_text'][] = Constant::$aryArea[$area];
                 }
             }
         }
@@ -1016,12 +1021,16 @@ class Product extends Entity {
             $data['area_text'] = array();
             foreach($data['area'] as $areas => $area_details) {
                 if($areas != '') {
-                    $area_detail_map = Constant::$aryAreaDetail[$areas];
+                    if(is_array($area_details)) {
+                        $area_detail_map = Constant::$aryAreaDetail[$areas];
 
-                    foreach($area_details as $value) {
-                        if($value != '') {
-                            $data['area_text'][] = $area_detail_map[$value];
+                        foreach($area_details as $value) {
+                            if($value != '') {
+                                $data['area_text'][] = $area_detail_map[$value];
+                            }
                         }
+                    } else {
+                        $data['area_text'][] = Constant::$aryArea[$areas];
                     }
                 }
             }

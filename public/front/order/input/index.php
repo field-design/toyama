@@ -74,8 +74,7 @@ if( !$err_flg ) {
 
 //商品データチェック
 if( !$err_flg ) {
-$log = new Log();
-$log->setErrorLog($order_data);
+
     $product_data = $product->getLangProduct($order_data['ProductID']);
     $course_data = $stock->getCourse($order_data['ProductID'], $order_data['course_id']);
     $order_date = strtotime($order_data['oderDate']);
@@ -157,6 +156,7 @@ if ( isset($_POST['next']) ) {
 }
 
 $smarty->assign('const_pref', Constant::$aryPref);
+$smarty->assign('product_data', $product_data);
 $smarty->assign('order_data', $order_data);
 $smarty->assign('page_data', $page_data);
 $smarty->display(FRONT_DIR . 'order/input/index.tpl');
