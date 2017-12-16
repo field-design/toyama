@@ -97,6 +97,9 @@ class ContactBase {
         $message .= "\r\n";
         $message .= '商品名：' . $product_data['title'] . "\r\n";
         $message .= '事業者名：' . $settings_data['company_name'] . '（' . $settings_data['PersonID'] . '）' . "\r\n";
+        $message .= '商品URL：'. "\r\n";
+        $message .= URL_ROOT_PATH_HOST . URL_ROOT_PATH_ADMIN . 'product/edit/?ProductID=' . $product_data['product_id'] . "\r\n";
+        $message .= '（※管理画面にログインした状態でクリックしてください。）'. "\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
         $message .= '管理画面より商品を確認の上、公開処理を行ってください。' . "\r\n";
