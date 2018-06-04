@@ -33,6 +33,9 @@ define('DB_PASS', 'db_admin');
 // 残りわずかしきい値
 define('FEW_THRESHOLD', 5);
 
+// フロントページ在庫確認月数
+define('STOCK_CHECK_MONTHS', 12);
+
 // 管理サイト集合場所初期値
 define('ADMIN_INIT_LAT', 36.701612);
 define('ADMIN_INIT_LNG', 137.213263);

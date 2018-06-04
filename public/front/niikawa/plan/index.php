@@ -30,7 +30,10 @@ $page = new Page();
 ***********************************************/
 if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
 
-    $stock_data = $stock->getCourseCurrentStock(htmlspecialchars($_POST['course_id']), htmlspecialchars($_POST['ym']));
+    $disp_ym = htmlspecialchars($_POST['ym']);
+    $disp_ym_time = strtotime($disp_ym);
+
+    $stock_data = $stock->getCourseCurrentStock(htmlspecialchars($_POST['course_id']), $disp_ym);
     $close_data = $stock->getCourseClose(htmlspecialchars($_POST['course_id']));
 
     if($_POST['course_id'] != '') {
@@ -41,6 +44,32 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
             $stock_data['close_time'] = substr($close_data['close_time'], 0, 2) . substr($close_data['close_time'], 3, 2);
         }
     }
+
+    //当月の残り在庫計算
+    $couse_change = htmlspecialchars($_POST['couse_change']);
+    $couse_change = filter_var($couse_change, FILTER_VALIDATE_BOOLEAN);
+    if($_POST['course_id'] != '' && $couse_change) {
+        $adjust_teijmaibi = $stock_data['close_date'];
+        if(date('Hi') >= $stock_data['close_time']) {
+            $adjust_teijmaibi += 1;
+        }
+        $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1 + $adjust_teijmaibi);
+        
+        if (array_sum($stock_value_left) == 0) {
+            //来月以降の在庫計算
+            for($i=1; $i < STOCK_CHECK_MONTHS; $i++) {
+                $next_ym = date('Y-m-d', strtotime('+' . $i . ' month', $disp_ym_time));
+                $next_stock_data = $stock->getCourseCurrentStock(htmlspecialchars($_POST['course_id']), $next_ym);
+                if (array_sum($next_stock_data['stock_value']) != 0) {
+                    $disp_ym = $next_ym;
+                    $stock_data = $next_stock_data;
+                    break;
+                }
+            }
+        } 
+    }
+
+    $stock_data['disp_ym'] = $disp_ym;
 
     header('Content-Type: application/json');
     echo json_encode($stock_data);

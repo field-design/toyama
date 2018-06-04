@@ -81,9 +81,11 @@
 <div class="overview">
     <div data-lg>
         <div class="title">
+<!--
             <div class="now">
                 <img src="{$smarty.const.URL_ROOT_PATH}assets/img/post/now.svg" alt="いますぐ買える">
             </div>
+-->
             <p class="sub-ttl">{$data.sub_title|default:''}</p>
             <h2>{$data.title|default:''}</h2>
             <p>{$data.description|default:''|nl2br}</p>
@@ -583,14 +585,14 @@
         var now_ym = '{$smarty.now|date_format:'%Y-%m-01'}';
         var url_root = '{$smarty.const.URL_ROOT_PATH}';
         {literal}
-        function setStockCalendar(ym, cls){
+        function setStockCalendar(ym, cls, couse_change){
             $.ajax({
                 type: "POST",
                 url: location.pathname,
-                data: { 'addtype' : 'calendar', 'ym' : ym, 'course_id' : $('#course_select').val() },
+                data: { 'addtype' : 'calendar', 'ym' : ym, 'course_id' : $('#course_select').val(), 'couse_change': couse_change },
                 success: function(data){
                     $('#calendar').stockcalendar({
-                        'start':ym,
+                        'start':data.disp_ym,
                         'data':data,
                         'few':few,
                         'url_root':url_root,
@@ -598,10 +600,10 @@
                         'course':$('#course_select').val()
                     });
                     $('#calendar a.button.prev').click(function() {
-                        setStockCalendar(data.prevMonth);
+                        setStockCalendar(data.prevMonth, false, false);
                     });
                     $('#calendar a.button.next').click(function() {
-                        setStockCalendar(data.nextMonth);
+                        setStockCalendar(data.nextMonth, false, false);
                     });
                     if(cls) {
                         $('#calendar').addClass('pre');
@@ -612,9 +614,9 @@
             });
         }
         $('#course_select').change(function(){
-            setStockCalendar(now_ym, false);
+            setStockCalendar(now_ym, false, true);
         });
-        setStockCalendar(now_ym, true);
+        setStockCalendar(now_ym, true, false);
     });
 </script>
 {/literal}
