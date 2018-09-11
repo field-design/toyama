@@ -456,6 +456,33 @@
 <link rel="stylesheet" href="{$smarty.const.URL_ROOT_PATH}assets/css/jquery.bxslider.min.css">
 <script src="{$smarty.const.URL_ROOT_PATH}assets/js/jquery.bxslider.min.js"></script>
 {literal}
+<script>
+    {/literal}
+    var display_type = '{$type|default:''}';
+    {literal}
+    $(function() {
+        /***************************
+        表示設定
+        ****************************/
+        if(display_type == 'schedule') {
+            $('.global-header').hide();
+            $('main > *').each(function(){
+                if(!$(this).hasClass('overview')) {
+                    $(this).hide();
+                }
+            });
+            $('main .overview > div > *').each(function(){
+                if(!$(this).hasClass('calendar')) {
+                    $(this).hide();
+                } else {
+                    $(this).children('h3').hide();
+                }
+            });
+            $('main .overview > .recommend').hide();
+            $('.global-footer').hide();
+        }
+    });
+</script>
 <script type="text/javascript">
     $(function(){
         var sliderImg = $('.bxslider .slide').length;

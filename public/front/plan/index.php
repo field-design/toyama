@@ -122,4 +122,7 @@ $smarty->assign('price_list', $price_list);
 $smarty->assign('person', $person);
 $smarty->assign('recommend_data', $recommend_data);
 $smarty->assign('page_data', $page_data);
+if(isset($_GET['type'])) {
+    $smarty->assign('type', htmlspecialchars($_GET['type']));    
+}
 $smarty->display(FRONT_DIR . 'plan/index.tpl');
