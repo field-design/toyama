@@ -90,6 +90,7 @@ if( !$err_flg ) {
     if ( $_SERVER['REQUEST_METHOD'] == 'POST' ) {
         $err_msg = $stock->checkInput($data);
         if( !empty(implode('', $err_msg)) ) {
+            $smarty->assign('global_message', MESSAGE_ERROR_INPUT);
             $err_flg = true;
         }
     }

@@ -199,9 +199,17 @@
 
             <hr>
 
-            <div class="control">
+            <div class="control classification">
+                <p>予約区分選択<span class="must">必須</span></p>
+                <ul>
+                    <li><label for="d1"><input type="radio" name="reservation_type" id="d1" value="1" checked="checked">手仕舞い日入力</label></li>
+                    <li><label for="d2"><input type="radio" name="reservation_type" id="d2" value="2">申込可能期間入力</label></li>
+                </ul>
+            </div>
+
+            <div class="control control-d1">
                 <label class="label">
-                    手仕舞い日（申込締切日）<span class="must">必須</span>
+                    手仕舞い日（申込締切日）<span class="must">区分選択時必須</span>
                     <span class="help">当日の場合は0日前と入力してください。</span>
                 </label>
                 <div class="">
@@ -213,6 +221,22 @@
                     </p>
                     {if isset($err_msg.close_date) && $err_msg.close_date != ''}
                     <span class="error has-icon">{$err_msg.close_date}</span>
+                    {/if}
+                </div>
+            </div>
+
+            <div class="control control-d2">
+                <label class="label">
+                    申込可能期間入力<span class="must">区分選択時必須</span>
+                    <span class="help">当日の場合は0日前と入力してください。</span>
+                </label>
+                <div class="">
+                    <p class="control has-addons">
+                    <input name="open_date" class="input is-danger" type="number" min="0" placeholder="例：3">
+                    <span class="button is-disabled">日後まで</span>
+                    </p>
+                    {if isset($err_msg.open_date) && $err_msg.open_date != ''}
+                    <span class="error has-icon">{$err_msg.open_date}</span>
                     {/if}
                 </div>
             </div>
@@ -355,6 +379,38 @@ $(function() {
         'step': 15
     });
 });
+/***************************
+予約区分
+****************************/
+function chechReservationType() {
+    $('input[name=close_date]').removeClass('is-danger');
+    $('input[name=open_date]').removeClass('is-danger');
+
+    if($('[id=d1]').prop('checked')){
+        $('.control-d1 input').removeAttr("readonly");
+        $('.control-d2 input').attr("readonly", true);
+        $('.control-d1').css('opacity','1');
+        $('.control-d2').css('opacity','.2');
+        if($('input[name=close_date]').val() == '') {
+            $('input[name=close_date]').addClass('is-danger');
+        }
+        
+    } else if ($('[id=d2]').prop('checked')) {
+        $('.control-d1 input').attr("readonly", true);
+        $('.control-d2 input').removeAttr("readonly");
+        $('.control-d1').css('opacity','.2');
+        $('.control-d2').css('opacity','1');
+        if($('input[name=open_date]').val() == '') {
+            $('input[name=open_date]').addClass('is-danger');
+        }
+    }
+}
+$(function() {
+    $('[name=reservation_type]:radio').click( function() {
+        chechReservationType();
+    });
+});
+
 </script>
 <script>
 function getLeftZero(number, keta)
@@ -422,13 +478,19 @@ $(function() {
             url: location.pathname,
             data: { 'addtype' : 'close', 'course_id' : course_id },
             success: function(response){
+
                 $('input[name=close_date]').val(response.close_date);
-                if(response.close_date == '') {
-                    $('input[name=close_date]').addClass('is-danger');
-                } else {
-                    $('input[name=close_date]').removeClass('is-danger');
-                }
                 $('input[name=close_time]').val(response.close_time);
+
+                $('input[name=open_date]').val(response.open_date);
+
+                if(response.reservation_type == '2') {
+                    $('#d2').prop('checked', true);
+                } else {
+                    $('#d1').prop('checked', true);
+                }
+                chechReservationType();
+
             }
         });
     }

@@ -227,6 +227,29 @@ body.login footer {
       content: counter(number); }
 
 /* =====================
+  form styles
+===================== */
+.classification p {
+  font-size: 1em;
+  font-weight: bold;
+  color: #363636; }
+
+.classification ul {
+  margin-top: 5px; }
+  .classification ul li {
+    display: inline-block;
+    vertical-align: middle;
+    font-size: 1em;
+    margin-right: 1em; }
+    .classification ul li label {
+      cursor: pointer; }
+    .classification ul li input {
+      margin-right: .3em; }
+
+.control.control-d2 {
+  opacity: .2; }
+
+/* =====================
   admin styles
 ===================== */
 .admin-list th {

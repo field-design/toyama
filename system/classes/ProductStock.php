@@ -41,6 +41,14 @@ class ProductStock extends Entity {
         $this->columnsDef[] = array();
         $this->tableName[] = $this->t_product_course_name;
 
+        $this->columns[] = 'reservation_type';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_course_name;
+
+        $this->columns[] = 'open_date';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_course_name;
+
         //商品コース在庫
         $this->columns[] = 'stock_date';
         $this->columnsDef[] = array();
@@ -145,6 +153,8 @@ class ProductStock extends Entity {
         foreach($selectCourseData as $data) {
             $resultData['close_date'] = is_null($data['close_date']) ? '' : $data['close_date'];
             $resultData['close_time'] = is_null($data['close_time']) ? '' : $data['close_time'];
+            $resultData['reservation_type'] = is_null($data['reservation_type']) ? '' : $data['reservation_type'];
+            $resultData['open_date'] = is_null($data['open_date']) ? '' : $data['open_date'];
         }
 
         return $resultData;
@@ -315,10 +325,20 @@ class ProductStock extends Entity {
             $closingout_time = substr($close_data['close_time'], 0, 2) . substr($close_data['close_time'], 3, 2);
         }
 
-        if( date('Ymd', $order_date) < date('Ymd', $now_plus_closingout) ) {
-            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
-        } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_closingout) && date('Hi', $now) >= $closingout_time ) {
-            $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+        $now_plus_openingout = strtotime('+' . intval($close_data['open_date']) . ' day', $now);
+
+        if($close_data['reservation_type'] == 2) {
+            if( date('Ymd', $order_date) > date('Ymd', $now_plus_openingout) ) {
+                $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+            } elseif( date('Ymd', $order_date) < date('Ymd', $now) ) {
+                $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+            }
+        } else {
+            if( date('Ymd', $order_date) < date('Ymd', $now_plus_closingout) ) {
+                $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+            } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_closingout) && date('Hi', $now) >= $closingout_time ) {
+                $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+            }
         }
 
         return $err_msg;
@@ -330,8 +350,14 @@ class ProductStock extends Entity {
     function checkInput($data) {
         $err_msg = array();
 
-        if( $data['close_date'] == '' ) {
-            $err_msg['close_date'] = MESSAGE_ERROR_REQUIRE;
+        if( $data['reservation_type'] == '1' ) {
+            if( $data['close_date'] == '' ) {
+                $err_msg['close_date'] = MESSAGE_ERROR_REQUIRE;
+            }
+        } else {
+            if( $data['open_date'] == '' ) {
+                $err_msg['open_date'] = MESSAGE_ERROR_REQUIRE;
+            }
         }
 
         return $err_msg;
@@ -354,6 +380,8 @@ class ProductStock extends Entity {
         $params = array();
         $params['close_date'] = $data['close_date'];
         $params['close_time'] = $data['close_time'];
+        $params['reservation_type'] = $data['reservation_type'];
+        $params['open_date'] = $data['open_date'];
 
         $where_params = array();
         $where_params['course_id'] = $data['course_id'];
@@ -459,10 +487,20 @@ class ProductStock extends Entity {
         //カレンダーデータをセッション保存
         $_SESSION[SESSION_PRODUCT_STOCK_CALEN] = $calenData;
 
+        //手じまい日処理
+        if(is_array($data['close_date'])) {
+            $data['close_date'] = '';
+        }
+        if(is_array($data['open_date'])) {
+            $data['open_date'] = '';
+        }
+
         //手じまい日情報をセッション保存
         $closeData = array();
         $closeData['close_date'] = $data['close_date'];
         $closeData['close_time'] = $data['close_time'];
+        $closeData['reservation_type'] = $data['reservation_type'];
+        $closeData['open_date'] = $data['open_date'];
         $_SESSION[SESSION_PRODUCT_STOCK_CLOSE] = $closeData;
 
         return $data;

@@ -149,38 +149,74 @@
                         var stock_option = input_data.stock_option[day - 1];
                         var t_date = new Date(yyyy, (mmmm - 1) + i, day);
                         var now = new Date();
+                        var now_ymd = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                         var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
                         var now_plus_closingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.close_date);
+                        var now_plus_openingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.open_date);
 
-                        if( t_date.getTime() < now_plus_closingout.getTime() ) {
-                            //手じまい日未満は期限切れ
-                            status = 'out';
-                        } else if( t_date.getTime() == now_plus_closingout.getTime() && now_time >= input_data.close_time ) {
-                            //手じまい日の手じまい時刻以降は期限切れ
-                            if(stock_option == 1) {
-                                status = 'ask';
-                            } else {
+                        if (input_data.reservation_type == 2) {
+                            //申込可能期間入力
+                            if (t_date.getTime() > now_plus_openingout.getTime() ) {
+                                //申込可能期間外は期限切れ
                                 status = 'out';
+                            } else if (t_date.getTime() < now_ymd.getTime()) {
+                                //当日未満は期限切れ
+                                status = 'out';
+                            } else {
+                                if (stock_type == null) {
+                                    //期間外
+                                    status = 'out';
+                                } else if (stock_type == 1) {
+                                    //リクエストプラン
+                                    status = 'ask';
+                                } else if (stock_type == 2) {
+                                    //在庫なし
+                                    status = 'not';
+                                } else if (stock_value <= 0) {
+                                    //在庫なし
+                                    status = 'not';
+                                } else if (stock_value <= settings.few) {
+                                    //残りわずか
+                                    status = 'few';
+                                } else {
+                                    status = 'many';
+                                }
                             }
+
                         } else {
-                            if(stock_type == null) {
-                                //期間外
+
+                            //手仕舞い日入力
+                            if( t_date.getTime() < now_plus_closingout.getTime() ) {
+                                //手じまい日未満は期限切れ
                                 status = 'out';
-                            } else if(stock_type == 1) {
-                                //リクエストプラン
-                                status = 'ask';
-                            } else if(stock_type == 2) {
-                                //在庫なし
-                                status = 'not';
-                            } else if(stock_value <= 0) {
-                                //在庫なし
-                                status = 'not';
-                            } else if(stock_value <= settings.few) {
-                                //残りわずか
-                                status = 'few';
+                            } else if( t_date.getTime() == now_plus_closingout.getTime() && now_time >= input_data.close_time ) {
+                                //手じまい日の手じまい時刻以降は期限切れ
+                                if(stock_option == 1) {
+                                    status = 'ask';
+                                } else {
+                                    status = 'out';
+                                }
                             } else {
-                                status = 'many';
+                                if(stock_type == null) {
+                                    //期間外
+                                    status = 'out';
+                                } else if(stock_type == 1) {
+                                    //リクエストプラン
+                                    status = 'ask';
+                                } else if(stock_type == 2) {
+                                    //在庫なし
+                                    status = 'not';
+                                } else if(stock_value <= 0) {
+                                    //在庫なし
+                                    status = 'not';
+                                } else if(stock_value <= settings.few) {
+                                    //残りわずか
+                                    status = 'few';
+                                } else {
+                                    status = 'many';
+                                }
                             }
+
                         }
 
                         html +='      <div class="order-status">';

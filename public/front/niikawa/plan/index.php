@@ -43,17 +43,26 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
         } else {
             $stock_data['close_time'] = substr($close_data['close_time'], 0, 2) . substr($close_data['close_time'], 3, 2);
         }
+
+        $stock_data['reservation_type'] = intval($close_data['reservation_type']);        
+        $stock_data['open_date'] = intval($close_data['open_date']);
     }
 
     //当月の残り在庫計算
     $couse_change = htmlspecialchars($_POST['couse_change']);
     $couse_change = filter_var($couse_change, FILTER_VALIDATE_BOOLEAN);
     if($_POST['course_id'] != '' && $couse_change) {
-        $adjust_teijmaibi = $stock_data['close_date'];
-        if(date('Hi') >= $stock_data['close_time']) {
-            $adjust_teijmaibi += 1;
+
+        if($stock_data['reservation_type'] == 2) {
+            $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1);
+        } else {
+            $adjust_tejimaibi = $stock_data['close_date'];
+            if(date('Hi') >= $stock_data['close_time']) {
+                $adjust_tejimaibi += 1;
+            }
+            $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1 + $adjust_tejimaibi);
         }
-        $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1 + $adjust_teijmaibi);
+        
         
         if (array_sum($stock_value_left) == 0) {
             //来月以降の在庫計算
@@ -62,7 +71,12 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
                 $next_stock_data = $stock->getCourseCurrentStock(htmlspecialchars($_POST['course_id']), $next_ym);
                 if (array_sum($next_stock_data['stock_value']) != 0) {
                     $disp_ym = $next_ym;
-                    $stock_data = $next_stock_data;
+                    $stock_data['stock_type'] = $next_stock_data['stock_type'];
+                    $stock_data['stock_value'] = $next_stock_data['stock_value'];
+                    $stock_data['stock_option'] = $next_stock_data['stock_option'];
+                    $stock_data['prevMonth'] = $next_stock_data['prevMonth'];
+                    $stock_data['nextMonth'] = $next_stock_data['nextMonth'];
+
                     break;
                 }
             }
