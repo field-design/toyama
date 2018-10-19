@@ -45,6 +45,14 @@ class ProductStock extends Entity {
         $this->columnsDef[] = array();
         $this->tableName[] = $this->t_product_course_name;
 
+        $this->columns[] = 'open_date_from';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_course_name;
+
+        $this->columns[] = 'open_date_from_limit';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_course_name;
+
         $this->columns[] = 'open_date';
         $this->columnsDef[] = array();
         $this->tableName[] = $this->t_product_course_name;
@@ -154,6 +162,8 @@ class ProductStock extends Entity {
             $resultData['close_date'] = is_null($data['close_date']) ? '' : $data['close_date'];
             $resultData['close_time'] = is_null($data['close_time']) ? '' : $data['close_time'];
             $resultData['reservation_type'] = is_null($data['reservation_type']) ? '' : $data['reservation_type'];
+            $resultData['open_date_from'] = is_null($data['open_date_from']) ? '' : $data['open_date_from'];
+            $resultData['open_date_from_limit'] = is_null($data['open_date_from_limit']) ? '' : $data['open_date_from_limit'];
             $resultData['open_date'] = is_null($data['open_date']) ? '' : $data['open_date'];
         }
 
@@ -325,20 +335,29 @@ class ProductStock extends Entity {
             $closingout_time = substr($close_data['close_time'], 0, 2) . substr($close_data['close_time'], 3, 2);
         }
 
+        $now_plus_openingout_from = strtotime('+' . intval($close_data['open_date_from']) . ' day', $now);
+        $openingout_from_limit = '2359';
+        if( isset($close_data['open_date_from_limit']) && $close_data['open_date_from_limit'] != '' ) {
+            $openingout_from_limit = substr($close_data['open_date_from_limit'], 0, 2) . substr($close_data['open_date_from_limit'], 3, 2);
+        }
         $now_plus_openingout = strtotime('+' . intval($close_data['open_date']) . ' day', $now);
 
         if($close_data['reservation_type'] == 2) {
             if( date('Ymd', $order_date) > date('Ymd', $now_plus_openingout) ) {
                 $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
-            } elseif( date('Ymd', $order_date) < date('Ymd', $now) ) {
+            } elseif( date('Ymd', $order_date) < date('Ymd', $now_plus_openingout_from) ) {
+                $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
+            } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_openingout_from) && date('Hi', $now) >= $openingout_from_limit ) {
                 $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
             }
+
         } else {
             if( date('Ymd', $order_date) < date('Ymd', $now_plus_closingout) ) {
                 $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
             } elseif( date('Ymd', $order_date) == date('Ymd', $now_plus_closingout) && date('Hi', $now) >= $closingout_time ) {
                 $err_msg = MESSAGE_ERROR_ORDER_EXPIRE;
             }
+
         }
 
         return $err_msg;
@@ -355,6 +374,9 @@ class ProductStock extends Entity {
                 $err_msg['close_date'] = MESSAGE_ERROR_REQUIRE;
             }
         } else {
+            if( $data['open_date_from'] == '' ) {
+                $err_msg['open_date_from'] = MESSAGE_ERROR_REQUIRE;
+            }
             if( $data['open_date'] == '' ) {
                 $err_msg['open_date'] = MESSAGE_ERROR_REQUIRE;
             }
@@ -381,6 +403,8 @@ class ProductStock extends Entity {
         $params['close_date'] = $data['close_date'];
         $params['close_time'] = $data['close_time'];
         $params['reservation_type'] = $data['reservation_type'];
+        $params['open_date_from'] = $data['open_date_from'];
+        $params['open_date_from_limit'] = $data['open_date_from_limit'];
         $params['open_date'] = $data['open_date'];
 
         $where_params = array();
@@ -491,6 +515,9 @@ class ProductStock extends Entity {
         if(is_array($data['close_date'])) {
             $data['close_date'] = '';
         }
+        if(is_array($data['open_date_from'])) {
+            $data['open_date_from'] = '';
+        }
         if(is_array($data['open_date'])) {
             $data['open_date'] = '';
         }
@@ -500,6 +527,8 @@ class ProductStock extends Entity {
         $closeData['close_date'] = $data['close_date'];
         $closeData['close_time'] = $data['close_time'];
         $closeData['reservation_type'] = $data['reservation_type'];
+        $closeData['open_date_from'] = $data['open_date_from'];
+        $closeData['open_date_from_limit'] = $data['open_date_from_limit'];
         $closeData['open_date'] = $data['open_date'];
         $_SESSION[SESSION_PRODUCT_STOCK_CLOSE] = $closeData;
 

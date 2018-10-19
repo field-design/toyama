@@ -70,6 +70,14 @@
     }
 
     /*
+     * リンクウィンドウ設定
+     */
+    var link_target = '';
+    if (settings.display_type == 'schedule') {
+        link_target = 'target="_blank"';
+    }
+
+    /*
     * カレンダー展開
     */
     var Calendar = function(obj,yyyy,mmmm){
@@ -152,6 +160,7 @@
                         var now_ymd = new Date(now.getFullYear(), now.getMonth(), now.getDate());
                         var now_time = getLeftZero(now.getHours(), 2) + getLeftZero(now.getMinutes(), 2);
                         var now_plus_closingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.close_date);
+                        var now_plus_openingout_from = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.open_date_from);
                         var now_plus_openingout = new Date(now.getFullYear(), now.getMonth(), now.getDate() + input_data.open_date);
 
                         if (input_data.reservation_type == 2) {
@@ -159,8 +168,11 @@
                             if (t_date.getTime() > now_plus_openingout.getTime() ) {
                                 //申込可能期間外は期限切れ
                                 status = 'out';
-                            } else if (t_date.getTime() < now_ymd.getTime()) {
+                            } else if (t_date.getTime() < now_plus_openingout_from.getTime()) {
                                 //当日未満は期限切れ
+                                status = 'out';
+                            } else if (t_date.getTime() == now_plus_openingout_from.getTime() && now_time >= input_data.open_date_from_limit ) {
+                                //申込可能期間の初日、指定時刻以降は期限切れ
                                 status = 'out';
                             } else {
                                 if (stock_type == null) {
@@ -221,7 +233,7 @@
 
                         html +='      <div class="order-status">';
                         if( status == 'ask' || status == 'few' || status == 'many' ) {
-                            html +='          <a href="' + settings.url_root + 'order/?plan=' + settings.plan + '&course=' + settings.course + '&ymd=' + ymd + '"><div class="' + status + '"></div></a>';
+                            html += '          <a href="' + settings.url_root + 'order/?plan=' + settings.plan + '&course=' + settings.course + '&ymd=' + ymd + '" ' + link_target + '><div class="' + status + '"></div></a>';
                         } else {
                             html +='          <div class="' + status + '"></div>';
                         }

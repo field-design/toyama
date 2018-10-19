@@ -43,6 +43,9 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'close' ) {
     if(!is_null($data['close_time']) && $data['close_time'] != '') {
         $data['close_time'] = substr($data['close_time'], 0, 5);
     }
+    if(!is_null($data['open_date_from_limit']) && $data['open_date_from_limit'] != '') {
+        $data['open_date_from_limit'] = substr($data['open_date_from_limit'], 0, 5);
+    }
     header('Content-Type: application/json');
     echo json_encode($data);
     exit;

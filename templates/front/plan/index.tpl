@@ -611,6 +611,7 @@
         var plan = '{$data.product_id}';
         var now_ym = '{$smarty.now|date_format:'%Y-%m-01'}';
         var url_root = '{$smarty.const.URL_ROOT_PATH}';
+        var display_type = '{$type|default:''}';
         {literal}
         function setStockCalendar(ym, cls, couse_change){
             $.ajax({
@@ -624,7 +625,8 @@
                         'few':few,
                         'url_root':url_root,
                         'plan':plan,
-                        'course':$('#course_select').val()
+                        'course':$('#course_select').val(),
+                        'display_type':display_type
                     });
                     $('#calendar a.button.prev').click(function() {
                         setStockCalendar(data.prevMonth, false, false);

@@ -227,27 +227,46 @@ body.login footer {
       content: counter(number); }
 
 /* =====================
-  form styles
+form styles
 ===================== */
 .classification p {
   font-size: 1em;
   font-weight: bold;
-  color: #363636; }
+  color: #363636;
+}
 
 .classification ul {
-  margin-top: 5px; }
-  .classification ul li {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 1em;
-    margin-right: 1em; }
-    .classification ul li label {
-      cursor: pointer; }
-    .classification ul li input {
-      margin-right: .3em; }
+  margin-top: 5px;
+}
+
+.classification ul li {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1em;
+  margin-right: 1em;
+}
+.classification ul li label {
+  cursor: pointer;
+}
+
+.classification ul li input {
+  margin-right: .3em;
+}
 
 .control.control-d2 {
-  opacity: .2; }
+  opacity: .2;
+}
+
+.control.control-d2 .has-addons input {
+    max-width: 110px;
+}
+
+.control.control-d2 .has-addons .no-frame {
+    display: inline-flex;
+    align-items: center;
+    padding-left: .75em;
+    padding-right: .75em;
+}
 
 /* =====================
   admin styles

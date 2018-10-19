@@ -45,6 +45,12 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
         }
 
         $stock_data['reservation_type'] = intval($close_data['reservation_type']);        
+        $stock_data['open_date_from'] = intval($close_data['open_date_from']);
+        if($close_data['open_date_from_limit'] == '') {
+            $stock_data['open_date_from_limit'] = '2359';
+        } else {
+            $stock_data['open_date_from_limit'] = substr($close_data['open_date_from_limit'], 0, 2) . substr($close_data['open_date_from_limit'], 3, 2);
+        }
         $stock_data['open_date'] = intval($close_data['open_date']);
     }
 
@@ -54,7 +60,11 @@ if( isset($_POST['addtype']) && $_POST['addtype'] == 'calendar' ) {
     if($_POST['course_id'] != '' && $couse_change) {
 
         if($stock_data['reservation_type'] == 2) {
-            $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1);
+            $adjust_from = $stock_data['open_date_from'];
+            if(date('Hi') >= $stock_data['open_date_from_limit']) {
+                $adjust_from += 1;
+            }
+            $stock_value_left = array_slice($stock_data['stock_value'], intval(date('j')) - 1 + $adjust_from);
         } else {
             $adjust_tejimaibi = $stock_data['close_date'];
             if(date('Hi') >= $stock_data['close_time']) {

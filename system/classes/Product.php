@@ -1251,12 +1251,14 @@ class Product extends Entity {
                             //メイン画像１はファイル名を固定
                             $params['meta_value'] = PRODUCT_MAIN_PHOTO1_NAME;
                         } else {
-                            $params['meta_value'] = end(explode("/", $data[$column][$j]));
+                            $temp = explode("/", $data[$column][$j]);
+                            $params['meta_value'] = end($temp);
                         }
 
                     } elseif($column == 'detail_photo') {
 
-                        $params['meta_value'] = end(explode("/", $data[$column][$j]));                        
+                        $temp = explode("/", $data[$column][$j]);
+                        $params['meta_value'] = end($temp);                        
 
                     } elseif($column == 'disp_price_type'
                             || $column == 'disp_price_value'
@@ -1421,7 +1423,8 @@ class Product extends Entity {
                 continue;
             }
             $tmp_img_path = str_replace(URL_UPL_DIR, UPL_DIR, $url);
-            $tmp_img_name = end(explode("/", $tmp_img_path));
+            $temp = explode("/", $tmp_img_path);
+            $tmp_img_name = end($temp);
             if( copy($tmp_img_path, $img_dir . $tmp_img_name) ) {
                 $url = str_replace(UPL_DIR, URL_UPL_DIR, $img_dir . $tmp_img_name);
             }

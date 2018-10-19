@@ -228,14 +228,21 @@
             <div class="control control-d2">
                 <label class="label">
                     申込可能期間入力<span class="must">区分選択時必須</span>
-                    <span class="help">当日の場合は0日前と入力してください。</span>
+                    <span class="help">当日の場合は0日後からと入力してください。</span>
                 </label>
                 <div class="">
                     <p class="control has-addons">
-                    <input name="open_date" class="input is-danger" type="number" min="0" placeholder="例：3">
+                        <input name="open_date_from" class="input is-danger" type="number" min="0" placeholder="例：2">
+                        <span class="button is-disabled">日後</span>
+                        <input name="open_date_from_limit" class="input js-timepicker" type="text" placeholder="時間">
+                        <span class="button is-disabled">時まで</span>
+                        <span class="no-frame">〜</span>
+                        <input name="open_date" class="input is-danger" type="number" min="0" placeholder="例：3">
                     <span class="button is-disabled">日後まで</span>
                     </p>
-                    {if isset($err_msg.open_date) && $err_msg.open_date != ''}
+                    {if isset($err_msg.open_date_from) && $err_msg.open_date_from != ''}
+                    <span class="error has-icon">{$err_msg.open_date_from}</span>
+                    {elseif isset($err_msg.open_date) && $err_msg.open_date != ''}
                     <span class="error has-icon">{$err_msg.open_date}</span>
                     {/if}
                 </div>
@@ -384,6 +391,7 @@ $(function() {
 ****************************/
 function chechReservationType() {
     $('input[name=close_date]').removeClass('is-danger');
+    $('input[name=open_date_from]').removeClass('is-danger');
     $('input[name=open_date]').removeClass('is-danger');
 
     if($('[id=d1]').prop('checked')){
@@ -400,6 +408,9 @@ function chechReservationType() {
         $('.control-d2 input').removeAttr("readonly");
         $('.control-d1').css('opacity','.2');
         $('.control-d2').css('opacity','1');
+        if($('input[name=open_date_from]').val() == '') {
+            $('input[name=open_date_from]').addClass('is-danger');
+        }
         if($('input[name=open_date]').val() == '') {
             $('input[name=open_date]').addClass('is-danger');
         }
@@ -482,6 +493,8 @@ $(function() {
                 $('input[name=close_date]').val(response.close_date);
                 $('input[name=close_time]').val(response.close_time);
 
+                $('input[name=open_date_from]').val(response.open_date_from);
+                $('input[name=open_date_from_limit]').val(response.open_date_from_limit);
                 $('input[name=open_date]').val(response.open_date);
 
                 if(response.reservation_type == '2') {
