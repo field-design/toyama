@@ -248,6 +248,20 @@
                 </div>
             </div>
 
+            <div class="control deposit-guide">
+                <label class="label">
+                    未決済ユーザーへの入金案内メール送信日設定<span class="help">送信しない場合は未入力としてください。</span>
+                </label>
+                <p class="control has-addons">
+                    <span class="button is-disabled">催行日の</span>
+                    <input name="remind_mail_date" class="input" type="number" min="0" placeholder="例：3">
+                    <span class="button is-disabled">日前</span>
+                </p>
+                {if isset($err_msg.remind_mail_date) && $err_msg.remind_mail_date != ''}
+                    <span class="error has-icon">{$err_msg.remind_mail_date}</span>
+                {/if}
+            </div>
+
             <div class="control save-point">
                 <p class="has-text-centered">
                     <a class="button is-success">
@@ -496,6 +510,8 @@ $(function() {
                 $('input[name=open_date_from]').val(response.open_date_from);
                 $('input[name=open_date_from_limit]').val(response.open_date_from_limit);
                 $('input[name=open_date]').val(response.open_date);
+
+                $('input[name=remind_mail_date]').val(response.remind_mail_date);
 
                 if(response.reservation_type == '2') {
                     $('#d2').prop('checked', true);

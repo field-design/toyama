@@ -504,7 +504,7 @@ class Order extends Entity {
         $sql .= 'and       t_order_meta.meta_type = "price_value"';
         $sql .= 'where  SHA1(CONCAT("' . ORDER_ID_SALT . '", t_order.order_id)) = :order_id ';
         //$sql .= 'and    t_order.order_status = 5 ';
-        $sql .= 'and    t_order.request_flg = 2 ';
+        //$sql .= 'and    t_order.request_flg = 2 ';
         $sql .= 'group by t_order.order_id ';
         $sql .= '       , t_order.product_id ';
         $sql .= '       , t_order.course_id ';
@@ -1016,6 +1016,70 @@ class Order extends Entity {
 
         $data['request_flg'] = 2;
         $data['order_status_text'] = Constant::$aryCorrespondence[6];
+
+        return $data;
+    }
+
+    /******************************
+    ステータス変更
+    *******************************/
+    function update_status($data, $status) {
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $db = new DB();
+
+        $params = array();
+        $params['update_date'] = $time_stamp;
+        $params['order_status'] = $status;
+
+        $where_params = array();
+        $where_params['order_id'] = $data['OderID'];
+
+        //トランザクション開始
+        $db->beginTransaction();
+
+        $err_msg = $db->execUpdate('t_order', $params, $where_params, false);
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $db->commit();
+
+        $data['order_status'] = $status;
+        $data['order_status_text'] = Constant::$aryCorrespondence[$data['order_status']];
+
+        return $data;
+    }
+    
+    /******************************
+    取引情報登録
+    *******************************/
+    function update_access($data) {
+        $time_stamp = date("Y/m/d H:i:s");
+
+        $db = new DB();
+
+        $params = array();
+        $params['update_date'] = $time_stamp;
+        $params['access_id'] = $data['access_id'];
+        $params['access_pass'] = $data['access_pass'];
+
+        $where_params = array();
+        $where_params['order_id'] = $data['OderID'];
+
+        //トランザクション開始
+        $db->beginTransaction();
+
+        $err_msg = $db->execUpdate('t_order', $params, $where_params, false);
+
+        if( !empty($err_msg) ) {
+            //エラー処理
+            return $err_msg;
+        }
+
+        $db->commit();
 
         return $data;
     }

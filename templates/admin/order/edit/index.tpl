@@ -89,17 +89,25 @@
                 <td>
                     {$data.order_status_text|default:''}
                     {if $data.request_flg == 1}
-                    <a class="button is-success is-outlined is-small">
+                    <a class="button is-success is-outlined is-small approval_ok">
                       <span class="icon is-small">
                         <i class="fa fa-check"></i>
                       </span>
                       <span>承認する</span>
                     </a>
-                    <a class="button is-danger is-outlined is-small">
+                    <a class="button is-danger is-outlined is-small approval_cancel">
                       <span class="icon is-small">
                         <i class="fa fa-check"></i>
                       </span>
                       <span>承認しない</span>
+                    </a>
+                    {/if}
+                    {if $data.order_status == 5}
+                    <a class="button is-danger is-outlined is-small order_status_cancel">
+                      <span class="icon is-small">
+                        <i class="fa fa-ban"></i>
+                      </span>
+                      <span>キャンセル</span>
                     </a>
                     {/if}
                 </td>
@@ -306,6 +314,7 @@
     <form method="post" action="{$smarty.server.PHP_SELF|replace:'index.php':''}">
         <input name="OderID" type="hidden" value="{$data.OderID}" />
     </form>
+    <div id="dialog" title="確認"></div>
 </main>
 <!-- END main -->
         </div>
@@ -334,6 +343,82 @@
 {include file=$smarty.const.ADMIN_DIR|cat:'includes/foot/google_script.tpl'}
 
 <!-- Page Script -->
+
+<style>
+.ui-dialog {
+    z-index: 101;
+}
+.ui-widget-overlay {
+    background: #666666;
+    opacity: .5;
+    filter: Alpha(Opacity=50);
+}
+
+.ui-widget-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.ui-widget-content {
+    background: #fff;
+    color: #333333;
+}
+
+.ui-draggable .ui-dialog-titlebar {
+    cursor: move;
+}
+.ui-dialog .ui-dialog-titlebar {
+    padding: .4em 1em;
+    position: relative;
+    border-bottom: 1px solid #aaa;
+}
+.ui-dialog .ui-dialog-titlebar .ui-dialog-titlebar-close {
+    display: none;
+}
+
+/*
+.ui-widget-header {
+    background: #363636;
+    color: #ffffff;
+    font-weight: bold;
+}
+*/
+.ui-helper-clearfix {
+    min-height: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+    position: relative;
+    border: 0;
+    padding: .5em 1em;
+    background: none;
+    overflow: auto;
+}
+
+.ui-dialog .ui-dialog-buttonpane {
+    text-align: left;
+    border-width: 1px 0 0 0;
+    background-image: none;
+    margin-top: .5em;
+    padding: .3em 1em .5em .4em;
+    overflow: hidden;
+   
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    float: right;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    margin: .5em .6em .5em 0;
+    cursor: pointer;
+}
+
+</style>
+
 {literal}
 <script>
   function initMap() {
@@ -408,15 +493,52 @@
         /***************************
         submitボタン設定
         ****************************/
-        $('a.button.is-success').click(function(){
+        $('a.button.approval_ok').click(function(){
             $('form').append($('<input/>', {type: 'hidden', name: 'approval', value: 'ok'}));
             $('form').submit();
         });
-        $('a.button.is-danger').click(function(){
+        $('a.button.approval_cancel').click(function(){
             $('form').append($('<input/>', {type: 'hidden', name: 'approval', value: 'cancel'}));
             $('form').submit();
         });
+        $('a.button.order_status_cancel').click(function(){
+            var params = getDialogParams(function(){
+              $('form').append($('<input/>', {type: 'hidden', name: 'order_status', value: 'cancel'}));
+                $('form').submit();
+            });
+            $("#dialog").html('受注内容をを破棄しますか？');
+            $("#dialog").dialog(params);
+        });
     });
+</script>
+<script>
+    /***************************
+    ダイアログ設定
+    ****************************/
+    function getDialogParams(okcallback) {
+        var params = {   
+              modal: true,
+              open: function() {
+                  //ボタンスタイル用
+                  $('.ui-dialog .ui-dialog-buttonpane button').addClass('button');
+                  $( this ).siblings('.ui-dialog-buttonpane').find('button:eq(1)').focus();
+              },
+              buttons:[
+                  {
+                      text: "OK",
+                      click: okcallback
+                  },
+                  {
+                      text: "Cancel",
+                      click: function(){
+                          $( this ).dialog( "close" );
+                      }
+                  }
+              ]
+          };
+
+        return params;
+    }
 </script>
 {/literal}
 

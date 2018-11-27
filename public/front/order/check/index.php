@@ -170,6 +170,50 @@ if( isset($_POST['create_order']) ) {
         exit;
     }
 
+    //取引ID取得・DB更新
+    set_include_path(get_include_path() . PATH_SEPARATOR  . CLS_DIR . "api/");
+    require_once( 'com/gmo_pg/client/input/EntryTranInput.php');
+    require_once( 'com/gmo_pg/client/tran/EntryTran.php');
+
+    $input = new EntryTranInput();
+    $input->setShopId($settings_data['shopID']);
+    $input->setShopPass($settings_data['pass2']);
+    $input->setJobCd('CAPTURE');
+    $input->setOrderId($order_data['OderID']);
+    $amount = 0;
+    for($i = 0; $i < count($order_data['amount']); $i++) {
+        $amount += intval($price_data['price_value'][$i]) * intval($order_data['amount'][$i]);
+    }
+    $input->setAmount($amount);
+
+    $exe = new EntryTran();
+    $output = $exe->exec($input);
+    if( $exe->isExceptionOccured() ){
+        //エラー
+        $exception = $exe->getException();
+        $log->setErrorLog($exception->getMessage());
+                
+    } else {
+        if( $output->isErrorOccurred() ){
+            //エラー
+            $exception = $output->getException();
+            $log->setErrorLog($exception->getMessage());
+        } else {
+            $order_data['access_id'] = $output->getAccessId();
+            $order_data['access_pass'] = $output->getAccessPass();
+
+            $order_data = $order->update_access($order_data);
+
+            if(!is_array($order_data)) {
+                header('Content-Type: application/json');
+                echo json_encode($order_data);
+                exit;
+            }
+        }
+        
+    }
+
+    
     $response = array();
     $response['status'] = 'ok';
 

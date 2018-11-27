@@ -128,6 +128,51 @@ if( !$err_flg ) {
         }
     }
 
+    if( isset($_POST['order_status']) ) {
+        if( $_POST['order_status'] == 'cancel' ) {
+            /*
+            set_include_path(get_include_path() . PATH_SEPARATOR  . CLS_DIR . "api/");
+            require_once( 'com/gmo_pg/client/input/AlterTranInput.php');
+            require_once( 'com/gmo_pg/client/tran/AlterTran.php');
+            
+            $input = new AlterTranInput();
+            $input->setShopId( $settings_data['shop_id'] );
+            $input->setShopPass( $settings_data['shop_pass'] );
+            $input->setAccessId( $data['access_id'] );
+            $input->setAccessPass( $data['access_pass'] );
+            $input->setJobCd('VOID');
+
+            $exe = new AlterTran();
+            $output = $exe->exec( $input );
+            if ( $exe->isExceptionOccured() ){
+
+                $exception = $exe->getException();
+                $smarty->assign('global_message', $exception->getMessage());
+                $err_flg = true;
+
+            } else {
+
+                //例外が発生していない場合、出力パラメータオブジェクトが戻ります。
+
+                if( $output->isErrorOccurred() ){
+                    $errorList = $output->getErrList();
+                    $errorMsg = '';
+                    foreach( $errorList as  $errorInfo ){
+                        $errorMsg .= $errorInfo->getErrCode() . ':' . $errorInfo->getErrInfo() . '<br>';
+                    }
+                    $smarty->assign('global_message', $errorMsg);
+                    $err_flg = true;
+                } else {
+
+                    //例外発生せず、エラーの戻りもなく、3Dセキュアフラグもオフであるので、実行結果を表示します。
+                    $data = $order->update_approval($data, 3);
+                }
+            }
+            */
+            $data = $order->update_status($data, 3);
+        }
+    }
+    
     $data['oderDate'] = date('Y/m/d', strtotime($data['oderDate']));
     //決済情報URL
     $enc_id = sha1(ORDER_ID_SALT . $data['OderID']);

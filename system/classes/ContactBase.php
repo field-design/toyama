@@ -688,7 +688,7 @@ class ContactBase {
     /*******************
     メール送信処理
     ********************/
-    function send_mail($to, $subject, $message, $headers) {
+    function send_mail($to, $subject, $message, $headers, $bcc = null) {
         //to設定
         $send_to = array ();
         $send_to['name'] = '';
@@ -698,12 +698,20 @@ class ContactBase {
         $send_from = array ();
         $send_from['name'] = '';
         $send_from['address'] = SYS_MAIL_FROM;
+
+        //bcc設定
+        $send_bcc = array();
+        if(!is_null($bcc)) {
+            $send_bcc['name'] = '';
+            $send_bcc['address'] = $bcc;
+        }
         
         //POSTデータ
         $data = array(
             'api_user' => EMAIL_SENDING_API_USER,
             'api_key' => EMAIL_SENDING_API_KEY,
             'to' => json_encode($send_to),
+            'bcc' => json_encode($send_bcc),
             'from' => json_encode($send_from),
             'subject' => $subject,
             'text' => $message,

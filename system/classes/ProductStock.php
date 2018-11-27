@@ -57,6 +57,10 @@ class ProductStock extends Entity {
         $this->columnsDef[] = array();
         $this->tableName[] = $this->t_product_course_name;
 
+        $this->columns[] = 'remind_mail_date';
+        $this->columnsDef[] = array();
+        $this->tableName[] = $this->t_product_course_name;
+
         //商品コース在庫
         $this->columns[] = 'stock_date';
         $this->columnsDef[] = array();
@@ -165,6 +169,7 @@ class ProductStock extends Entity {
             $resultData['open_date_from'] = is_null($data['open_date_from']) ? '' : $data['open_date_from'];
             $resultData['open_date_from_limit'] = is_null($data['open_date_from_limit']) ? '' : $data['open_date_from_limit'];
             $resultData['open_date'] = is_null($data['open_date']) ? '' : $data['open_date'];
+            $resultData['remind_mail_date'] = is_null($data['remind_mail_date']) ? '' : $data['remind_mail_date'];
         }
 
         return $resultData;
@@ -406,6 +411,7 @@ class ProductStock extends Entity {
         $params['open_date_from'] = $data['open_date_from'];
         $params['open_date_from_limit'] = $data['open_date_from_limit'];
         $params['open_date'] = $data['open_date'];
+        $params['remind_mail_date'] = $data['remind_mail_date'];
 
         $where_params = array();
         $where_params['course_id'] = $data['course_id'];
@@ -521,6 +527,9 @@ class ProductStock extends Entity {
         if(is_array($data['open_date'])) {
             $data['open_date'] = '';
         }
+        if(is_array($data['remind_mail_date'])) {
+            $data['remind_mail_date'] = '';
+        }
 
         //手じまい日情報をセッション保存
         $closeData = array();
@@ -530,6 +539,7 @@ class ProductStock extends Entity {
         $closeData['open_date_from'] = $data['open_date_from'];
         $closeData['open_date_from_limit'] = $data['open_date_from_limit'];
         $closeData['open_date'] = $data['open_date'];
+        $closeData['remind_mail_date'] = $data['remind_mail_date'];
         $_SESSION[SESSION_PRODUCT_STOCK_CLOSE] = $closeData;
 
         return $data;
