@@ -95,6 +95,81 @@ class Contact extends ContactBase {
     }
 
     /*******************
+    申し込み完了（未決済）
+    ********************/
+    function sendOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
+
+        $enc_id = sha1(ORDER_ID_SALT . $order_data['OderID']);
+
+        //データ調整
+        $order_data['registDate'] = date('Y年m月d日 H時i分s秒');
+        $order_data['zipCode'] = implode('-', $order_data['zipCode']);
+        $order_data['tel_'] = implode('-', $order_data['tel_']);
+        $order_data['mobile'] = implode('-', $order_data['mobile']);
+
+        //============
+        //お客様宛
+        //============
+        $to      = $order_data['mail'];
+        $subject = 'Your application is confirmed.';
+
+        $message = '';
+        $message .= 'Dear' . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
+        $message .= "\r\n";
+        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Your application is confirmed as follows.\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfoEn($order_data, $product_data, $course_data, $price_data);
+        $message .= "\r\n";
+        $message .= $this->getOrderPersonEn($order_data);
+        $message .= "\r\n";
+        $message .= $this->getCompanionEn($order_data);
+        $message .= $this->getProductQuestionEn($order_data, $product_data);
+        $message .= "\r\n";
+        $message .= "If settlement can not be completed successfully, please do the settlement procedure again from the following URL." . "\r\n";
+        $message .= URL_ROOT_PATH_HOST . "/order/settleapp/?order=" . $enc_id . "&date=" . date('Y-m-d', strtotime($order_data['oderDate'])) . " \r\n";
+        $message .= "\r\n";
+        $message .= $this->getProductSettingsEn($settings_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+
+
+        //=============
+        //事業者宛
+        //=============
+        $to      = $settings_data['email'];
+        $subject = 'お申し込みが入りました';
+
+        $message = "";
+        $message .= (empty($settings_data['company_name']) ? $settings_data['display_name'] : $settings_data['company_name']) . "　御中\r\n";
+        $message .= "\r\n";
+        $message .= "いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申込がありました。\r\n";
+        $message .= "下記の内容にて承りましたので、内容の確認、お客様へ確定書面のご発送をお願い致します。\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
+        $message .= "\r\n";
+        $message .= $this->getOrderPerson($order_data);
+        $message .= $this->getCompanion($order_data);
+        $message .= $this->getProductQuestion($order_data, $product_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        $bcc = $this->bcc;
+
+        if( !$this->send_mail($to, $subject, $message, $headers, $bcc) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+
+        return '';
+    }
+
+    /*******************
     申し込み完了（カード）
     ********************/
     function sendCardOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
@@ -299,7 +374,9 @@ class Contact extends ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !$this->send_mail($to, $subject, $message, $headers) ){
+        $bcc = $this->bcc;
+
+        if( !$this->send_mail($to, $subject, $message, $headers, $bcc) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 

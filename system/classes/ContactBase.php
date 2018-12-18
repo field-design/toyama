@@ -9,15 +9,19 @@
 *******************************************/
 class ContactBase {
 
-    private $simei;
-    private $mail;
-    private $mailconfirm;
-    private $tel;
-    private $naiyo;
-    private $log;
+    protected $simei;
+    protected $mail;
+    protected $mailconfirm;
+    protected $tel;
+    protected $naiyo;
+    protected $log;
+    
+    protected $bcc;
 
     function __construct() {
         $this->log = new Log();
+
+        $this->bcc = 'nanala.it.3056@gmail.com';
     }
 
     /******************************
@@ -273,6 +277,81 @@ class ContactBase {
     }
 
     /*******************
+    申し込み完了（未決済）
+    ********************/
+    function sendOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
+
+        $enc_id = sha1(ORDER_ID_SALT . $order_data['OderID']);
+
+        //データ調整
+        $order_data['registDate'] = date('Y年m月d日 H時i分s秒');
+        $order_data['zipCode'] = implode('-', $order_data['zipCode']);
+        $order_data['tel_'] = implode('-', $order_data['tel_']);
+        $order_data['mobile'] = implode('-', $order_data['mobile']);
+
+        //============
+        //お客様宛
+        //============
+        $to      = $order_data['mail'];
+        $subject = 'お申し込みを承りました。';
+
+        $message = '';
+        $message .= $order_data['nameSei'] . '　' . $order_data['nameMei'] . '　様' . "\r\n";
+        $message .= "\r\n";
+        $message .= "この度は、いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申し込み頂きありがとうございます。\r\n";
+        $message .= "下記の内容にて、お申し込みを承りました。\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
+        $message .= "\r\n";
+        $message .= $this->getOrderPerson($order_data);
+        $message .= "\r\n";
+        $message .= $this->getCompanion($order_data);
+        $message .= $this->getProductQuestion($order_data, $product_data);
+        $message .= "\r\n";
+        $message .= "万が一、決済がうまく完了できなかった場合は、下記URLより再度決済手続きを行って下さい。" . "\r\n";
+        $message .= URL_ROOT_PATH_HOST . "/order/settleapp/?order=" . $enc_id . "&date=" . date('Y-m-d', strtotime($order_data['oderDate'])) . " \r\n";
+        $message .= "\r\n";
+        $message .= $this->getProductSettings($settings_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        if( !$this->send_mail($to, $subject, $message, $headers) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+
+
+        //=============
+        //事業者宛
+        //=============
+        $to      = $settings_data['email'];
+        $subject = 'お申し込みが入りました';
+
+        $message = "";
+        $message .= (empty($settings_data['company_name']) ? $settings_data['display_name'] : $settings_data['company_name']) . "　御中\r\n";
+        $message .= "\r\n";
+        $message .= "いますぐ選べるトラベルより「" . $product_data['title'] . "（" . $course_data['course_name'][0] . "）」にお申込がありました。\r\n";
+        $message .= "下記の内容にて承りましたので、内容の確認、お客様へ確定書面のご発送をお願い致します。\r\n";
+        $message .= "\r\n";
+        $message .= "\r\n";
+        $message .= $this->getOrderInfo($order_data, $product_data, $course_data, $price_data);
+        $message .= "\r\n";
+        $message .= $this->getOrderPerson($order_data);
+        $message .= $this->getCompanion($order_data);
+        $message .= $this->getProductQuestion($order_data, $product_data);
+
+        $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
+
+        $bcc = $this->bcc;
+
+        if( !$this->send_mail($to, $subject, $message, $headers, $bcc) ){
+            $this->log->setErrorLog('FAIL_SEND_MAIL');
+        }
+
+        return '';
+    }
+
+    /*******************
     申し込み完了（カード）
     ********************/
     function sendCardOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data) {
@@ -477,7 +556,9 @@ class ContactBase {
 
         $headers = 'From: ' . SYS_MAIL_FROM . "\r\n";
 
-        if( !$this->send_mail($to, $subject, $message, $headers) ){
+        $bcc = $this->bcc;
+
+        if( !$this->send_mail($to, $subject, $message, $headers, $bcc) ){
             $this->log->setErrorLog('FAIL_SEND_MAIL');
         }
 

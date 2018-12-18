@@ -23,6 +23,7 @@ $price = new ProductPrice();
 $order = new Order();
 $settings = new Settings();
 $page = new Page();
+$contact = new Contact();
 $log = new Log();
 
 $order_data = $order->getNewData();
@@ -221,6 +222,8 @@ if( isset($_POST['create_order']) ) {
         $response['action'] = URL_ROOT_PATH_HOST . '/order/request/';
     } else {
         $response['action'] = $settings_data['APIurl'];
+        //メール送信
+        $contact->sendOrderComp($order_data, $product_data, $course_data, $price_data, $settings_data);
     }
 
     $response['JobCd'] = 'CAPTURE';
