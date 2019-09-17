@@ -122,6 +122,7 @@ class ProductStock extends Entity {
         foreach($selectCourseData as $data) {
             $resultData['course_id'][] = $data['course_id'];
             $resultData['course_name'][] = $data['course_name'];
+            $resultData['course_order'][] = $data['course_order'];
         }
 
         return $resultData;

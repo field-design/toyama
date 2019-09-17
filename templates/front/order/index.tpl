@@ -88,7 +88,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">プラン名</th>
-                            <td class="text-left">{$product_data.course_name[0]}</td>
+                            <td class="text-left">{$product_data.title}（{$course_data.course_name[0]}）</td>
                         </tr>
                         <tr>
                             <th class="text-center">出発日</th>

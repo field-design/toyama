@@ -116,7 +116,7 @@ class Contact extends ContactBase {
         $message = '';
         $message .= 'Dear' . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your application is confirmed as follows.\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
@@ -186,7 +186,7 @@ class Contact extends ContactBase {
         $message = '';
         $message .= 'Dear' . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your application is confirmed as follows.\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
@@ -251,7 +251,7 @@ class Contact extends ContactBase {
         $message = "";
         $message .= "Dear " . $order_data['nameSei'] . "　" . $order_data['nameMei'] . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for applying for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your application is confirmed as follows.\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
@@ -333,7 +333,7 @@ class Contact extends ContactBase {
         $message = '';
         $message .= "Dear " . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your request has been sent with the following content.\r\n";
         $message .= "We will contact you within 24 hours if your application is submitted 3 days prior to the date of participation or earlier. / We will contact you within 3 hours if your request is made the day before or 2 days before the date of participation. (* Please contact the office by phone during the business hours of each company if you are not contacted within the time frames stated above.)\r\n";
         $message .= "\r\n";
@@ -399,7 +399,7 @@ class Contact extends ContactBase {
         $message = '';
         $message .= "Dear " . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your request is now approved. Please proceed to payment on the page below.\r\n";
         $message .= "\r\n";
         $message .= "【Settlement page】\r\n";
@@ -437,7 +437,7 @@ class Contact extends ContactBase {
         $message = '';
         $message .= "Dear " . $order_data['nameSei'] . '　' . $order_data['nameMei'] . '' . "\r\n";
         $message .= "\r\n";
-        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][0] . ")\" through Imasugu Eraberu Travel.\r\n";
+        $message .= "Thank you for sending your request for \"" . $product_data['title'] . "(" . $product_data['course_name'][$course_data['course_order'][0] - 1] . ")\" through Imasugu Eraberu Travel.\r\n";
         $message .= "Your request is canceled.\r\n";
         $message .= "\r\n";
         $message .= "\r\n";
@@ -473,7 +473,7 @@ class Contact extends ContactBase {
         $message .= "*********************\r\n";
         $message .= $type_name . " plan\r\n";
         $message .= "*********************\r\n";
-        $message .= "・Name of Plan：" . $product_data['title'] . "（" . $product_data['course_name'][0] . "）" . "\r\n";
+        $message .= "・Name of Plan：" . $product_data['title'] . "（" . $product_data['course_name'][$course_data['course_order'][0] - 1] . "）" . "\r\n";
         $message .= "・Departure Date：" . date('Y/n/j', strtotime($order_data['oderDate'])) . "\r\n";
         $message .= "・Meeting Place：" . "\r\n";
         foreach($product_data['meeting_place'] as $value) {

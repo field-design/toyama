@@ -104,7 +104,7 @@
                         </tr>
                         <tr>
                             <th class="text-center">Name of Plan</th>
-                            <td class="text-left">{$product_data.course_name[0]}</td>
+                            <td class="text-left">{$product_data.title}({$product_data.course_name[$course_data.course_order[0] - 1]})</td>
                         </tr>
                         <tr>
                             <th class="text-center">Departure Date</th>
